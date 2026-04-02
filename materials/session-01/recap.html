@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第1回 振り返り | AI研修 初級編</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;background:#f8f9fb;color:#1e293b;line-height:1.8}
+.container{max-width:720px;margin:0 auto;padding:32px 20px 80px}
+header{text-align:center;padding:40px 0 32px;border-bottom:1px solid #e2e8f0;margin-bottom:32px}
+header .tag{font-size:13px;color:#64748b;letter-spacing:2px;margin-bottom:8px}
+header h1{font-size:28px;font-weight:700;color:#1e293b;margin-bottom:4px}
+header .subtitle{font-size:16px;color:#64748b}
+h2{font-size:22px;font-weight:700;margin:40px 0 16px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
+h3{font-size:18px;font-weight:600;margin:24px 0 8px;color:#334155}
+p{font-size:16px;color:#475569;margin-bottom:12px}
+ul{font-size:16px;padding-left:24px;color:#475569;margin-bottom:12px}
+li{margin-bottom:8px}
+li strong{color:#1e293b}
+
+.goal-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;margin:10px 0;display:flex;align-items:flex-start;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.goal-num{min-width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0}
+.goal-num.done{background:#dcfce7;color:#16a34a}
+.goal-text{font-size:16px;color:#1e293b;line-height:1.6}
+
+.insight-card{background:#fff;border:1px solid #e2e8f0;border-left:4px solid #3b82f6;border-radius:8px;padding:16px 20px;margin:10px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.insight-card .label{font-size:12px;font-weight:600;color:#3b82f6;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+.insight-card p{margin:0;font-size:15px;color:#475569}
+
+.tip-card{background:#fffbeb;border:1px solid #fbbf24;border-radius:8px;padding:16px 20px;margin:10px 0}
+.tip-card .label{font-size:12px;font-weight:600;color:#d97706;margin-bottom:4px}
+.tip-card p{margin:0;font-size:15px;color:#92400e}
+
+.warning-card{background:#fef2f2;border:1px solid #fca5a5;border-radius:8px;padding:16px 20px;margin:10px 0}
+.warning-card .label{font-size:12px;font-weight:600;color:#dc2626;margin-bottom:4px}
+.warning-card p{margin:0;font-size:15px;color:#991b1b}
+
+.challenge-card{background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:20px 24px;margin:16px 0}
+.challenge-card h3{color:#16a34a;margin:0 0 12px}
+.challenge-card .prompt{background:#fff;border:1px solid #d1fae5;border-radius:8px;padding:12px 48px 12px 16px;margin:8px 0;font-size:15px;color:#1e293b;position:relative;line-height:1.6}
+.challenge-card .prompt .copy-btn{position:absolute;top:8px;right:8px;padding:4px 10px;border:1px solid #cbd5e1;border-radius:5px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:11px;transition:all .2s}
+.challenge-card .prompt .copy-btn:hover{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.challenge-card .prompt .copy-btn.copied{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+
+.next-card{background:#eff6ff;border:1px solid #93c5fd;border-radius:12px;padding:20px 24px;margin:16px 0}
+.next-card h3{color:#2563eb;margin:0 0 8px}
+.next-card p{margin:0;font-size:15px;color:#1e40af}
+
+.divider{border:none;border-top:1px solid #e2e8f0;margin:32px 0}
+
+.three-points{display:flex;flex-direction:column;gap:12px;margin:16px 0}
+.point{display:flex;gap:12px;align-items:flex-start}
+.point-icon{font-size:24px;min-width:32px;text-align:center;line-height:1.4}
+.point-body{font-size:15px;color:#475569;line-height:1.6}
+.point-body strong{color:#1e293b}
+
+.quiz{margin:16px 0}
+.quiz-item{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:14px 18px;margin:8px 0;cursor:pointer;transition:all .2s}
+.quiz-item:hover{border-color:#3b82f6}
+.quiz-item .q{font-size:15px;font-weight:600;color:#1e293b;margin-bottom:4px}
+.quiz-item .a{font-size:14px;color:#16a34a;display:none;margin-top:8px;padding-top:8px;border-top:1px solid #e2e8f0}
+.quiz-item.open .a{display:block}
+
+footer{text-align:center;padding:40px 0 20px;color:#94a3b8;font-size:13px;border-top:1px solid #e2e8f0;margin-top:40px}
+
+@media(max-width:600px){
+  .container{padding:20px 16px 60px}
+  header h1{font-size:24px}
+  h2{font-size:20px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <div class="tag">AI研修 初級編</div>
+  <h1>第1回 振り返り</h1>
+  <p class="subtitle">AIと話してみよう ― はじめての対話</p>
+</header>
+
+<!-- ===== 今日のゴール達成状況 ===== -->
+<h2>今日のゴール ― できるようになったこと</h2>
+
+<div class="goal-card">
+  <div class="goal-num done">&#x2713;</div>
+  <div class="goal-text"><strong>AIに自分の言葉で質問できた</strong><br>Geminiを開いて、自分で質問を投げかけ、回答をもらう体験をしました。</div>
+</div>
+<div class="goal-card">
+  <div class="goal-num done">&#x2713;</div>
+  <div class="goal-text"><strong>聞き方を変えると結果が変わることを体験した</strong><br>同じ「自己紹介文を作って」でも、条件を足すだけで全く違う結果が出ることを確認しました。</div>
+</div>
+<div class="goal-card">
+  <div class="goal-num done">&#x2713;</div>
+  <div class="goal-text"><strong>AIは間違えることがあると分かった</strong><br>特に自分が詳しくない分野では、AIの間違いに気づけないことを体験しました。<br>→ <strong>事実確認が大切</strong>です。</div>
+</div>
+<div class="goal-card">
+  <div class="goal-num done">&#x2713;</div>
+  <div class="goal-text"><strong>入力してOK/NGの判断基準を持った</strong><br>個人情報や機密情報は入れない。迷ったら入力しない。このルールを確認しました。</div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 講義中の気づき ===== -->
+<h2>講義中に出た気づき・学び</h2>
+
+<div class="insight-card">
+  <div class="label">気づき</div>
+  <p><strong>AIに「聞き出してもらう」という使い方がある。</strong><br>自己紹介文を作る時、自分の情報を全部打ち込むのは大変。<br>「足りない情報を私に質問してください」と指示すると、AIが必要なことを聞いてくれます。音声入力と組み合わせると、キーボードを打たなくても情報を伝えられます。</p>
+</div>
+
+<div class="insight-card">
+  <div class="label">気づき</div>
+  <p><strong>Google系のツールと連携できるのがGeminiの強み。</strong><br>Googleカレンダー、Googleマップ、Gmail、Googleフォームなど、普段使っているツールとつなげることで便利さが倍増します。</p>
+</div>
+
+<div class="insight-card">
+  <div class="label">気づき</div>
+  <p><strong>AIは使えば使うほど、自分のことを覚えてくれる。</strong><br>会話を重ねるとAIが文脈を理解し、より的確な回答を返してくれるようになります。ただし個人情報の扱いには注意が必要です。</p>
+</div>
+
+<div class="tip-card">
+  <div class="label">便利な使い方</div>
+  <p><strong>音声入力を活用しよう。</strong><br>キーボード入力が苦手でも、スマホの音声入力（マイクボタン）を使えばAIに話しかけるように指示を出せます。特にスマホで使う場合におすすめです。</p>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 大事なポイント ===== -->
+<h2>覚えておきたい3つのポイント</h2>
+
+<div class="three-points">
+  <div class="point">
+    <div class="point-icon">&#x1F4DD;</div>
+    <div class="point-body"><strong>AIは「優秀な下書き係」</strong><br>いろんな文章の下書きを素早く作ってくれます。ただし内容の正しさは自分で確認する必要があります。</div>
+  </div>
+  <div class="point">
+    <div class="point-icon">&#x26A0;&#xFE0F;</div>
+    <div class="point-body"><strong>AIの回答は必ず事実確認する</strong><br>自分が詳しい分野なら間違いに気づけます。詳しくない分野では気づけないので、別の方法でも確認しましょう。</div>
+  </div>
+  <div class="point">
+    <div class="point-icon">&#x1F512;</div>
+    <div class="point-body"><strong>個人情報・機密情報は入力しない</strong><br>名前+住所、パスワード、漏れたら困る情報は絶対に入力しません。迷ったら入れないのが安全です。</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== ミニクイズ ===== -->
+<h2>振り返りクイズ（タップで答えが出ます）</h2>
+
+<div class="quiz">
+  <div class="quiz-item" onclick="this.classList.toggle('open')">
+    <div class="q">Q1. AIに個人情報（名前+住所など）を入力してもいい？</div>
+    <div class="a">&#x274C; <strong>いけません。</strong>個人が特定される情報、パスワード、機密情報は入力しないようにしましょう。</div>
+  </div>
+  <div class="quiz-item" onclick="this.classList.toggle('open')">
+    <div class="q">Q2. AIの回答は100%正しい？</div>
+    <div class="a">&#x274C; <strong>正しくないこともあります。</strong>AIは時々「知ったかぶり」をします。特に自分が詳しくない分野では間違いに気づけないので、必ず事実確認をしましょう。</div>
+  </div>
+  <div class="quiz-item" onclick="this.classList.toggle('open')">
+    <div class="q">Q3. AIへの聞き方を変えると、結果は変わる？</div>
+    <div class="a">&#x2B55; <strong>大きく変わります。</strong>「誰向けか」「どんな長さか」「どんな雰囲気か」を伝えるだけで、回答の質がぐっと上がります。次回はこの「聞き方のコツ」をさらに深掘りします。</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 今週のチャレンジ ===== -->
+<h2>今週のチャレンジ</h2>
+<p>次回までにGeminiで3つ聞いてみましょう。以下のお題をコピーしてそのまま使えます。</p>
+
+<div class="challenge-card">
+  <h3>お題1: 今週の献立</h3>
+  <div class="prompt">
+    <span class="copy-btn" onclick="copyText(this)">コピー</span>
+    平日5日分の晩ごはんの献立を考えてください。30分以内で作れる簡単なメニューがいいです。和食多めでお願いします。
+  </div>
+</div>
+
+<div class="challenge-card">
+  <h3>お題2: 週末のお出かけ</h3>
+  <div class="prompt">
+    <span class="copy-btn" onclick="copyText(this)">コピー</span>
+    家族で楽しめる日帰りのお出かけスポットを3つ教えてください。予算は1人3000円以内で、車で1時間以内で行けるところがいいです。
+  </div>
+</div>
+
+<div class="challenge-card">
+  <h3>お題3: お礼のメッセージ</h3>
+  <div class="prompt">
+    <span class="copy-btn" onclick="copyText(this)">コピー</span>
+    友人にお祝いの品をもらったので、お礼のメッセージを考えてください。LINEで送る想定で、カジュアルだけど感謝が伝わるような文面をお願いします。
+  </div>
+</div>
+
+<p style="color:#64748b;font-size:14px;margin-top:16px">結果が良くても悪くても大丈夫です。次回の冒頭で「どんなことを聞いたか」を教えてください。<br>業務で使いたい方は、入力OK/NGのルールを守った上でどうぞ。</p>
+
+<hr class="divider">
+
+<!-- ===== 次回予告 ===== -->
+<h2>次回予告</h2>
+
+<div class="next-card">
+  <h3>第2回: 伝え方で結果が変わる</h3>
+  <p>今回「なんとなく良い聞き方」をした人も、次回で<strong>なぜ良い結果が出たのか</strong>が分かるようになります。<br>AIへの指示の出し方の「型」を学ぶと、回答の質が大きく変わります。</p>
+</div>
+
+<footer>
+  <p>AI研修 初級編 | 全8回</p>
+  <p>Geminiへのアクセス: <a href="https://gemini.google.com" target="_blank" style="color:#3b82f6">gemini.google.com</a></p>
+</footer>
+
+</div>
+
+<script>
+function copyText(btn){
+  const t=btn.parentElement.textContent.replace(/コピー(済み ✓)?/g,'').trim();
+  navigator.clipboard.writeText(t).then(()=>{
+    btn.textContent='コピー済み ✓';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('copied')},1500);
+  });
+}
+</script>
+</body>
+</html>
