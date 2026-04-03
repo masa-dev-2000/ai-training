@@ -36,14 +36,14 @@ body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',
 
 /* ===== Part Container ===== */
 .parts-wrapper{position:fixed;top:44px;bottom:3px;left:0;right:0;overflow:hidden}
-.part-page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;padding:60px 100px 80px;opacity:0;transform:translateX(50px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;scroll-behavior:smooth}
+.part-page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;padding:48px 48px 80px;opacity:0;transform:translateX(50px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;scroll-behavior:smooth}
 .part-page.active{opacity:1;transform:translateX(0);pointer-events:auto}
 .part-page.prev{transform:translateX(-50px)}
 .part-page .inner{max-width:960px;margin:0 auto}
 
 /* ===== Typography (プレゼン級) ===== */
 h1{font-size:56px;font-weight:700;margin-bottom:24px;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.25}
-h2{font-size:40px;font-weight:700;margin:56px 0 20px;color:#1e293b}
+h2{font-size:40px;font-weight:700;margin:72px 0 20px;color:#1e293b}
 h3{font-size:30px;font-weight:600;margin:40px 0 14px;color:#334155}
 p{font-size:26px;color:#475569;margin-bottom:16px}
 ul,ol{font-size:24px;padding-left:36px;color:#475569}
@@ -100,7 +100,7 @@ tr:hover td{background:#f8fafc}
 .flow-arrow{text-align:center;font-size:22px;color:#94a3b8;margin:4px 0 4px 20px}
 
 /* 3-level safety */
-.safety-level{border-radius:14px;padding:24px 28px;margin:28px 0}
+.safety-level{border-radius:14px;padding:24px 28px;margin:40px 0}
 .safety-level h4{font-size:28px;margin-bottom:10px}
 .safety-level ul{font-size:22px}
 .safety-green{background:#f0fdf4;border:3px solid #86efac}.safety-green h4{color:#16a34a}
@@ -108,7 +108,7 @@ tr:hover td{background:#f8fafc}
 .safety-red{background:#fef2f2;border:3px solid #fca5a5}.safety-red h4{color:#dc2626}
 
 /* Divider */
-.divider{border:none;border-top:2px solid #e2e8f0;margin:64px 0}
+.divider{border:none;border-top:2px solid #e2e8f0;margin:80px 0}
 
 /* ===== Nav Arrows ===== */
 .nav-arrow{position:fixed;top:50%;z-index:50;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:44px;display:flex;align-items:center;justify-content:center;transition:all .2s;transform:translateY(-50%);box-shadow:0 2px 6px rgba(0,0,0,.06)}
@@ -172,6 +172,20 @@ tr:hover td{background:#f8fafc}
     <p class="subtitle">はじめての対話 ― 90分</p>
   </div>
 
+  <h2>今日の流れ</h2>
+  <div class="flow-steps">
+    <div class="flow-item"><div class="flow-num">1</div>AIってそもそも何？（ミニ講義）</div>
+    <div class="flow-item"><div class="flow-num">2</div>AIに何を入力していいの？（ミニ講義）</div>
+    <div class="flow-item"><div class="flow-num">3</div>Geminiを開いて話しかけてみよう（ハンズオン）</div>
+    <div class="flow-item" style="background:#f8fafc;color:#94a3b8"><div class="flow-num" style="background:#f1f5f9;color:#94a3b8">☕</div>休憩</div>
+    <div class="flow-item"><div class="flow-num">4</div>「聞き方」で結果が変わる（ミニ講義）</div>
+    <div class="flow-item"><div class="flow-num">5</div>聞き方を変えてみよう（ハンズオン）</div>
+    <div class="flow-item"><div class="flow-num">6</div>AIの「知ったかぶり」を見破ろう（ハンズオン）</div>
+    <div class="flow-item"><div class="flow-num">7</div>振り返り＆次回予告</div>
+  </div>
+
+  <hr class="divider">
+
   <h2>全8回で目指すゴール</h2>
   <p>この研修を全て終えると、以下のことが<strong>自分の力で</strong>できるようになります。</p>
   <div class="card-grid">
@@ -191,11 +205,6 @@ tr:hover td{background:#f8fafc}
     <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">3</div>自分の知らない分野ではAIの間違いに気づけないと理解している</div>
     <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">4</div>入力していいもの・ダメなものの判断基準を持っている</div>
   </div>
-
-  <hr class="divider">
-
-  <h2>ライブデモ</h2>
-  <p>上のゴールを実際にお見せします。講師がAIを操作するのをご覧ください。</p>
 
   <hr class="divider">
 
