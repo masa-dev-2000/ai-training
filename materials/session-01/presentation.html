@@ -100,7 +100,7 @@ tr:hover td{background:#f8fafc}
 .flow-arrow{text-align:center;font-size:22px;color:#94a3b8;margin:4px 0 4px 20px}
 
 /* 3-level safety */
-.safety-level{border-radius:12px;padding:24px 28px;margin:40px 0;background:#fff;border:1px solid #e2e8f0;border-left:6px solid #e2e8f0}
+.safety-level{border-radius:12px;padding:28px 32px;margin:48px 0;background:#fff;border:1px solid #e2e8f0;border-left:6px solid #e2e8f0}
 .safety-level h4{font-size:26px;margin-bottom:10px}
 .safety-level ul{font-size:22px}
 .safety-green{border-left-color:#22c55e}.safety-green h4{color:#16a34a}
@@ -261,38 +261,32 @@ tr:hover td{background:#f8fafc}
     <p class="subtitle">3つのゾーンで判断する</p>
   </div>
 
-  <div class="safety-green">
-    <h4>&#x2705; 安全ゾーン ― そのまま入力OK</h4>
+  <div class="safety-level safety-green">
+    <h4>&#x2705; 安全 ― そのまま入力OK</h4>
     <ul>
-      <li>ネット上に公開されている情報（ニュース記事、公式サイトの内容）</li>
-      <li>個人が特定されない一般的な質問（「メールの書き方は？」「旅行先のおすすめは？」）</li>
-      <li>アイデア出し・壁打ち（「企画のアイデアを10個出して」）</li>
-      <li>文章の書き直し（機密を含まない文章の推敲）</li>
+      <li>公開されている情報の質問</li>
+      <li>アイデア出し・文章の書き直し</li>
     </ul>
   </div>
 
-  <div class="safety-yellow">
-    <h4>&#x26A0;&#xFE0F; 注意ゾーン ― 加工してから入力</h4>
+  <div class="safety-level safety-yellow">
+    <h4>&#x26A0;&#xFE0F; 注意 ― 名前や数字を伏せてから入力</h4>
     <ul>
-      <li>社内情報だが漏れても大問題にはならないもの → <strong>名前や数字を伏せて入力</strong></li>
-      <li>自分の業務内容 → <strong>具体的な社名・人名を抜いて入力</strong></li>
-      <li>組織に専用のAI環境がある場合はそちらを使う</li>
-    </ul>
-    <p style="font-size:22px;color:#92400e;margin:8px 0 0"><strong>コツ：</strong>「この文章がネットに漏れても困らないか？」を基準に判断</p>
-  </div>
-
-  <div class="safety-red">
-    <h4>&#x1F6D1; 禁止ゾーン ― 絶対に入力しない</h4>
-    <ul>
-      <li>個人情報（氏名＋住所、マイナンバー、電話番号）</li>
-      <li>パスワード・ログイン情報</li>
-      <li>漏れたら訴訟になるような機密情報</li>
-      <li>他人の個人的な情報（同僚の評価、相談内容）</li>
+      <li>社内情報 → 固有名詞を抜いて入力</li>
+      <li>判断基準：「ネットに漏れても困らないか？」</li>
     </ul>
   </div>
 
-  <div class="highlight-box" style="text-align:center;margin-top:24px">
-    <p style="margin:0;font-size:28px"><strong>迷ったら → 入力しない</strong><br><span style="font-size:22px;color:#64748b">判断に困ったら、講師や周りの人に聞いてください</span></p>
+  <div class="safety-level safety-red">
+    <h4>&#x1F6D1; 禁止 ― 絶対に入力しない</h4>
+    <ul>
+      <li>個人情報・パスワード</li>
+      <li>漏れたら訴訟になる機密情報</li>
+    </ul>
+  </div>
+
+  <div class="highlight-box" style="text-align:center;margin-top:48px">
+    <p style="margin:0;font-size:28px"><strong>迷ったら → 入力しない</strong></p>
   </div>
 </div>
 </div>
