@@ -1,0 +1,392 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ナレッジベース | AI研修 初級編</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;background:#f8f9fb;color:#1e293b;line-height:1.8}
+.container{max-width:800px;margin:0 auto;padding:32px 24px 80px}
+header{text-align:center;padding:40px 0 24px;border-bottom:1px solid #e2e8f0;margin-bottom:32px}
+header h1{font-size:28px;font-weight:700;margin-bottom:4px}
+header p{font-size:15px;color:#64748b}
+nav{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:32px}
+nav h2{font-size:18px;margin-bottom:12px;color:#334155}
+nav ol{padding-left:24px;font-size:15px}
+nav li{margin-bottom:6px}
+nav a{color:#2563eb;text-decoration:none}
+nav a:hover{text-decoration:underline}
+h2{font-size:24px;font-weight:700;margin:48px 0 16px;padding:12px 0;border-bottom:2px solid #e2e8f0;color:#1e293b}
+h3{font-size:18px;font-weight:600;margin:28px 0 8px;color:#2563eb}
+p{font-size:16px;color:#475569;margin-bottom:10px}
+strong{color:#1e293b}
+ul,ol{font-size:15px;padding-left:24px;color:#475569;margin-bottom:10px}
+li{margin-bottom:6px}
+blockquote{border-left:4px solid #e2e8f0;padding:8px 16px;margin:12px 0;color:#64748b;font-size:14px;background:#f8fafc;border-radius:0 8px 8px 0}
+table{width:100%;border-collapse:collapse;margin:12px 0;font-size:15px}
+th{background:#f1f5f9;padding:10px 14px;text-align:left;font-weight:600;color:#475569;border-bottom:2px solid #e2e8f0}
+td{padding:8px 14px;border-bottom:1px solid #f1f5f9;color:#475569}
+hr{border:none;border-top:1px solid #e2e8f0;margin:32px 0}
+.qa-card{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:20px 24px;margin:16px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.qa-card h3{margin:0 0 8px;color:#2563eb}
+.source{font-size:13px;color:#94a3b8;margin-bottom:8px}
+.search-box{position:sticky;top:0;z-index:10;background:#f8f9fb;padding:12px 0}
+.search-box input{width:100%;padding:12px 16px;border:1px solid #e2e8f0;border-radius:8px;font-size:16px;background:#fff;outline:none}
+.search-box input:focus{border-color:#3b82f6;box-shadow:0 0 0 3px rgba(59,130,246,.1)}
+.hidden{display:none}
+footer{text-align:center;padding:32px 0 16px;color:#94a3b8;font-size:13px;border-top:1px solid #e2e8f0;margin-top:40px}
+footer a{color:#3b82f6}
+@media(max-width:600px){.container{padding:20px 16px 60px} h2{font-size:20px} h3{font-size:16px}}
+</style>
+</head>
+<body>
+<div class="container">
+
+<header>
+  <h1>AI研修 ナレッジベース</h1>
+  <p>受講者の困りごと事例集 ― 講師用リファレンス</p>
+</header>
+
+<div class="search-box">
+  <input type="text" id="searchInput" placeholder="キーワードで検索（例：敬語、コピー、文字数）" oninput="filterCards()">
+</div>
+
+<nav>
+  <h2>カテゴリ</h2>
+  <ol>
+    <li><a href="#cat1">AIの仕組み・基本理解</a></li>
+    <li><a href="#cat2">情報漏洩・セキュリティ</a></li>
+    <li><a href="#cat3">知ったかぶり・正確性</a></li>
+    <li><a href="#cat4">指示の出し方</a></li>
+    <li><a href="#cat5">ツール操作・技術的問題</a></li>
+    <li><a href="#cat6">AI比較・ツール選び</a></li>
+    <li><a href="#cat7">業務活用・実践</a></li>
+    <li><a href="#cat8">よくある誤解・不安</a></li>
+    <li><a href="#cat9">日本のビジネス文化特有の課題</a></li>
+    <li><a href="#cat10">WordやPowerPointとの連携</a></li>
+  </ol>
+</nav>
+
+<!-- ===== 1. AIの仕組み ===== -->
+<h2 id="cat1">1. AIの仕組み・基本理解</h2>
+
+<div class="qa-card" data-search="考える 仕組み 予測 新人">
+  <h3>Q. AIは考えているんですか？</h3>
+  <div class="source">出典: テスター1講義</div>
+  <p>考えているわけではありません。膨大な文章を学習して「次に来そうな言葉」を予測しているだけです。だから自然な文章が出るが、正しいかどうかは別の話。<strong>「優秀だけど口が軽い新人」</strong>のようなものと考えてください。</p>
+</div>
+
+<div class="qa-card" data-search="検索 違い Google インターネット">
+  <h3>Q. 検索エンジンとAIって何が違うんですか？</h3>
+  <div class="source">出典: テスター2講義</div>
+  <p><strong>検索</strong>: 10個のリンクを出して「この中から自分で選んで」。正確な情報を探す作業。</p>
+  <p><strong>AI</strong>: 1つの答えにまとめて「こうですよ」と返す。ただし"それっぽく作った"答えなので、必ず正しいとは限らない。</p>
+  <p>検索は「見つける」、AIは「作る」。この違いがハルシネーション（知ったかぶり）の原因でもある。</p>
+</div>
+
+<div class="qa-card" data-search="賢くなる 学習 メモリ 記憶">
+  <h3>Q. AIは使えば使うほど賢くなるんですか？</h3>
+  <div class="source">出典: テスター1・2両方</div>
+  <p>2つの意味があります。</p>
+  <ul>
+    <li><strong>メモリ機能</strong>: 会話を重ねると文脈を覚えてくれる。ただしこれは「学習」ではなく「記憶」。</li>
+    <li><strong>モデルのアップデート</strong>: AI提供企業が定期的にモデルを更新し、全体的に賢くなる。これは個人の利用とは別。</li>
+  </ul>
+</div>
+
+<!-- ===== 2. 情報漏洩 ===== -->
+<h2 id="cat2">2. 情報漏洩・セキュリティ</h2>
+
+<div class="qa-card" data-search="漏れる 情報 個人情報 セキュリティ 安全">
+  <h3>Q. 入力した情報はどうなるんですか？漏れますか？</h3>
+  <div class="source">出典: テスター1・2両方（最も関心が高かったトピック）</div>
+  <p>無料版・個人版：会話履歴がAIの学習に使われる場合がある。すると他の人の回答に情報が混じる可能性がゼロではない。</p>
+  <p>企業版（Gemini for Workspace、ChatGPT Enterprise等）：学習に使われない設定がデフォルト。</p>
+  <p><strong>結論</strong>: パスワードや機密情報は絶対に入れない。名前・数字は伏せてから入力。</p>
+</div>
+
+<div class="qa-card" data-search="設定 学習 オフ データコントロール">
+  <h3>Q. 学習に使わない設定はどこにありますか？</h3>
+  <div class="source">出典: テスター1・2両方</div>
+  <ul>
+    <li><strong>ChatGPT</strong>: 設定 → データコントロール → 「すべての人のためにモデルを改善する」をオフ</li>
+    <li><strong>Gemini</strong>: 個人版では明確な設定なし。企業版なら管理者が制御。</li>
+    <li><strong>Claude</strong>: 設定で明確にオフ可能。</li>
+  </ul>
+  <p><strong>注意</strong>: 設定は頻繁に変わるので、使うツールごとに最新の情報を確認すべき。</p>
+</div>
+
+<div class="qa-card" data-search="企業版 価格 料金 高い プラン">
+  <h3>Q. 企業版って高いんですか？</h3>
+  <div class="source">出典: テスター2</div>
+  <table>
+    <tr><th>サービス</th><th>価格帯</th></tr>
+    <tr><td>Gemini for Workspace</td><td>月額約4,000円/ユーザー</td></tr>
+    <tr><td>ChatGPT Team</td><td>月額$25-30/ユーザー</td></tr>
+    <tr><td>Claude Pro</td><td>月額$20/ユーザー</td></tr>
+    <tr><td>Claude Max</td><td>月額$100/ユーザー</td></tr>
+  </table>
+  <p>個人利用ならPro/Plus（月額$20程度）で十分な場合も多い。</p>
+</div>
+
+<!-- ===== 3. ハルシネーション ===== -->
+<h2 id="cat3">3. 知ったかぶり・正確性</h2>
+
+<div class="qa-card" data-search="嘘 間違い ハルシネーション 知ったかぶり">
+  <h3>Q. AIが嘘をつくことがあるんですか？</h3>
+  <div class="source">出典: テスター2</div>
+  <p>はい。AIは「それっぽい答え」を生成するので、内容が正しいかどうかは保証しません。特に注意：</p>
+  <ul>
+    <li>数字（統計、市場規模）</li>
+    <li>固有名詞（人名、会社名）</li>
+    <li>法律・医療の解釈</li>
+    <li>URLやリンク先（存在しないURLを出すことがある）</li>
+  </ul>
+</div>
+
+<div class="qa-card" data-search="本当 確認 正しい 自己肯定">
+  <h3>Q. 「本当？」って聞いたら正しいか教えてくれないの？</h3>
+  <div class="source">出典: テスター2</div>
+  <p>残念ながら「はい、正しいです」と自己肯定してしまうことが多いです。</p>
+  <p><strong>解決策</strong>:</p>
+  <ol>
+    <li>「この情報の出典元のURLを教えて」と指示する</li>
+    <li>Perplexity（出典を明示するAI）で同じ質問をする</li>
+    <li>Google検索で裏取りする</li>
+  </ol>
+</div>
+
+<div class="qa-card" data-search="リンク URL 存在しない 架空">
+  <h3>Q. リンクを出させても存在しないリンクが出てきます</h3>
+  <div class="source">出典: テスター2</div>
+  <p>よくある知ったかぶりです。AIが「このURLがあるはず」と推測して架空のURLを生成します。</p>
+  <p><strong>対策</strong>: 出典URLは必ずクリックして確認する。Perplexityは実在するソースのみを参照するので比較的安全。</p>
+</div>
+
+<div class="qa-card" data-search="AI 違い 嘘つき ChatGPT Gemini Claude">
+  <h3>Q. AIによって嘘つきやすさが違うんですか？</h3>
+  <div class="source">出典: テスター2</div>
+  <ul>
+    <li><strong>ChatGPT</strong>: ユーザーの期待に合わせる傾向（忖度しやすい）</li>
+    <li><strong>Gemini</strong>: Google検索と連携しやすく、事実ベースの回答が比較的得意</li>
+    <li><strong>Claude</strong>: 「分からないことは分からないと言う」方針で、嘘をつきにくい</li>
+  </ul>
+</div>
+
+<!-- ===== 4. 指示の出し方 ===== -->
+<h2 id="cat4">4. 指示の出し方</h2>
+
+<div class="qa-card" data-search="文字数 無視 守らない 短い 長い">
+  <h3>Q. 文字数を指定しても守ってくれないんですが</h3>
+  <div class="source">出典: テスター2</div>
+  <p><strong>解決策</strong>:</p>
+  <ol>
+    <li><strong>多めに指定する</strong>: 1200文字欲しいなら1800文字で指定</li>
+    <li><strong>行数で指定</strong>: 「10パラグラフで」「箇条書き15項目で」の方が正確</li>
+    <li><strong>字数チェックして再指示</strong>: 「今の回答は○○文字でした。1200文字に増やして」</li>
+  </ol>
+</div>
+
+<div class="qa-card" data-search="背景 毎回 めんどくさい メモリ カスタム">
+  <h3>Q. 背景を毎回説明するのがめんどくさいです</h3>
+  <div class="source">出典: テスター2</div>
+  <ol>
+    <li><strong>メモリ機能を活用</strong>: 使い続けると自分向けにカスタマイズされる</li>
+    <li><strong>カスタム指示を設定</strong>: ChatGPTの「カスタム指示」に自分の情報を登録</li>
+    <li><strong>有料版の恩恵</strong>: メモリ容量が大きく、より正確に覚えてくれる</li>
+  </ol>
+</div>
+
+<div class="qa-card" data-search="堅い 固い 文章 カジュアル トーン">
+  <h3>Q. いつも堅い文章が返ってくるんですが</h3>
+  <div class="source">出典: テスター2</div>
+  <ol>
+    <li><strong>トーンを指定</strong>: 「カジュアルに」「友達に話すように」</li>
+    <li><strong>メモリに登録</strong>: 「柔らかい口調でお願いします」を1回伝えると以降反映</li>
+    <li><strong>例文を見せる</strong>: 好きな文体のサンプルを貼る</li>
+  </ol>
+</div>
+
+<!-- ===== 5. ツール操作 ===== -->
+<h2 id="cat5">5. ツール操作・技術的問題</h2>
+
+<div class="qa-card" data-search="メモリ不足 開けない エラー 重い">
+  <h3>Q. PCのメモリが不足してGeminiが開けません</h3>
+  <div class="source">出典: テスター1</div>
+  <ol>
+    <li>不要なブラウザタブを全て閉じる</li>
+    <li>使っていないアプリを終了する</li>
+    <li>ブラウザを再起動する</li>
+    <li>それでもダメならスマホから参加</li>
+  </ol>
+</div>
+
+<div class="qa-card" data-search="コピー 貼り付け ペースト 方法">
+  <h3>Q. コピーボタンを押した後どうすればいいですか？</h3>
+  <div class="source">出典: テスター2</div>
+  <ol>
+    <li>コピーボタンを押す</li>
+    <li>Geminiの入力欄をクリック</li>
+    <li><strong>PC</strong>: Ctrl+V で貼り付け</li>
+    <li><strong>Mac</strong>: Command+V で貼り付け</li>
+    <li><strong>スマホ</strong>: 入力欄を長押し →「ペースト」</li>
+    <li>送信ボタンを押す</li>
+  </ol>
+</div>
+
+<div class="qa-card" data-search="スマホ タブレット iPad 画面 小さい">
+  <h3>Q. スマホで受講する場合のおすすめは？</h3>
+  <div class="source">出典: テスター1</div>
+  <p>可能ならPCがおすすめ。スマホの場合は横向きにすると見やすい。音声入力を使えばキーボード入力の手間が省ける。</p>
+</div>
+
+<!-- ===== 6. AI比較 ===== -->
+<h2 id="cat6">6. AI比較・ツール選び</h2>
+
+<div class="qa-card" data-search="どれ おすすめ 比較 選び方">
+  <h3>Q. 結局どのAIを使えばいいんですか？</h3>
+  <div class="source">出典: テスター2</div>
+  <table>
+    <tr><th>用途</th><th>おすすめ</th><th>理由</th></tr>
+    <tr><td>壁打ち・文章作成</td><td>ChatGPT or Claude</td><td>総合力が高い</td></tr>
+    <tr><td>Google連携</td><td>Gemini</td><td>Googleツールと統合</td></tr>
+    <tr><td>正確な調べもの</td><td>Perplexity</td><td>出典を明示</td></tr>
+    <tr><td>嘘をつかれたくない</td><td>Claude</td><td>正直に答える</td></tr>
+    <tr><td>大量の資料を読ませる</td><td>NotebookLM / Claude</td><td>大量ドキュメント対応</td></tr>
+  </table>
+</div>
+
+<div class="qa-card" data-search="Claude クロード 良い 特徴">
+  <h3>Q. Claudeってどこがいいんですか？</h3>
+  <div class="source">出典: テスター2</div>
+  <ul>
+    <li><strong>嘘をつきにくい</strong>: 倫理的な回答を重視する設計</li>
+    <li><strong>長い文章の処理が得意</strong>: 大量のドキュメントを一度に読める</li>
+    <li><strong>確認を取ってくれる</strong>: 曖昧な指示を受けたら聞いてくれる</li>
+    <li><strong>データの扱いが慎重</strong>: 学習への利用をオフにする設定がある</li>
+  </ul>
+</div>
+
+<!-- ===== 7. 業務活用 ===== -->
+<h2 id="cat7">7. 業務活用・実践</h2>
+
+<div class="qa-card" data-search="議事録 文字起こし ボイスメモ 会議">
+  <h3>Q. 議事録の自動作成はどうすればいいですか？</h3>
+  <div class="source">出典: テスター1</div>
+  <ol>
+    <li><strong>簡単な方法</strong>: iPhoneのボイスメモで録音 → 文字起こし → AIに「議事録にまとめて」</li>
+    <li><strong>専用ツール</strong>: Notta、otter.ai等の文字起こしサービス</li>
+    <li><strong>話者識別が必要な場合</strong>: 各人にマイクをつけるか、発言時に名前を言ってもらう</li>
+  </ol>
+</div>
+
+<div class="qa-card" data-search="アンケート フォーム Googleフォーム">
+  <h3>Q. アンケートフォームを作りたいんですが</h3>
+  <div class="source">出典: テスター1</div>
+  <ol>
+    <li>AIに「〇〇のアンケートの質問項目を考えて」と聞く</li>
+    <li>出てきた項目をGoogleフォームに手動で作成</li>
+    <li><strong>上級</strong>: GASを使うとAIが考えた項目から自動でフォームを生成できる</li>
+  </ol>
+</div>
+
+<div class="qa-card" data-search="専門 設計 業界 技術">
+  <h3>Q. 専門分野の仕事でAIを使えますか？</h3>
+  <div class="source">出典: テスター2（交差点設計の業務）</div>
+  <p>公開されている規格・基準の確認にはある程度使える。ただし非公開の社内データは入力してあげる必要がある。</p>
+  <p><strong>注意</strong>: 設計値の正確性はAIに任せず必ず元資料で確認する。Perplexityで出典付きで調べるのが便利。</p>
+</div>
+
+<!-- ===== 8. よくある誤解 ===== -->
+<h2 id="cat8">8. よくある誤解・不安</h2>
+
+<div class="qa-card" data-search="仕事 奪われる 代替 失業">
+  <h3>Q. AIに仕事を奪われませんか？</h3>
+  <div class="source">出典: 企業AI研修FAQ（調査）</div>
+  <p>AIは単純作業を自動化しますが、判断・創造・人間関係の仕事は残ります。「AIに仕事を奪われる」のではなく<strong>「AIを使える人に仕事が移る」</strong>と考えてください。</p>
+</div>
+
+<div class="qa-card" data-search="プログラミング 技術 知識 必要">
+  <h3>Q. プログラミングの知識が必要ですか？</h3>
+  <div class="source">出典: 企業AI研修FAQ（調査）</div>
+  <p>まったく不要です。メールを書ける人なら、AIに指示を出せます。</p>
+</div>
+
+<div class="qa-card" data-search="1回 完璧 一発 何回">
+  <h3>Q. 1回の指示で完璧な答えが出るべきでは？</h3>
+  <div class="source">出典: 初心者に最も多い誤解（調査）</div>
+  <p>1回で完璧は出ません。それが普通です。やりとりを2〜3回重ねて磨いていくのが正しい使い方です。</p>
+</div>
+
+<div class="qa-card" data-search="無料 有料 どっち 違い">
+  <h3>Q. 無料版と有料版、どっちがいいですか？</h3>
+  <div class="source">出典: テスター2・企業研修FAQ（調査）</div>
+  <p>始めるなら無料版で十分。使い慣れてきたら有料版を検討。企業で機密情報を扱うなら企業版が必要。</p>
+</div>
+
+<div class="qa-card" data-search="毎回違う バグ 同じ質問">
+  <h3>Q. AIの出力が毎回違うんですが、バグですか？</h3>
+  <div class="source">出典: 初心者あるある（調査）</div>
+  <p>バグではありません。AIは確率的に言葉を選ぶため、毎回少し異なる答えが出ます。「別パターンを試せる」とポジティブに捉えてください。</p>
+</div>
+
+<!-- ===== 9. 日本特有 ===== -->
+<h2 id="cat9">9. 日本のビジネス文化特有の課題</h2>
+
+<div class="qa-card" data-search="敬語 尊敬語 謙譲語 メール 日本語">
+  <h3>Q. AIが出す敬語がおかしいんですが</h3>
+  <div class="source">出典: 日本企業AI研修調査</div>
+  <p>AIは敬語の使い分けが苦手です。特に社外向けメールでは不自然な敬語が出やすい。</p>
+  <p><strong>対策</strong>: 「取引先の部長に送る丁寧な敬語で」と具体的に指定。AIの出力を確認し、敬語の部分だけ手直し。</p>
+</div>
+
+<div class="qa-card" data-search="許可 会社 稟議 使っていい">
+  <h3>Q. 会社でAIを使っていいか分からない</h3>
+  <div class="source">出典: 日本企業特有（稟議文化）</div>
+  <p>まずは個人情報・機密情報を入れない範囲で使ってみてください（安全ゾーン）。組織としてのAI利用方針は上司や情報管理部門に確認するのがベストです。</p>
+</div>
+
+<div class="qa-card" data-search="必要ない いらない 使わない">
+  <h3>Q. そもそもAIの必要性を感じないんですが</h3>
+  <div class="source">出典: 日本の非利用者の68%が回答（GMO Research 2025調査）</div>
+  <p>最初は多くの方がそう感じます。「30分かかっていた議事録が3分で終わる」という体験をすると見方が変わることが多いです。</p>
+</div>
+
+<!-- ===== 10. Word/PPT連携 ===== -->
+<h2 id="cat10">10. WordやPowerPointとの連携</h2>
+
+<div class="qa-card" data-search="Word 書式 崩れる 貼り付け フォーマット">
+  <h3>Q. AIの回答をWordに貼ると書式が崩れます</h3>
+  <div class="source">出典: 企業研修で頻出（調査）</div>
+  <ol>
+    <li><strong>Ctrl+Shift+V</strong>（書式なし貼り付け）を使う</li>
+    <li>メモ帳に一度貼ってからコピーし直す</li>
+    <li>Wordの「テキストのみ保持」で貼り付ける</li>
+  </ol>
+</div>
+
+<div class="qa-card" data-search="そのまま使う 著作権 確認">
+  <h3>Q. AIで作った文章をそのまま社内資料に使っていいですか？</h3>
+  <div class="source">出典: 企業研修FAQ（調査）</div>
+  <p>必ず自分で確認・修正してから使ってください。事実が間違っている可能性、文体が均一化されやすい点、著作権の問題があります。</p>
+</div>
+
+<footer>
+  <p>AI研修 初級編 ナレッジベース</p>
+  <p>最終更新: 2026-04-03 | <a href="index.html">トップに戻る</a></p>
+</footer>
+
+</div>
+
+<script>
+function filterCards(){
+  const q=document.getElementById('searchInput').value.toLowerCase();
+  document.querySelectorAll('.qa-card').forEach(card=>{
+    const text=(card.textContent+' '+(card.dataset.search||'')).toLowerCase();
+    card.classList.toggle('hidden',q.length>0&&!text.includes(q));
+  });
+}
+</script>
+</body>
+</html>
