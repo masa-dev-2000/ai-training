@@ -10,14 +10,11 @@ html,body{height:100%;overflow:hidden}
 body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;background:#f8f9fb;color:#1e293b;line-height:1.7}
 .top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:6px 20px;background:rgba(255,255,255,.95);border-bottom:1px solid #e2e8f0;font-size:13px;backdrop-filter:blur(8px);height:44px}
 .timer-section{display:flex;align-items:center;gap:16px}
-.timer-label{color:#64748b;font-size:11px}
-.timer-value{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:#1e293b}
-.timer-value.warning{color:#d97706}
-.timer-value.overtime{color:#dc2626;animation:pulse 1s infinite}
+.timer-label{color:#64748b;font-size:11px}.timer-value{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:#1e293b}
+.timer-value.warning{color:#d97706}.timer-value.overtime{color:#dc2626;animation:pulse 1s infinite}
 @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
 .timer-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#1e293b;cursor:pointer;font-size:12px;transition:background .2s}
-.timer-btn:hover{background:#f1f5f9}
-.timer-btn.active{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.timer-btn:hover{background:#f1f5f9}.timer-btn.active{background:#dcfce7;border-color:#22c55e;color:#16a34a}
 .fs-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#64748b;cursor:pointer;font-size:12px;transition:background .2s}
 .fs-btn:hover{background:#f1f5f9}
 .part-indicator{display:flex;align-items:center;gap:6px;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:500}
@@ -38,28 +35,22 @@ h1{font-size:56px;font-weight:700;margin-bottom:20px;background:linear-gradient(
 h2{font-size:40px;font-weight:700;margin:72px 0 20px;color:#1e293b}
 h3{font-size:30px;font-weight:600;margin:40px 0 14px;color:#334155}
 p{font-size:26px;color:#475569;margin-bottom:16px}
-ul,ol{font-size:24px;padding-left:36px;color:#475569}
-li{margin-bottom:10px}
-li strong{color:#1e293b}
+ul,ol{font-size:24px;padding-left:36px;color:#475569}li{margin-bottom:10px}li strong{color:#1e293b}
 .section-header{text-align:center;padding:80px 0 60px}
 .section-header .tag{font-size:20px;color:#64748b;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px}
 .section-header .subtitle{font-size:26px;color:#64748b;margin-bottom:0}
 table{width:100%;border-collapse:collapse;margin:20px 0;font-size:22px}
 th{background:#f1f5f9;padding:14px 20px;text-align:left;font-weight:600;color:#475569;border-bottom:3px solid #e2e8f0}
-td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}
-tr:hover td{background:#f8fafc}
-.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:20px 0}
+td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{background:#f8fafc}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin:20px 0}
 .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.card h4{font-size:24px;margin-bottom:8px;color:#1e293b}
-.card p{font-size:20px;color:#64748b;margin-bottom:0}
-.prompt-block{position:relative;background:#fff;border:1px solid #e2e8f0;border-left:6px solid #22c55e;border-radius:12px;padding:20px 20px 16px;margin:18px 0;font-size:22px;color:#1e293b;line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:10px;white-space:pre-wrap}
+.card h4{font-size:24px;margin-bottom:8px;color:#1e293b}.card p{font-size:20px;color:#64748b;margin-bottom:0}
+.prompt-block{background:#fff;border:1px solid #e2e8f0;border-left:6px solid #22c55e;border-radius:12px;padding:20px 20px 16px;margin:18px 0;font-size:22px;color:#1e293b;line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:10px;white-space:pre-wrap}
 .prompt-block .copy-btn{align-self:flex-end;padding:6px 14px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:13px;flex-shrink:0}
 .prompt-block .copy-btn:hover{background:#dcfce7;border-color:#22c55e;color:#16a34a}
 .prompt-block .copy-btn.copied{background:#dcfce7;border-color:#22c55e;color:#16a34a}
 .highlight-box{background:#f8fafc;border-radius:14px;padding:24px 28px;margin:20px 0;border:1px solid #e2e8f0;font-size:24px}
-.highlight-box.warning{border-color:#fbbf24;background:#fffbeb}
-.highlight-box.success{border-color:#86efac;background:#f0fdf4}
-.highlight-box.info{border-color:#93c5fd;background:#eff6ff}
+.highlight-box.warning{border-color:#fbbf24;background:#fffbeb}.highlight-box.success{border-color:#86efac;background:#f0fdf4}.highlight-box.info{border-color:#93c5fd;background:#eff6ff}
 .highlight-box p{font-size:24px}
 .compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
 .compare-col{background:#fff;border-radius:14px;padding:24px}
@@ -76,32 +67,29 @@ tr:hover td{background:#f8fafc}
 .quiz-answer.revealed .answer-mark{display:block}
 .divider{border:none;border-top:2px solid #e2e8f0;margin:80px 0}
 .nav-arrow{position:fixed;top:50%;z-index:50;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:28px;display:flex;align-items:center;justify-content:center;transition:all .2s;transform:translateY(-50%);box-shadow:0 2px 6px rgba(0,0,0,.06)}
-.nav-arrow:hover{background:#f1f5f9;color:#1e293b}
-.nav-arrow.left{left:20px}.nav-arrow.right{right:20px}
-.nav-arrow:disabled{opacity:.2;cursor:default}
+.nav-arrow:hover{background:#f1f5f9;color:#1e293b}.nav-arrow.left{left:20px}.nav-arrow.right{right:20px}.nav-arrow:disabled{opacity:.2;cursor:default}
 .instructor-notes{position:fixed;bottom:6px;left:20px;right:20px;z-index:90;background:rgba(255,255,255,.97);border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;font-size:16px;color:#475569;line-height:1.5;backdrop-filter:blur(8px);transform:translateY(calc(100% + 12px));transition:transform .3s ease;max-height:140px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.08)}
-.instructor-notes.visible{transform:translateY(0)}
-.instructor-notes strong{color:#d97706}
+.instructor-notes.visible{transform:translateY(0)}.instructor-notes strong{color:#d97706}
 .notes-toggle{position:fixed;bottom:12px;right:20px;z-index:91;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.06)}
-.notes-toggle:hover{background:#f1f5f9;color:#1e293b}
-.notes-toggle.active{background:#fffbeb;border-color:#f59e0b;color:#d97706}
+.notes-toggle:hover{background:#f1f5f9;color:#1e293b}.notes-toggle.active{background:#fffbeb;border-color:#f59e0b;color:#d97706}
 .keyboard-hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:80;color:#94a3b8;font-size:14px}
-.tech-card{background:#fff;border:2px solid #e2e8f0;border-radius:16px;padding:28px;margin:24px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.tech-card h3{margin:0 0 12px;color:#2563eb}
-.tech-card .compare{margin:12px 0 0}
-@media(max-width:768px){
-  .part-page{padding:32px 28px 60px}
-  h1{font-size:36px} h2{font-size:28px} h3{font-size:24px}
-  p,.highlight-box p,.selfcheck-item,.quiz-answer,.prompt-block,td,th,ul,ol,.card h4,.card p,.compare-col p,.tech-card{font-size:18px}
-  .compare{grid-template-columns:1fr}
-}
+.tech-card{background:#fff;border:2px solid #e2e8f0;border-radius:16px;padding:28px;margin:32px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.tech-card h3{margin:0 0 12px;color:#2563eb;font-size:28px}
+.tech-card p{font-size:22px}
+/* Industry switcher */
+.industry-switcher{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap}
+.industry-btn{padding:10px 20px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;color:#64748b;cursor:pointer;font-size:16px;font-weight:600;transition:all .2s}
+.industry-btn:hover{border-color:#3b82f6;color:#2563eb}
+.industry-btn.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.industry-content{display:none}.industry-content.active{display:block}
+@media(max-width:768px){.part-page{padding:32px 28px 60px}h1{font-size:36px}h2{font-size:28px}h3{font-size:24px}p,.highlight-box p,.selfcheck-item,.quiz-answer,.prompt-block,td,th,ul,ol,.card h4,.card p,.compare-col p,.tech-card p{font-size:18px}.compare{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
 
 <div class="top-bar">
   <div class="timer-section">
-    <a href="../../index.html" style="color:#64748b;text-decoration:none;font-size:14px;margin-right:8px" title="ホームに戻る">&#x1F3E0;</a>
+    <a href="../../index.html" style="color:#64748b;text-decoration:none;font-size:14px;margin-right:8px">&#x1F3E0;</a>
     <button class="timer-btn" id="timerToggle" onclick="toggleTimer()">Start</button>
     <div><div class="timer-label">経過時間</div><div class="timer-value" id="totalTime">00:00</div></div>
     <div><div class="timer-label">パート残り</div><div class="timer-value" id="partTime">--:--</div></div>
@@ -109,7 +97,7 @@ tr:hover td{background:#f8fafc}
   <div id="partIndicator" class="part-indicator part-lecture"><span class="dot"></span><span id="partName">オープニング</span></div>
   <div style="display:flex;align-items:center;gap:12px">
     <button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">&#x26F6; 全画面</button>
-    <div class="slide-counter"><span id="pageNum">1</span> / <span id="pageTotal">7</span></div>
+    <div class="slide-counter"><span id="pageNum">1</span> / <span id="pageTotal">9</span></div>
   </div>
 </div>
 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
@@ -121,7 +109,7 @@ tr:hover td{background:#f8fafc}
 <div class="parts-wrapper">
 
 <!-- ========== PAGE 1: オープニング (5min) ========== -->
-<div class="part-page" data-part="0" data-notes="前回チャレンジの共有から。「何を聞いた？結果は？」を2-3人に聞く。今日のゴール3つを提示。<strong>ポイント:</strong> 今日は第1回の「なんとなく」を「再現できる技術」にする回。">
+<div class="part-page" data-part="0" data-notes="前回チャレンジの共有。2-3人に聞く。今日は「なんとなく」→「再現できる技術」にする回だと伝える。">
 <div class="inner">
   <div class="section-header">
     <div class="tag">AI研修 初級編 第2回</div>
@@ -130,16 +118,15 @@ tr:hover td{background:#f8fafc}
   </div>
 
   <h2>前回のチャレンジ、やってみましたか？</h2>
-  <p>朝礼原稿・業務報告メール・会議アジェンダ ― どうでしたか？</p>
-  <p><strong>チャットで教えてください。</strong></p>
+  <p><strong>チャットで教えてください。</strong>どんなことを聞きましたか？結果はどうでしたか？</p>
 
   <hr class="divider">
 
   <h2>今日のゴール</h2>
   <div class="selfcheck">
     <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">1</div>5つの応用テクニックを知り、場面に応じて使い分けられる</div>
-    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">2</div>やりとり戦略（大枠→修正→仕上げ）で品質を上げるサイクルが回せる</div>
-    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">3</div>うまくいかない時の立て直し方を知っている</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">2</div>やりとり戦略（大枠→修正→仕上げ）で品質を上げられる</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">3</div>AIの種類やプランの違いを理解している</div>
   </div>
 
   <div class="highlight-box info" style="margin-top:32px">
@@ -149,110 +136,144 @@ tr:hover td{background:#f8fafc}
 </div>
 
 <!-- ========== PAGE 2: 復習＋3要素の再定義 (10min) ========== -->
-<div class="part-page" data-part="1" data-notes="前回の3つのコツを軽く復習（1分）。次に「研究で分かったこと」として3要素を再定義する。<strong>ポイント:</strong> 「あなたは○○の専門家です」は最新のAIではあまり効果がないことが研究で分かっている。代わりに状況説明を充実させた方が良い結果が出る。">
+<div class="part-page" data-part="1" data-notes="前回の復習を30秒で。3要素を再定義。「あなたは○○です」は最新AIでは効果が薄い（研究結果）。代わりに状況説明を充実させる方が効果的。">
 <div class="inner">
   <div class="section-header">
     <div class="tag">復習＋再定義 ― 10分</div>
     <h1>指示文の3つの要素</h1>
-    <p class="subtitle">前回の復習＋より効果的なやり方</p>
+    <p class="subtitle">研究で分かった、より効果的なやり方</p>
   </div>
 
   <h2>前回の復習（30秒）</h2>
   <p>具体的に伝える / 背景を伝える / やりとりを重ねる ― これが基本でした。</p>
 
-  <h2>より効果的な3要素</h2>
-  <p>研究で「あなたは○○の専門家です」だけでは最新AIの精度が上がらないと分かっています。<br>代わりに<strong>状況を詳しく伝える</strong>方が効果的です。</p>
+  <h2>研究で分かったこと</h2>
+  <div class="highlight-box warning">
+    <p style="margin:0"><strong>「あなたは○○の専門家です」だけでは、最新のAIでは精度が上がらない</strong>ことが複数の研究で確認されています。代わりに<strong>状況を詳しく伝える</strong>方が効果的です。</p>
+  </div>
 
+  <h2>より効果的な3要素</h2>
   <div class="card-grid" style="grid-template-columns:repeat(3,1fr)">
-    <div class="card" style="border-top:4px solid #3b82f6">
-      <h4>1. 状況を伝える</h4>
-      <p>誰に？何のために？どんな立場で？</p>
-    </div>
-    <div class="card" style="border-top:4px solid #22c55e">
-      <h4>2. 具体的に指示する</h4>
-      <p>何をしてほしい？条件は？やらなくていいことは？</p>
-    </div>
-    <div class="card" style="border-top:4px solid #8b5cf6">
-      <h4>3. 形を指定する</h4>
-      <p>箇条書き？表？何文字？どんなトーン？</p>
-    </div>
+    <div class="card" style="border-top:4px solid #3b82f6"><h4>1. 状況を伝える</h4><p>誰に？何のために？どんな立場で？</p></div>
+    <div class="card" style="border-top:4px solid #22c55e"><h4>2. 具体的に指示する</h4><p>何をしてほしい？条件は？やらなくていいことは？</p></div>
+    <div class="card" style="border-top:4px solid #8b5cf6"><h4>3. 形を指定する</h4><p>箇条書き？表？何文字？どんなトーン？</p></div>
   </div>
 
   <div class="compare" style="margin-top:32px">
-    <div class="compare-col bad">
-      <h4>効果が薄い</h4>
-      <p>「あなたはメールの専門家です。お礼メールを書いてください」</p>
-    </div>
-    <div class="compare-col good">
-      <h4>効果が高い</h4>
-      <p>「先日の商談でお会いした取引先の部長に、次回の訪問予定も含めたお礼メールを書いてください。丁寧な敬語で、200文字以内で」</p>
-    </div>
+    <div class="compare-col bad"><h4>効果が薄い</h4><p>「あなたはメールの専門家です。お礼メールを書いてください」</p></div>
+    <div class="compare-col good"><h4>効果が高い</h4><p>「先日の商談でお会いした取引先の部長に、次回の訪問予定も含めたお礼メールを書いてください。丁寧な敬語で、200文字以内で」</p></div>
   </div>
 </div>
 </div>
 
-<!-- ========== PAGE 3: 5つの応用テクニック (20min) ========== -->
-<div class="part-page" data-part="2" data-notes="5つのテクニックを1つずつ紹介→即実践。各テクニック3-4分。全部はやらなくてもOK。<strong>テクニック3（インタビュー）は第1回テスターで最も好評だったのでしっかりやる。</strong>">
+<!-- ========== PAGE 3: テクニック1〜3 (20min) ========== -->
+<div class="part-page" data-part="2" data-notes="各テクニックを紹介→すぐ実践の繰り返し。業種切替ボタンで参加者の業種に合ったお題を見せる。<strong>テクニック3（AIに質問させる）はテスター講義で最も好評だったのでしっかりやる。</strong>">
 <div class="inner">
   <div class="section-header">
     <div class="tag">テクニック紹介＋実践 ― 20分</div>
-    <h1>5つの応用テクニック</h1>
-    <p class="subtitle">場面に応じて使い分ける</p>
+    <h1>5つの応用テクニック（前半）</h1>
+  </div>
+
+  <p>あなたの業種に近いものを選んでください。お題が切り替わります。</p>
+  <div class="industry-switcher">
+    <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
+    <button class="industry-btn" onclick="switchIndustry('B',this)">B. 技術・専門職系</button>
+    <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
   </div>
 
   <div class="tech-card">
     <h3>テクニック1：手順を分けて指示する</h3>
-    <p>複雑なことを1回で頼まず、「まず○○→次に○○→最後に○○」と分ける</p>
+    <p>複雑なことを1回で頼まず、「まず○○→次に○○→最後に○○」と分ける。</p>
     <div class="compare">
-      <div class="compare-col bad"><h4>1回で全部</h4><p>「会議の内容をまとめて、問題点を分析して、改善案を出して」</p></div>
-      <div class="compare-col good"><h4>手順を分ける</h4><p>「以下の手順で進めてください。<br>1. 会議メモを箇条書きで整理<br>2. 問題点を3つ挙げる<br>3. 各問題の改善案を1つずつ提案」</p></div>
+      <div class="compare-col bad"><h4>1回で全部</h4><p>「まとめて、分析して、改善案も出して」</p></div>
+      <div class="compare-col good"><h4>手順を分ける</h4><p>「以下の手順で進めてください。<br>1. まず内容を箇条書きで整理<br>2. 問題点を3つ挙げる<br>3. 各問題の改善案を提案」</p></div>
+    </div>
+    <h4 style="margin-top:20px">やってみよう</h4>
+    <div class="industry-content active" data-group="A">
+      <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の手順で、地域福祉事業の改善案を作ってください。
+1. まず現在の「地域サロン事業」の一般的な課題を3つ挙げてください
+2. 次に、各課題の原因を分析してください
+3. 最後に、具体的な改善策を各課題に1つずつ提案してください</div>
+    </div>
+    <div class="industry-content" data-group="B">
+      <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の手順で、工事現場の安全管理改善案を作ってください。
+1. まず建設現場でよくある安全上の問題を3つ挙げてください
+2. 次に、各問題が発生する原因を分析してください
+3. 最後に、具体的な防止策を各問題に1つずつ提案してください</div>
+    </div>
+    <div class="industry-content" data-group="C">
+      <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の手順で、店舗の顧客満足度改善案を作ってください。
+1. まず飲食店でよくある顧客不満を3つ挙げてください
+2. 次に、各不満の根本原因を分析してください
+3. 最後に、具体的な改善アクションを各不満に1つずつ提案してください</div>
     </div>
   </div>
 
   <div class="tech-card">
     <h3>テクニック2：見本を渡す</h3>
-    <p>「この形で書いて」と見本を1つ添えると、AIが形式を真似してくれる</p>
-    <div class="prompt-block" style="border-left-color:#2563eb"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の形式で、今月の業務報告を書いてください。
+    <p>「この形で書いて」と見本を1つ添えると、AIが形式を真似してくれる。</p>
+    <div class="industry-content active" data-group="A">
+      <div class="prompt-block" style="border-left-color:#2563eb"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の形式で、今月の事業進捗報告を書いてください。
 
 【見本】
-■ 主な成果
-・○○を実施し、△△の結果を得た
-■ 課題
-・○○について改善が必要
+■ 事業名：○○
+■ 今月の実績
+　・参加者数：○○名（目標比○○%）
+　・実施回数：○回
+■ 成果と課題
+　・成果：○○
+　・課題：○○
 ■ 来月の予定
-・○○を予定</div>
+　・○○を予定</div>
+    </div>
+    <div class="industry-content" data-group="B">
+      <div class="prompt-block" style="border-left-color:#2563eb"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の形式で、今月の工事進捗報告を書いてください。
+
+【見本】
+■ 工事名：○○
+■ 今月の進捗
+　・完了した工程：○○
+　・進捗率：○○%
+■ 品質・安全
+　・検査結果：○○
+　・事故・災害：なし
+■ 来月の予定
+　・○○工事に着手</div>
+    </div>
+    <div class="industry-content" data-group="C">
+      <div class="prompt-block" style="border-left-color:#2563eb"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の形式で、今月の売上報告を書いてください。
+
+【見本】
+■ 店舗名：○○
+■ 今月の売上
+　・売上高：○○万円（前年比○○%）
+　・客数：○○名
+■ 好調な点・課題
+　・好調：○○
+　・課題：○○
+■ 来月の施策
+　・○○キャンペーンを実施予定</div>
+    </div>
   </div>
 
   <div class="tech-card">
     <h3>テクニック3：AIに質問させる</h3>
-    <p>情報を整理できていない時に。AIが必要なことを聞き出してくれる</p>
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>業務改善の提案書を作りたいのですが、必要な情報を私に1つずつ質問してください。全ての情報が揃ったら、提案書を作成してください。</div>
-    <p style="color:#64748b;font-size:20px">音声入力と組み合わせると、話すだけで情報を伝えられます。</p>
-  </div>
-
-  <div class="tech-card">
-    <h3>テクニック4：条件と制約を明示する</h3>
-    <p>「やってほしくないこと」も伝えると、余計なことをしなくなる</p>
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>この文章を校正してください。
-- 内容は変えないでください
-- 誤字脱字だけを直してください
-- 修正した箇所は【 】で囲んで教えてください</div>
-  </div>
-
-  <div class="tech-card">
-    <h3>テクニック5：AIに自己評価させる</h3>
-    <p>AIの出力をAI自身に振り返らせると、品質が上がる</p>
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>上記の提案書を、以下の観点で自己評価してください。
-- 論理の飛躍はないか
-- 実現可能性はあるか
-- 読む人が理解できる表現か
-問題があれば修正版も出してください。</div>
+    <p>情報を整理できていない時に有効。AIが必要なことを聞き出してくれる。<br>音声入力と組み合わせると、話すだけで情報を伝えられる。</p>
+    <div class="industry-content active" data-group="A">
+      <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>来月の住民向け福祉イベントの企画書を作りたいのですが、必要な情報を私に1つずつ質問してください。全ての情報が揃ったら、企画書を作成してください。</div>
+    </div>
+    <div class="industry-content" data-group="B">
+      <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>施主に提出する工事完了報告書を作りたいのですが、必要な情報を私に1つずつ質問してください。全ての情報が揃ったら、報告書を作成してください。</div>
+    </div>
+    <div class="industry-content" data-group="C">
+      <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>来月の販促キャンペーンの企画書を作りたいのですが、必要な情報を私に1つずつ質問してください。全ての情報が揃ったら、企画書を作成してください。</div>
+    </div>
   </div>
 </div>
 </div>
 
 <!-- ========== PAGE 4: 休憩 (5min) ========== -->
-<div class="part-page" data-part="3" data-notes="5つのテクニックの振り返り。「全部覚えなくてOK。まずは1つ使ってみるところから」と伝える。">
+<div class="part-page" data-part="3" data-notes="「全部覚えなくてOK。まずは1つ使ってみる」と伝える。">
 <div class="inner">
   <div class="section-header" style="padding:100px 0">
     <p style="font-size:72px;margin-bottom:20px">&#x2615;</p>
@@ -263,17 +284,56 @@ tr:hover td{background:#f8fafc}
 </div>
 </div>
 
-<!-- ========== PAGE 5: やりとり戦略＋失敗の立て直し (15min) ========== -->
-<div class="part-page" data-part="4" data-notes="3段階戦略を具体的に実演。<strong>大枠→修正→仕上げ</strong>をGeminiでライブデモ。失敗パターンは参加者に「こういう経験ありますか？」と聞くと盛り上がる。「新しい会話でリセット」も大事なテクニック。">
+<!-- ========== PAGE 5: テクニック4〜5 (10min) ========== -->
+<div class="part-page" data-part="4" data-notes="テクニック4と5を紹介。4は「やってほしくないこと」を伝えるテクニック。5はAIの出力品質を上げるテクニック。両方ともデモで見せる。">
 <div class="inner">
   <div class="section-header">
-    <div class="tag">ミニ講義 ― 15分</div>
+    <div class="tag">テクニック紹介＋実践 ― 10分</div>
+    <h1>5つの応用テクニック（後半）</h1>
+  </div>
+
+  <div class="tech-card">
+    <h3>テクニック4：条件と制約を明示する</h3>
+    <p>「やってほしくないこと」も伝えると、余計なことをしなくなる。</p>
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>この文章を校正してください。
+- 内容は変えないでください
+- 誤字脱字だけを直してください
+- 修正した箇所は【 】で囲んで教えてください
+- 丁寧語はそのまま残してください</div>
+  </div>
+
+  <div class="tech-card">
+    <h3>テクニック5：AIに自己評価させる</h3>
+    <p>AIに自分の出力を振り返らせると、品質がもう一段上がる。</p>
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>上記の文章を、以下の観点で自己評価してください。
+- 論理の飛躍はないか
+- 読む人が理解できる表現になっているか
+- 抜け漏れや矛盾はないか
+問題があれば修正版も出してください。</div>
+  </div>
+
+  <div class="highlight-box success">
+    <p style="margin:0"><strong>5つのテクニック まとめ</strong></p>
+    <ol>
+      <li>手順を分けて指示する</li>
+      <li>見本を渡す</li>
+      <li>AIに質問させる</li>
+      <li>条件と制約を明示する</li>
+      <li>AIに自己評価させる</li>
+    </ol>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 6: やりとり戦略＋失敗の立て直し (10min) ========== -->
+<div class="part-page" data-part="5" data-notes="3段階戦略をGeminiでライブデモ。失敗パターンは参加者に「こういう経験ありますか？」と聞く。「新しい会話でリセット」も大事なテクニック。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">ミニ講義 ― 10分</div>
     <h1>やりとり戦略と<br>失敗の立て直し方</h1>
   </div>
 
-  <h2>やりとりの3段階</h2>
-  <p>1回で完璧を目指さない。<strong>大枠→修正→仕上げ</strong>の3段階で進める。</p>
-
+  <h2>3段階で磨く</h2>
   <table>
     <thead><tr><th>段階</th><th>やること</th><th>指示の例</th></tr></thead>
     <tbody>
@@ -283,94 +343,152 @@ tr:hover td{background:#f8fafc}
     </tbody>
   </table>
 
-  <h2>うまくいかない時の立て直し方</h2>
-
+  <h2>うまくいかない時の対処法</h2>
   <table>
     <thead><tr><th>困った状況</th><th>対処法</th></tr></thead>
     <tbody>
       <tr><td>回答が的外れ</td><td>「そうではなくて、○○という意味です」と明確に否定して再説明</td></tr>
       <tr><td>長すぎる</td><td>「200文字以内で書き直して」と具体的な数字で指定</td></tr>
-      <tr><td>敬語がおかしい</td><td>「取引先の部長に送れるレベルの丁寧な敬語で」と具体的に</td></tr>
-      <tr><td>何度やってもダメ</td><td><strong>新しい会話を始めてリセットする</strong>（これが一番効く場合も）</td></tr>
+      <tr><td>文字数を守らない</td><td>多めに指定する（1200文字欲しいなら1800で指定）</td></tr>
+      <tr><td>何度やってもダメ</td><td><strong>新しい会話を始めてリセットする</strong></td></tr>
+    </tbody>
+  </table>
+</div>
+</div>
+
+<!-- ========== PAGE 7: AIの種類とプランの違い (10min) ========== -->
+<div class="part-page" data-part="6" data-notes="AIの種類の違いを簡潔に。<strong>覚えてもらうのは「目的に応じて使い分ける」こと。</strong>価格は参考程度に。深入りしすぎない。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">知っておくと便利 ― 10分</div>
+    <h1>AIの種類とプランの違い</h1>
+    <p class="subtitle">目的に応じて使い分ける</p>
+  </div>
+
+  <h2>主なAIサービスの特徴</h2>
+  <table>
+    <thead><tr><th>サービス</th><th>特徴</th><th>向いている用途</th></tr></thead>
+    <tbody>
+      <tr><td><strong>Gemini</strong></td><td>Google連携が強み</td><td>Gmail・カレンダー・マップと連携した作業</td></tr>
+      <tr><td><strong>ChatGPT</strong></td><td>利用者が最も多い。幅広い用途</td><td>文章作成、壁打ち、アイデア出し</td></tr>
+      <tr><td><strong>Claude</strong></td><td>正確さ重視。嘘をつきにくい</td><td>正確な文書作成、長い資料の読み込み</td></tr>
+      <tr><td><strong>Perplexity</strong></td><td>出典を明示してくれる</td><td>調べもの、事実確認</td></tr>
     </tbody>
   </table>
 
-  <div class="highlight-box warning" style="margin-top:32px">
-    <p style="margin:0"><strong>大事なこと：</strong>「AIに"本当？"と聞いても"はい、正しいです"と返すだけ」です。<br>間違いに気づいたら、指摘して直させるか、新しい会話でやり直しましょう。</p>
+  <h2>無料と有料の違い</h2>
+  <table>
+    <thead><tr><th></th><th>無料版</th><th>有料版（月額2,000〜3,000円程度）</th></tr></thead>
+    <tbody>
+      <tr><td><strong>回答の賢さ</strong></td><td>標準的なモデル</td><td>より賢いモデルが使える</td></tr>
+      <tr><td><strong>使える回数</strong></td><td>制限あり</td><td>大幅に増える</td></tr>
+      <tr><td><strong>記憶機能</strong></td><td>限定的</td><td>より多くの情報を覚えてくれる</td></tr>
+      <tr><td><strong>画像生成</strong></td><td>制限あり</td><td>自由に使える</td></tr>
+    </tbody>
+  </table>
+
+  <h2>「速い回答」と「じっくり考えた回答」</h2>
+  <p>最近のAIには回答モードの選択肢があります。</p>
+  <div class="compare">
+    <div class="compare-col" style="border:2px solid #3b82f6">
+      <h4 style="color:#3b82f6">速い回答（Fast / Flash）</h4>
+      <p>素早く回答。簡単な質問や下書き向き。<br>料金が安い or 無料で使える場合が多い</p>
+    </div>
+    <div class="compare-col" style="border:2px solid #8b5cf6">
+      <h4 style="color:#8b5cf6">じっくり考えた回答（Pro / 推論モード）</h4>
+      <p>時間をかけて深く考える。複雑な分析や正確さが求められる場面で有効。<br>有料版で使える場合が多い</p>
+    </div>
+  </div>
+
+  <div class="highlight-box info" style="margin-top:24px">
+    <p style="margin:0"><strong>まずは無料版で十分。</strong>使い慣れてきて「もっと賢い回答が欲しい」「回数制限がきつい」と感じたら有料版を検討してください。</p>
   </div>
 </div>
 </div>
 
-<!-- ========== PAGE 6: 実践② 総合演習 (20min) ========== -->
-<div class="part-page" data-part="5" data-notes="3つのお題から1つ選んでもらう。テクニックとやりとり戦略を組み合わせて完成させる。<strong>完成した「指示文」をチャットで共有してもらう（結果ではなく指示文）。</strong>良い指示文をピックアップしてコメント。">
+<!-- ========== PAGE 8: 総合演習 (15min) ========== -->
+<div class="part-page" data-part="7" data-notes="業種切替ボタンでお題を選ぶ。テクニックとやりとり戦略を組み合わせて完成させる。<strong>完成した「指示文」をチャットで共有（結果ではなく指示文）。</strong>">
 <div class="inner">
   <div class="section-header">
-    <div class="tag">実践 ― 20分</div>
-    <h1>テクニックを使って<br>業務文書を作ってみよう</h1>
-    <p class="subtitle">3つから1つ選んで取り組む</p>
+    <div class="tag">総合演習 ― 15分</div>
+    <h1>テクニックを使って<br>業務文書を作ろう</h1>
+    <p class="subtitle">1つ選んで、今日学んだ技術を全部使う</p>
   </div>
 
-  <p>今日学んだテクニックとやりとり戦略を使って、実際に完成させてください。</p>
+  <div class="industry-switcher">
+    <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
+    <button class="industry-btn" onclick="switchIndustry('B',this)">B. 技術・専門職系</button>
+    <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
+  </div>
 
-  <h2>お題A：上司への改善提案メール</h2>
-  <p style="color:#64748b">おすすめテクニック：3（AIに質問させる）→ 1（手順を分ける）→ 3段階戦略</p>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>業務改善の提案メールを上司に送りたいのですが、必要な情報を私に1つずつ質問してください。全ての情報が揃ったら、以下の手順で作成してください。
-1. 現状の課題を整理
-2. 改善案を提案
-3. 期待される効果をまとめ
-4. メール本文にまとめる（300文字程度、丁寧な敬語で）</div>
+  <div class="industry-content active" data-group="A">
+    <h2>お題：助成金事業の中間報告書</h2>
+    <p style="color:#64748b">テクニック3（質問させる）→テクニック1（手順分割）→テクニック2（見本）→3段階戦略で仕上げ</p>
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>助成金事業の中間報告書を作成したいのですが、必要な情報を私に1つずつ質問してください。
 
-  <h2>お題B：会議の議事録</h2>
-  <p style="color:#64748b">おすすめテクニック：2（見本を渡す）＋ 4（条件と制約）</p>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の会議メモから議事録を作成してください。
+情報が揃ったら、以下の手順で作成してください。
+1. 事業概要を整理
+2. 実績（参加者数、実施回数）をまとめる
+3. 成果と課題を分析
+4. 今後の予定を記載
 
-【形式の見本】
-■ 日時：○月○日
-■ 出席者：○○
-■ 決定事項：（箇条書き）
-■ 次回予定：○月○日
+報告書の形式は、各項目を■で区切り、実績は箇条書きで。全体で500文字程度。</div>
+  </div>
 
-【条件】
-- 事実のみ記載し、意見や推測は含めないでください
-- 決定事項と未決定事項を明確に分けてください
+  <div class="industry-content" data-group="B">
+    <h2>お題：施主への月次進捗報告書</h2>
+    <p style="color:#64748b">テクニック3（質問させる）→テクニック1（手順分割）→テクニック2（見本）→3段階戦略で仕上げ</p>
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>施主に提出する月次工事進捗報告書を作成したいのですが、必要な情報を私に1つずつ質問してください。
 
-【会議メモ】
-・来月のイベント企画について話し合い
-・日程は第3週の土曜で全員合意
-・予算は10万円以内で収める方向
-・会場はまだ未定、候補3つを担当者が来週までに調査
-・広報は再来週から開始</div>
+情報が揃ったら、以下の手順で作成してください。
+1. 工事概要を整理
+2. 今月の進捗（完了工程、進捗率）をまとめる
+3. 品質・安全管理の状況を記載
+4. 来月の予定を記載
 
-  <h2>お題C：自分の業務の手順書</h2>
-  <p style="color:#64748b">おすすめテクニック：3（AIに質問させる）→ 5（自己評価させる）</p>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>私がよくやる業務の手順書を作りたいです。まず必要な情報を私に質問してください。手順書ができたら、「新人が読んで迷わないか」の観点で自己評価して、問題があれば修正してください。</div>
+形式は各項目を■で区切り、進捗は箇条書きで。全体で500文字程度。</div>
+  </div>
+
+  <div class="industry-content" data-group="C">
+    <h2>お題：本部への月次売上報告</h2>
+    <p style="color:#64748b">テクニック3（質問させる）→テクニック1（手順分割）→テクニック2（見本）→3段階戦略で仕上げ</p>
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>本部に提出する月次売上報告書を作成したいのですが、必要な情報を私に1つずつ質問してください。
+
+情報が揃ったら、以下の手順で作成してください。
+1. 売上実績（前年比、客数）を整理
+2. 好調だった点を分析
+3. 課題を3つ挙げる
+4. 来月の施策を提案
+
+形式は各項目を■で区切り、数字は具体的に。全体で500文字程度。</div>
+  </div>
 
   <div class="highlight-box success" style="margin-top:40px">
-    <p style="margin:0"><strong>完成したら：</strong>自分が書いた<strong>指示文</strong>をチャットに貼ってください。<br>「結果」ではなく「どう指示したか」を共有するのがポイントです。</p>
+    <p style="margin:0"><strong>完成したら：</strong>自分が書いた<strong>指示文</strong>をチャットに貼ってください。「結果」ではなく「どう指示したか」を共有するのがポイントです。</p>
   </div>
 </div>
 </div>
 
-<!-- ========== PAGE 7: 振り返り＆次回予告 (15min) ========== -->
-<div class="part-page" data-part="6" data-notes="振り返りクイズ→セルフチェック→チャレンジ。チャレンジは3要素＋テクニック1つ以上を使う条件付き。次回は「メール・議事録・報告書」を実際に作る回。">
+<!-- ========== PAGE 9: 振り返り＆次回予告 (10min) ========== -->
+<div class="part-page" data-part="8" data-notes="クイズ→セルフチェック→チャレンジ。チャレンジは3要素＋テクニック1つ以上を使う条件付き。次回は「メール・議事録・報告書」を実際に作る回。">
 <div class="inner">
   <div class="section-header">
-    <div class="tag">振り返り＆次回予告 ― 15分</div>
+    <div class="tag">振り返り＆次回予告 ― 10分</div>
     <h1>今日できるようになったこと</h1>
   </div>
 
   <h2>振り返りクイズ（タップで答え）</h2>
   <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
     <strong>Q1.</strong> 指示文の3つの要素は？
-    <div class="answer-mark">&#x2B55; <strong>状況を伝える</strong>（誰に・何のために）、<strong>具体的に指示する</strong>（条件・制約）、<strong>形を指定する</strong>（箇条書き・文字数・トーン）</div>
+    <div class="answer-mark">&#x2B55; <strong>状況を伝える</strong>・<strong>具体的に指示する</strong>・<strong>形を指定する</strong></div>
   </div>
   <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
     <strong>Q2.</strong> AIへの指示がうまくいかない時、最も効くのは？
-    <div class="answer-mark">&#x2B55; 場合によるが、<strong>新しい会話を始めてリセットする</strong>のが一番効くことも多い。</div>
+    <div class="answer-mark">&#x2B55; <strong>新しい会話を始めてリセットする</strong>のが一番効くことも多い。</div>
   </div>
   <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
-    <strong>Q3.</strong> 「あなたは○○の専門家です」と書くだけで精度は上がる？
-    <div class="answer-mark">△ 最新のAIでは効果が限定的。<strong>状況を詳しく伝える方が効果的</strong>です。</div>
+    <strong>Q3.</strong> 無料版と有料版、どちらから始めるべき？
+    <div class="answer-mark">&#x2B55; <strong>まずは無料版で十分。</strong>使い慣れてから有料版を検討。</div>
   </div>
 
   <hr class="divider">
@@ -380,27 +498,22 @@ tr:hover td{background:#f8fafc}
 名前：
 1. 5つのテクニックのうち1つ以上使えた：　/5
 2. やりとり戦略（大枠→修正→仕上げ）が分かった：　/5
-3. うまくいかない時の立て直し方を知った：　/5</div>
+3. AIの種類やプランの違いが分かった：　/5</div>
 
   <hr class="divider">
 
   <h2>今週のチャレンジ</h2>
-  <p><strong>3要素＋テクニック1つ以上</strong>を使って、以下を試してみてください。</p>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>来月の部署の目標をまとめたいのですが、必要な情報を私に質問してください。情報が揃ったら、以下の形式でまとめてください。
+  <p><strong>テクニック1つ以上</strong>を使って、以下を試してみてください。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>来月の部署目標をまとめたいので、必要な情報を私に1つずつ質問してください。情報が揃ったら、以下の形式でまとめてください。
 ■ 目標（箇条書き3つ）
 ■ 具体的なアクション
 ■ 担当者と期限</div>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の文章を校正してください。
-- 内容は変えずに、誤字脱字と読みにくい表現だけを直してください
-- 修正した箇所は【 】で囲んでください
-
-（ここに自分の文章を貼る）</div>
 
   <hr class="divider">
 
   <h2>次回予告：第3回「業務文書を素早く作る」</h2>
   <div class="highlight-box" style="border-color:#c4b5fd">
-    <p style="margin:0">今日学んだテクニックを使って、<strong>メール・議事録・報告書</strong>を実際に完成させます。<br>「AIの下書き＋自分の仕上げ」のサイクルを体験しましょう。</p>
+    <p style="margin:0">今日学んだテクニックを使って、<strong>メール・議事録・報告書</strong>を実際に完成させます。</p>
   </div>
   <p style="text-align:center;margin-top:40px;font-size:32px">お疲れさまでした！</p>
 </div>
@@ -414,15 +527,27 @@ tr:hover td{background:#f8fafc}
 const PARTS=[
   {name:'オープニング',minutes:5,type:'lecture'},
   {name:'復習＋3要素の再定義',minutes:10,type:'lecture'},
-  {name:'5つの応用テクニック',minutes:20,type:'handson'},
+  {name:'テクニック1〜3',minutes:20,type:'handson'},
   {name:'休憩',minutes:5,type:'break'},
-  {name:'やりとり戦略＋立て直し',minutes:15,type:'lecture'},
-  {name:'実践: 総合演習',minutes:20,type:'handson'},
-  {name:'振り返り＆次回予告',minutes:15,type:'review'}
+  {name:'テクニック4〜5',minutes:10,type:'handson'},
+  {name:'やりとり戦略',minutes:10,type:'lecture'},
+  {name:'AIの種類とプラン',minutes:10,type:'lecture'},
+  {name:'総合演習',minutes:15,type:'handson'},
+  {name:'振り返り＆次回予告',minutes:10,type:'review'}
 ];
+
+// Industry switcher
+function switchIndustry(group,btn){
+  document.querySelectorAll('.industry-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+  document.querySelectorAll('.industry-content').forEach(c=>{c.classList.toggle('active',c.dataset.group===group)});
+}
+
+// Logging
 const pageLog=[];let pageEnterTime=Date.now();
 function logPageTransition(f,t){const n=Date.now();pageLog.push({from:f+1,to:t+1,elapsed:Math.round(totalSeconds),dwellMs:n-pageEnterTime,timestamp:new Date().toISOString()});pageEnterTime=n}
 function exportLog(){const s=PARTS.map((p,i)=>{const e=pageLog.filter(l=>l.from===i+1);const d=e.reduce((a,b)=>a+b.dwellMs,0);return{part:p.name,planned:p.minutes+'分',actual:Math.round(d/60000)+'分'}});const j=JSON.stringify({summary:s,detail:pageLog},null,2);const b=new Blob([j],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='session-02-log-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
+
 let currentPage=0,timerRunning=false,totalSeconds=0,partSeconds=0,timerInterval=null,notesVisible=false;
 const pages=document.querySelectorAll('.part-page');const totalPages=pages.length;document.getElementById('pageTotal').textContent=totalPages;
 function showPage(i){if(i<0||i>=totalPages)return;logPageTransition(currentPage,i);pages.forEach((p,x)=>{p.classList.remove('active','prev');if(x===i)p.classList.add('active');else if(x<i)p.classList.add('prev')});pages[i].scrollTop=0;currentPage=i;document.getElementById('pageNum').textContent=i+1;document.getElementById('progressFill').style.width=((i+1)/totalPages*100)+'%';document.getElementById('navLeft').disabled=i===0;document.getElementById('navRight').disabled=i===totalPages-1;updatePartIndicator();updateNotes()}
