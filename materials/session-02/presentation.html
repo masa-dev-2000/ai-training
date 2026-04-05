@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI研修 初級編 第2回：伝え方で結果が変わる</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;background:#f8f9fb;color:#1e293b;line-height:1.7}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:6px 20px;background:rgba(255,255,255,.95);border-bottom:1px solid #e2e8f0;font-size:13px;backdrop-filter:blur(8px);height:44px}
+.timer-section{display:flex;align-items:center;gap:16px}
+.timer-label{color:#64748b;font-size:11px}
+.timer-value{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:#1e293b}
+.timer-value.warning{color:#d97706}
+.timer-value.overtime{color:#dc2626;animation:pulse 1s infinite}
+@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.timer-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#1e293b;cursor:pointer;font-size:12px;transition:background .2s}
+.timer-btn:hover{background:#f1f5f9}
+.timer-btn.active{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.fs-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#64748b;cursor:pointer;font-size:12px;transition:background .2s}
+.fs-btn:hover{background:#f1f5f9}
+.part-indicator{display:flex;align-items:center;gap:6px;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:500}
+.part-indicator .dot{width:7px;height:7px;border-radius:50%}
+.part-lecture{background:#eff6ff;color:#2563eb}.part-lecture .dot{background:#3b82f6}
+.part-handson{background:#f0fdf4;color:#16a34a}.part-handson .dot{background:#22c55e}
+.part-break{background:#f8fafc;color:#64748b}.part-break .dot{background:#94a3b8}
+.part-review{background:#faf5ff;color:#7c3aed}.part-review .dot{background:#8b5cf6}
+.slide-counter{color:#64748b;font-size:12px}
+.progress-bar{position:fixed;bottom:0;left:0;right:0;height:3px;background:#e2e8f0;z-index:100}
+.progress-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);transition:width .3s ease}
+.parts-wrapper{position:fixed;top:44px;bottom:3px;left:0;right:0;overflow:hidden}
+.part-page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;padding:60px 72px 80px;opacity:0;transform:translateX(50px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;scroll-behavior:smooth}
+.part-page.active{opacity:1;transform:translateX(0);pointer-events:auto}
+.part-page.prev{transform:translateX(-50px)}
+.part-page .inner{max-width:960px;margin:0 auto}
+h1{font-size:56px;font-weight:700;margin-bottom:20px;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.25}
+h2{font-size:40px;font-weight:700;margin:72px 0 20px;color:#1e293b}
+h3{font-size:30px;font-weight:600;margin:40px 0 14px;color:#334155}
+p{font-size:26px;color:#475569;margin-bottom:16px}
+ul,ol{font-size:24px;padding-left:36px;color:#475569}
+li{margin-bottom:10px}
+li strong{color:#1e293b}
+.section-header{text-align:center;padding:80px 0 60px}
+.section-header .tag{font-size:20px;color:#64748b;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px}
+.section-header .subtitle{font-size:26px;color:#64748b;margin-bottom:0}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:22px}
+th{background:#f1f5f9;padding:14px 20px;text-align:left;font-weight:600;color:#475569;border-bottom:3px solid #e2e8f0}
+td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}
+tr:hover td{background:#f8fafc}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;margin:20px 0}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.card h4{font-size:24px;margin-bottom:8px;color:#1e293b}
+.card p{font-size:20px;color:#64748b;margin-bottom:0}
+.prompt-block{position:relative;background:#fff;border:1px solid #e2e8f0;border-left:6px solid #22c55e;border-radius:12px;padding:20px 20px 16px;margin:18px 0;font-size:24px;color:#1e293b;line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:10px}
+.prompt-block .copy-btn{align-self:flex-end;padding:6px 14px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:13px;flex-shrink:0}
+.prompt-block .copy-btn:hover{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.prompt-block .copy-btn.copied{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.highlight-box{background:#f8fafc;border-radius:14px;padding:24px 28px;margin:20px 0;border:1px solid #e2e8f0;font-size:24px}
+.highlight-box.warning{border-color:#fbbf24;background:#fffbeb}
+.highlight-box.success{border-color:#86efac;background:#f0fdf4}
+.highlight-box.info{border-color:#93c5fd;background:#eff6ff}
+.highlight-box p{font-size:24px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
+.compare-col{background:#fff;border-radius:14px;padding:24px}
+.compare-col.bad{border:3px solid #fca5a5}.compare-col.bad h4{color:#dc2626}
+.compare-col.good{border:3px solid #86efac}.compare-col.good h4{color:#16a34a}
+.compare-col p{font-size:22px}
+.selfcheck{display:flex;flex-direction:column;gap:14px;margin:20px 0}
+.selfcheck-item{display:flex;align-items:center;gap:18px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px 24px;font-size:24px}
+.selfcheck-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0}
+.quiz-answer{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:22px 26px;margin:14px 0;cursor:pointer;transition:all .2s;font-size:24px}
+.quiz-answer:hover{border-color:#3b82f6;background:#f8fafc}
+.quiz-answer.revealed{border-color:#16a34a;background:#f0fdf4}
+.quiz-answer .answer-mark{display:none;color:#16a34a;font-weight:700;margin-top:12px;font-size:22px}
+.quiz-answer.revealed .answer-mark{display:block}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin:20px 0}
+.flow-item{display:flex;align-items:center;gap:18px;padding:18px 22px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;font-size:24px}
+.flow-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;background:#eff6ff;color:#2563eb;flex-shrink:0}
+.flow-arrow{text-align:center;font-size:22px;color:#94a3b8;margin:3px 0 3px 18px}
+.divider{border:none;border-top:2px solid #e2e8f0;margin:80px 0}
+.nav-arrow{position:fixed;top:50%;z-index:50;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:28px;display:flex;align-items:center;justify-content:center;transition:all .2s;transform:translateY(-50%);box-shadow:0 2px 6px rgba(0,0,0,.06)}
+.nav-arrow:hover{background:#f1f5f9;color:#1e293b}
+.nav-arrow.left{left:20px}
+.nav-arrow.right{right:20px}
+.nav-arrow:disabled{opacity:.2;cursor:default}
+.instructor-notes{position:fixed;bottom:6px;left:20px;right:20px;z-index:90;background:rgba(255,255,255,.97);border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;font-size:16px;color:#475569;line-height:1.5;backdrop-filter:blur(8px);transform:translateY(calc(100% + 12px));transition:transform .3s ease;max-height:140px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.08)}
+.instructor-notes.visible{transform:translateY(0)}
+.instructor-notes strong{color:#d97706}
+.notes-toggle{position:fixed;bottom:12px;right:20px;z-index:91;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.notes-toggle:hover{background:#f1f5f9;color:#1e293b}
+.notes-toggle.active{background:#fffbeb;border-color:#f59e0b;color:#d97706}
+.keyboard-hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:80;color:#94a3b8;font-size:14px}
+@media(max-width:768px){
+  .part-page{padding:32px 28px 60px}
+  h1{font-size:36px} h2{font-size:28px} h3{font-size:24px}
+  p,.highlight-box p,.selfcheck-item,.quiz-answer,.prompt-block,.flow-item,td,th,ul,ol,.card h4,.card p,.compare-col p{font-size:18px}
+  .compare{grid-template-columns:1fr}
+  .section-header .tag{font-size:16px}
+  .section-header .subtitle{font-size:22px}
+}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="timer-section">
+    <a href="../../index.html" style="color:#64748b;text-decoration:none;font-size:14px;margin-right:8px" title="ホームに戻る">&#x1F3E0;</a>
+    <button class="timer-btn" id="timerToggle" onclick="toggleTimer()">Start</button>
+    <div><div class="timer-label">経過時間</div><div class="timer-value" id="totalTime">00:00</div></div>
+    <div><div class="timer-label">パート残り</div><div class="timer-value" id="partTime">--:--</div></div>
+  </div>
+  <div id="partIndicator" class="part-indicator part-lecture"><span class="dot"></span><span id="partName">オープニング</span></div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()" title="全画面 (F)">&#x26F6; 全画面</button>
+    <div class="slide-counter"><span id="pageNum">1</span> / <span id="pageTotal">8</span></div>
+  </div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<button class="nav-arrow left" id="navLeft" onclick="prevPage()">&#8592;</button>
+<button class="nav-arrow right" id="navRight" onclick="nextPage()">&#8594;</button>
+<button class="notes-toggle" id="notesToggle" onclick="toggleNotes()">N</button>
+<div class="instructor-notes" id="instructorNotes"></div>
+
+<div class="parts-wrapper">
+
+<!-- ========== PAGE 1: オープニング (5min) ========== -->
+<div class="part-page" data-part="0" data-notes="前回チャレンジの共有から。2-3人に「何を聞いた？結果は？」を聞く。今日のゴール3つを提示。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">AI研修 初級編 第2回</div>
+    <h1>伝え方で結果が変わる</h1>
+    <p class="subtitle">指示文の「型」を身につける</p>
+  </div>
+
+  <h2>前回のチャレンジ、やってみましたか？</h2>
+  <p>朝礼原稿・業務報告メール・会議アジェンダ ― どんな結果でしたか？</p>
+  <p><strong>2〜3人、チャットで教えてください。</strong></p>
+
+  <hr class="divider">
+
+  <h2>今日のゴール</h2>
+  <div class="selfcheck">
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">1</div>指示文の3要素（役割・背景・出力形式）を使って、狙い通りの回答を引き出せる</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">2</div>同じお題でも指示文を変えると結果が大きく変わることを実感している</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">3</div>「1回で完璧を求めず、やりとりで磨く」使い方が身についている</div>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 2: ミニ講義① 指示文の3要素 (15min) ========== -->
+<div class="part-page" data-part="1" data-notes="「後輩に仕事を頼むときと同じ」の延長で教える。各要素ごとにBad→Goodを見せ、デモで実演。<strong>デモ:</strong> 同じお題で「3要素なし」→「3要素あり」をGeminiで実演して結果を見比べる。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">ミニ講義 01 ― 15分</div>
+    <h1>指示文の3つの要素</h1>
+    <p class="subtitle">この3つを入れるだけで、回答の質が変わります</p>
+  </div>
+
+  <h2>要素1：役割を決める</h2>
+  <p>「あなたは○○の専門家です」と最初に伝える</p>
+  <div class="compare">
+    <div class="compare-col bad"><h4>役割なし</h4><p>「メールを書いて」</p></div>
+    <div class="compare-col good"><h4>役割あり</h4><p>「あなたはビジネスマナーの専門家です。メールを書いてください」</p></div>
+  </div>
+
+  <h2>要素2：背景を伝える</h2>
+  <p>「誰に」「何のために」「どんな状況で」を添える</p>
+  <div class="compare">
+    <div class="compare-col bad"><h4>背景なし</h4><p>「お礼メールを書いて」</p></div>
+    <div class="compare-col good"><h4>背景あり</h4><p>「先日の商談でお会いした取引先の部長に、次回の訪問予定も含めたお礼メールを書いて」</p></div>
+  </div>
+
+  <h2>要素3：出力形式を指定する</h2>
+  <p>「箇条書きで」「表形式で」「○○文字以内で」</p>
+  <div class="compare">
+    <div class="compare-col bad"><h4>形式なし</h4><p>「まとめて」</p></div>
+    <div class="compare-col good"><h4>形式あり</h4><p>「箇条書き5項目、各項目1行。最後に要約を3行で」</p></div>
+  </div>
+
+  <div class="highlight-box info" style="margin-top:40px">
+    <p style="margin:0"><strong>覚え方：</strong>「<strong>誰として</strong>（役割）、<strong>こういう状況で</strong>（背景）、<strong>こんな形で</strong>（出力形式）お願いします」</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 3: 実践① 指示文を段階的に改善 (15min) ========== -->
+<div class="part-page" data-part="2" data-notes="全員が同じお題をやる。Step1→結果を見る→Step2で役割追加→Step3で背景追加→Step4で形式追加。各ステップで「何が変わったか」をチャットで共有。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 01 ― 15分</div>
+    <h1>指示文を段階的に<br>改善してみよう</h1>
+    <p class="subtitle">1つずつ要素を足すと、どう変わる？</p>
+  </div>
+
+  <h2>お題：上司への業務報告メール</h2>
+
+  <h3>Step 1：何も指定せずに聞く</h3>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>業務報告メールを書いて</div>
+  <p style="color:#64748b">→ どんな結果が出ましたか？</p>
+
+  <h3>Step 2：役割を追加する</h3>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたは社会人10年目のビジネスパーソンです。業務報告メールを書いてください。</div>
+
+  <h3>Step 3：背景を追加する</h3>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたは社会人10年目のビジネスパーソンです。今週実施した顧客アンケートの結果報告メールを上司に書いてください。回答率は85%で好調でした。改善点として「問い合わせ対応の速度」が挙がっています。</div>
+
+  <h3>Step 4：出力形式を追加する</h3>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたは社会人10年目のビジネスパーソンです。今週実施した顧客アンケートの結果報告メールを上司に書いてください。回答率は85%で好調でした。改善点として「問い合わせ対応の速度」が挙がっています。箇条書きで、最初に結論、次に詳細、最後に今後の対応予定。全体で200文字程度。</div>
+
+  <div class="highlight-box success" style="margin-top:32px">
+    <p style="margin:0"><strong>チャットで共有：</strong>Step 1とStep 4の結果を見比べて、「一番変わった！」と思うポイントを教えてください。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 4: 休憩 (5min) ========== -->
+<div class="part-page" data-part="3" data-notes="「前半で指示文の型を学びました。後半は実際の業務シーンで使ってみましょう」">
+<div class="inner">
+  <div class="section-header" style="padding:100px 0">
+    <p style="font-size:72px;margin-bottom:20px">&#x2615;</p>
+    <h1>休憩タイム</h1>
+    <p class="subtitle">5分間</p>
+    <p style="margin-top:32px;color:#64748b">3つの要素、覚えましたか？<br><strong>役割 → 背景 → 出力形式</strong></p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 5: ミニ講義② よくある失敗パターン (10min) ========== -->
+<div class="part-page" data-part="4" data-notes="失敗パターンを先に見せてから対処法。「文字数が守られない」はテスターからも出た困りごと。参加者に「こんな経験ありますか？」と聞くと盛り上がる。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">ミニ講義 02 ― 10分</div>
+    <h1>よくある失敗パターンと<br>対処法</h1>
+  </div>
+
+  <table>
+    <thead><tr><th>困りごと</th><th>原因</th><th>対処法</th></tr></thead>
+    <tbody>
+      <tr><td>回答が長すぎる</td><td>長さの指定がない</td><td>「○○文字以内で」「箇条書き○項目で」</td></tr>
+      <tr><td>回答が的外れ</td><td>背景情報が足りない</td><td>「目的は○○」「読む人は○○」を追加</td></tr>
+      <tr><td>文字数を守らない</td><td>AIの文字数感覚は不正確</td><td>多めに指定する（1200文字→1800で指定）</td></tr>
+      <tr><td>敬語がおかしい</td><td>敬語レベルの指定なし</td><td>「取引先の部長に送る丁寧な敬語で」</td></tr>
+    </tbody>
+  </table>
+
+  <div class="highlight-box warning" style="margin-top:32px">
+    <p style="margin:0"><strong>大事なこと：</strong>1回でうまくいかなくても普通です。「もう少し短くして」「敬語を直して」と追加で伝えればOK。やりとりを重ねて磨いていきましょう。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 6: 実践② 業務シーンで指示文を書く (20min) ========== -->
+<div class="part-page" data-part="5" data-notes="3つのお題から2つ選んでもらう。3要素を意識して書くこと。早く終わった人には3つ目もやってもらう。完成した指示文をチャットで共有。<strong>中級者向け:</strong> 例示テクニック（「このような形式で書いてください」と見本を添える）を試してもらう。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 02 ― 20分</div>
+    <h1>業務シーンで<br>指示文を書いてみよう</h1>
+    <p class="subtitle">3つから2つ選んで取り組む</p>
+  </div>
+
+  <p>3つの要素（<strong>役割・背景・出力形式</strong>）を意識して、指示文を自分で書いてみましょう。</p>
+
+  <h2>お題A：会議の案内メール</h2>
+  <p style="color:#64748b">来週の定例会議の案内メールを参加者全員に送りたい。日時・場所・議題を含めて。</p>
+  <div class="highlight-box">
+    <p style="margin:0"><strong>ヒント：</strong>「あなたは○○です。来週の○○会議の案内メールを書いてください。参加者は○人。議題は○○と○○。敬語で、箇条書きを使って。」</p>
+  </div>
+
+  <h2>お題B：お断りの返信文</h2>
+  <p style="color:#64748b">取引先からの提案を丁重にお断りするメールを書きたい。今後の関係は維持したい。</p>
+
+  <h2>お題C：新人向けの手順書</h2>
+  <p style="color:#64748b">自分がよくやる業務の手順を、新人でも分かるように1ページにまとめたい。</p>
+
+  <div class="highlight-box success" style="margin-top:40px">
+    <p style="margin:0"><strong>完成したら：</strong>自分が書いた指示文（入力した文）をチャットに貼ってください。結果ではなく「指示文」を共有するのがポイントです。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 7: 共有＆振り返り (10min) ========== -->
+<div class="part-page" data-part="6" data-notes="チャットに投稿された指示文を2-3個ピックアップして「ここの役割指定がいい！」「背景がしっかりしてる」等コメント。振り返りクイズ→セルフチェック→チャレンジ。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">共有＆振り返り ― 10分</div>
+    <h1>今日できるようになったこと</h1>
+  </div>
+
+  <h2>振り返りクイズ（タップで答え）</h2>
+  <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
+    <strong>Q1.</strong> 指示文の3つの要素は何ですか？
+    <div class="answer-mark">&#x2B55; <strong>役割</strong>（誰として）、<strong>背景</strong>（どんな状況で）、<strong>出力形式</strong>（どんな形で）</div>
+  </div>
+  <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
+    <strong>Q2.</strong> AIが文字数を守らない場合、どうすればいい？
+    <div class="answer-mark">&#x2B55; 多めに指定する（1200文字欲しいなら1800で指定）。または行数・箇条書きの数で指定する。</div>
+  </div>
+  <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
+    <strong>Q3.</strong> 1回の指示で完璧な回答が出なかったら、失敗？
+    <div class="answer-mark">&#x2B55; 失敗ではありません。「もう少し○○して」と追加で伝えて磨いていくのが普通の使い方です。</div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>セルフチェック</h2>
+  <p>以下をコピーして、数字を入れてチャットに投稿してください。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>【第2回セルフチェック】
+名前：
+1. 指示文の3要素を使える：　/5
+2. 指示文で結果が変わると実感した：　/5
+3. やりとりを重ねて磨くやり方が分かった：　/5</div>
+
+  <hr class="divider">
+
+  <h2>今週のチャレンジ</h2>
+  <p>次回までにGeminiで3つ試してみましょう。<strong>3要素を意識して</strong>指示文を書いてください。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたはビジネスメールの専門家です。上司に来月の業務計画を報告するメールを書いてください。計画は3つの項目に分けて、箇条書きで。全体で300文字程度。</div>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたは広報担当です。今月のチームの成果を社内向けに報告する文章を書いてください。読む人は他部署の社員。明るいトーンで、箇条書き5項目で。</div>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたは研修担当です。来月の社内勉強会のテーマを5つ提案してください。対象は若手社員。各テーマに「なぜこのテーマが良いか」の理由を1行添えて。</div>
+  <p style="color:#64748b">結果が良くても悪くても大丈夫。次回の冒頭で教えてください。</p>
+</div>
+</div>
+
+<!-- ========== PAGE 8: 発展トピック＆次回予告 (10min) ========== -->
+<div class="part-page" data-part="7" data-notes="発展トピックは中級者向け。時間がなければ「興味がある方は試してみてください」と案内だけでOK。次回予告で「型を使って実際の業務文書を作る」への期待を作る。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">発展トピック＆次回予告</div>
+    <h1>さらに精度を上げるコツ</h1>
+  </div>
+
+  <h2>発展：見本を入れるともっと良くなる</h2>
+  <p>「このような形式で書いてください」と見本を1つ添えると、AIが形式を真似てくれます。</p>
+  <div class="prompt-block" style="border-left-color:#7c3aed"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の形式で、今月の売上報告を書いてください。
+
+【見本】
+■ 4月の売上実績
+・売上高：○○万円（前年比○○%）
+・主な要因：○○
+・来月の見込み：○○</div>
+
+  <h2>発展：自分の情報をAIに覚えさせる</h2>
+  <p>ChatGPTの「カスタム指示」やGeminiの「パーソナライズ」設定に、自分の役職・業種・好みの文体を登録しておくと、毎回背景を説明しなくても良くなります。</p>
+
+  <hr class="divider">
+
+  <h2>次回予告：第3回「業務文書を素早く作る」</h2>
+  <div class="highlight-box" style="border-color:#c4b5fd">
+    <p style="margin:0">今日学んだ指示文の「型」を使って、<strong>メール・議事録・報告書</strong>を実際に作ります。<br>AIに下書きを作らせて、自分の言葉で仕上げるサイクルを体験しましょう。</p>
+  </div>
+  <p style="text-align:center;margin-top:40px;font-size:32px">お疲れさまでした！</p>
+</div>
+</div>
+
+</div><!-- /parts-wrapper -->
+
+<div class="keyboard-hint">← → パート移動 ／ N 講師メモ ／ Space タイマー ／ F 全画面</div>
+
+<script>
+const PARTS=[
+  {name:'オープニング',minutes:5,type:'lecture'},
+  {name:'ミニ講義①: 指示文の3要素',minutes:15,type:'lecture'},
+  {name:'実践①: 指示文を改善',minutes:15,type:'handson'},
+  {name:'休憩',minutes:5,type:'break'},
+  {name:'ミニ講義②: 失敗パターン',minutes:10,type:'lecture'},
+  {name:'実践②: 業務シーンで書く',minutes:20,type:'handson'},
+  {name:'共有＆振り返り',minutes:10,type:'review'},
+  {name:'発展＆次回予告',minutes:10,type:'review'}
+];
+
+const pageLog=[];
+let pageEnterTime=Date.now();
+function logPageTransition(from,to){const now=Date.now();pageLog.push({from:from+1,to:to+1,elapsed:Math.round(totalSeconds),dwellMs:now-pageEnterTime,timestamp:new Date().toISOString()});pageEnterTime=now;}
+function exportLog(){const summary=PARTS.map((p,i)=>{const entries=pageLog.filter(l=>l.from===i+1);const totalDwell=entries.reduce((s,e)=>s+e.dwellMs,0);return{part:p.name,planned:p.minutes+'分',actual:Math.round(totalDwell/60000)+'分',entries:entries.length}});const data=JSON.stringify({summary,detail:pageLog},null,2);const blob=new Blob([data],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='session-02-log-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
+
+let currentPage=0,timerRunning=false,totalSeconds=0,partSeconds=0,timerInterval=null,notesVisible=false;
+const pages=document.querySelectorAll('.part-page');
+const totalPages=pages.length;
+document.getElementById('pageTotal').textContent=totalPages;
+
+function showPage(i){if(i<0||i>=totalPages)return;logPageTransition(currentPage,i);pages.forEach((p,idx)=>{p.classList.remove('active','prev');if(idx===i)p.classList.add('active');else if(idx<i)p.classList.add('prev')});pages[i].scrollTop=0;currentPage=i;document.getElementById('pageNum').textContent=i+1;document.getElementById('progressFill').style.width=((i+1)/totalPages*100)+'%';document.getElementById('navLeft').disabled=i===0;document.getElementById('navRight').disabled=i===totalPages-1;updatePartIndicator();updateNotes()}
+function nextPage(){showPage(currentPage+1)}
+function prevPage(){showPage(currentPage-1)}
+
+function updatePartIndicator(){const pi=parseInt(pages[currentPage].dataset.part)||0;const part=PARTS[pi];const ind=document.getElementById('partIndicator');const map={lecture:'part-lecture',handson:'part-handson',break:'part-break',review:'part-review'};ind.className='part-indicator '+map[part.type];document.getElementById('partName').textContent=part.name;resetPartTimer(part.minutes)}
+
+let currentPartMin=5;
+function resetPartTimer(m){currentPartMin=m;partSeconds=m*60;updatePartTimeDisplay()}
+function toggleTimer(){if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerToggle').textContent='Start';document.getElementById('timerToggle').classList.remove('active')}else{timerInterval=setInterval(tick,1000);timerRunning=true;document.getElementById('timerToggle').textContent='Pause';document.getElementById('timerToggle').classList.add('active')}}
+function tick(){totalSeconds++;partSeconds--;updateTotalTimeDisplay();updatePartTimeDisplay()}
+function updateTotalTimeDisplay(){const m=Math.floor(totalSeconds/60),s=totalSeconds%60;document.getElementById('totalTime').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function updatePartTimeDisplay(){const el=document.getElementById('partTime');if(partSeconds<=0){const o=Math.abs(partSeconds),m=Math.floor(o/60),s=o%60;el.textContent='-'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value overtime'}else if(partSeconds<=60){const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value warning'}else{const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value'}}
+
+function updateNotes(){document.getElementById('instructorNotes').innerHTML=pages[currentPage].dataset.notes||''}
+function toggleNotes(){notesVisible=!notesVisible;document.getElementById('instructorNotes').classList.toggle('visible',notesVisible);document.getElementById('notesToggle').classList.toggle('active',notesVisible)}
+
+function copyText(btn){const t=btn.parentElement.textContent.replace(/コピー(済み ✓)?/g,'').trim();navigator.clipboard.writeText(t).then(()=>{btn.textContent='コピー済み ✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('copied')},1500)})}
+
+function toggleFullscreen(){if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{})}else{document.exitFullscreen()}}
+document.addEventListener('fullscreenchange',()=>{document.getElementById('fsBtn').innerHTML=document.fullscreenElement?'&#x26F6; 終了':'&#x26F6; 全画面'});
+
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextPage()}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevPage()}
+  else if(e.key==='n'||e.key==='N'){toggleNotes()}
+  else if(e.key===' '){e.preventDefault();toggleTimer()}
+  else if(e.key==='f'||e.key==='F'){toggleFullscreen()}
+  else if(e.key==='Home'){e.preventDefault();showPage(0)}
+  else if(e.key==='End'){e.preventDefault();showPage(totalPages-1)}
+  else if(e.key==='l'||e.key==='L'){exportLog()}
+});
+
+showPage(0);
+</script>
+</body>
+</html>
