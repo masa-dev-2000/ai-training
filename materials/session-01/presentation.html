@@ -121,7 +121,7 @@ tr:hover td{background:#f8fafc}
 .instructor-notes{position:fixed;bottom:6px;left:20px;right:20px;z-index:90;background:rgba(255,255,255,.97);border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;font-size:16px;color:#475569;line-height:1.5;backdrop-filter:blur(8px);transform:translateY(calc(100% + 12px));transition:transform .3s ease;max-height:140px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.08)}
 .instructor-notes.visible{transform:translateY(0)}
 .instructor-notes strong{color:#d97706}
-.notes-toggle{position:fixed;bottom:12px;right:20px;z-index:91;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:34px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.06)}
+.notes-toggle{position:fixed;bottom:12px;right:20px;z-index:91;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:22px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .notes-toggle:hover{background:#f1f5f9;color:#1e293b}
 .notes-toggle.active{background:#fffbeb;border-color:#f59e0b;color:#d97706}
 
@@ -229,10 +229,14 @@ tr:hover td{background:#f8fafc}
     <p class="subtitle">覚えるのは3つだけ</p>
   </div>
 
-  <h2>1. AIは「優秀な下書き係」</h2>
+  <h2>1. AIは「優秀だけど口が軽い新人」</h2>
   <p>膨大な文章を読んで学んだアシスタントのようなものです。<br>指示を出すと、それに合った下書きを素早く作ってくれます。</p>
   <div class="highlight-box info">
-    <p style="margin:0"><strong>ただし、内容の正しさは保証しません。</strong><br>たくさん読んでいるから物知りだけど、時々記憶違いをする ― そんなイメージです。</p>
+    <p style="margin:0"><strong>ただし2つの注意点があります。</strong></p>
+    <ul style="margin:8px 0 0">
+      <li><strong>時々記憶違いをする</strong> ― 物知りだけど、間違った情報を自信満々で言うことがある</li>
+      <li><strong>入れた情報を外に漏らすかもしれない</strong> ― 会話内容が学習に使われる場合がある</li>
+    </ul>
   </div>
 
   <h2>2. 得意なこと・苦手なこと</h2>
@@ -297,7 +301,7 @@ tr:hover td{background:#f8fafc}
 </div>
 
 <!-- ========== PAGE 4: 実践① 初めての対話 (15min) ========== -->
-<div class="part-page" data-part="3" data-notes="画面共有しながら一緒にGeminiを開く。Googleアカウントなしでも使える旨を伝える。全員2回以上やりとり確認。早い人には「追加で聞いてみて」。最後にチャットで共有。<strong>1対1の場合は10分で次へ。</strong>">
+<div class="part-page" data-part="3" data-notes="<strong>時間配分（複数人）:</strong> アクセス確認3分→お題選択＆質問4分→追加質問3分→チャット共有5分=計15分。<strong>1対1の場合:</strong> 共有を短縮して10分で次へ。<strong>余った場合:</strong> 別のお題も試してもらう。<strong>中級者向け:</strong> 発展トピック（AI比較）を案内。">
 <div class="inner">
   <div class="section-header">
     <div class="tag">実践 01 ― 15分</div>
@@ -307,7 +311,7 @@ tr:hover td{background:#f8fafc}
 
   <h2>まずはGeminiにアクセス</h2>
   <p><a href="https://gemini.google.com" target="_blank" style="font-size:28px;color:#2563eb;text-decoration:underline">gemini.google.com を開く &#x2197;</a></p>
-  <p style="color:#64748b;font-size:34px">Googleアカウントがなくても使えます。アカウントがある方はログインするとより便利です。</p>
+  <p style="color:#64748b">Googleアカウントがなくても使えます。アカウントがある方はログインするとより便利です。</p>
 
   <h3>使い方の流れ</h3>
   <div class="flow-steps">
@@ -321,12 +325,15 @@ tr:hover td{background:#f8fafc}
     <div class="flow-arrow">↓</div>
     <div class="flow-item"><div class="flow-num">5</div>続けて質問もできる（会話が続く）</div>
   </div>
-  <p style="color:#64748b;font-size:34px">新しい話題にしたい時は、左上の「＋」ボタンで新しい会話を始められます。</p>
+  <p style="color:#64748b;font-size:22px">新しい話題にしたい時は、左上の「＋」ボタンで新しい会話を始められます。</p>
 
   <hr class="divider">
 
   <h2>好きなお題で話しかけてみよう</h2>
-  <p>以下から好きなものを選んでコピー＆ペーストしてください。</p>
+  <p>以下から好きなものを選んで、コピーボタンを押してください。</p>
+  <div class="highlight-box" style="margin-bottom:16px">
+    <p style="margin:0"><strong>貼り付け方：</strong>コピーボタンを押す → Geminiの入力欄をクリック → <strong>Ctrl+V</strong>（Macは Command+V、スマホは長押し→ペースト）→ 送信</p>
+  </div>
   <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>来週の月曜日、朝礼で1分スピーチをします。テーマは「最近嬉しかったこと」で原稿を考えてください</div>
   <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>新しく入った後輩に、社会人1年目で知っておくべきことを3つ教えるとしたら？</div>
   <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>今度の歓迎会の幹事になりました。10人規模で予算5000円/人、盛り上がる企画を3つ考えて</div>
@@ -346,7 +353,7 @@ tr:hover td{background:#f8fafc}
     <p style="font-size:72px;margin-bottom:20px">&#x2615;</p>
     <h1>休憩タイム</h1>
     <p class="subtitle">5分間</p>
-    <p style="margin-top:32px;color:#64748b;font-size:34px">前半のAI体験、いかがでしたか？<br>感想があればチャットに書いてみてください</p>
+    <p style="margin-top:32px;color:#64748b;font-size:22px">前半のAI体験、いかがでしたか？<br>感想があればチャットに書いてみてください</p>
   </div>
 </div>
 </div>
@@ -463,7 +470,17 @@ tr:hover td{background:#f8fafc}
   </div>
 
   <div class="highlight-box warning" style="margin-top:32px;text-align:center">
-    <p style="margin:0;font-size:26px"><strong>自分が詳しい分野</strong> → 間違いに気づける<br><strong>自分が詳しくない分野</strong> → 気づけない → <strong>必ず事実確認する</strong></p>
+    <p style="margin:0"><strong>自分が詳しい分野</strong> → 間違いに気づける<br><strong>自分が詳しくない分野</strong> → 気づけない → <strong>必ず事実確認する</strong></p>
+  </div>
+
+  <h2>事実確認の3つの方法</h2>
+  <div class="flow-steps">
+    <div class="flow-item"><div class="flow-num">1</div>AIに「この情報の出典元のURLを教えて」と聞く</div>
+    <div class="flow-item"><div class="flow-num">2</div><a href="https://www.perplexity.ai" target="_blank" style="color:#2563eb">Perplexity</a>（出典を明示してくれるAI）で同じ質問をする</div>
+    <div class="flow-item"><div class="flow-num">3</div>Google検索で裏取りする</div>
+  </div>
+  <div class="highlight-box">
+    <p style="margin:0"><strong>注意：</strong>AIに「本当？」と聞いても「はい、正しいです」と返すだけです。AIは自分の間違いに気づけません。必ず別の方法で確認しましょう。</p>
   </div>
 </div>
 </div>
@@ -520,10 +537,10 @@ tr:hover td{background:#f8fafc}
 
   <h2>今週のチャレンジ</h2>
   <p>次回までにGeminiで3つ聞いてみましょう。</p>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>平日5日分の晩ごはんの献立を考えてください。30分以内で作れる簡単なメニューがいいです。</div>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>家族で楽しめる日帰りのお出かけスポットを3つ教えてください。車で1時間以内で行けるところ。</div>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>友人にお祝いの品をもらったので、お礼のメッセージを考えてください。LINEで送る想定です。</div>
-  <p style="color:#64748b;font-size:34px">結果が良くても悪くても大丈夫。次回の冒頭で教えてください。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>明日の朝礼で1分間話す原稿を考えてください。テーマは「最近の業務で工夫したこと」です。</div>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>上司に送る今週の業務報告メールの下書きを作ってください。やったことを3つ箇条書きで。</div>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>来月の会議のアジェンダ（議題一覧）を考えてください。テーマは「業務改善」です。</div>
+  <p style="color:#64748b">結果が良くても悪くても大丈夫。次回の冒頭で教えてください。</p>
 
   <hr class="divider">
 
