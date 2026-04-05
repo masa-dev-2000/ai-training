@@ -52,7 +52,7 @@ tr:hover td{background:#f8fafc}
 .card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
 .card h4{font-size:24px;margin-bottom:8px;color:#1e293b}
 .card p{font-size:20px;color:#64748b;margin-bottom:0}
-.prompt-block{position:relative;background:#fff;border:1px solid #e2e8f0;border-left:6px solid #22c55e;border-radius:12px;padding:20px 20px 16px;margin:18px 0;font-size:24px;color:#1e293b;line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:10px}
+.prompt-block{position:relative;background:#fff;border:1px solid #e2e8f0;border-left:6px solid #22c55e;border-radius:12px;padding:20px 20px 16px;margin:18px 0;font-size:22px;color:#1e293b;line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:10px;white-space:pre-wrap}
 .prompt-block .copy-btn{align-self:flex-end;padding:6px 14px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:13px;flex-shrink:0}
 .prompt-block .copy-btn:hover{background:#dcfce7;border-color:#22c55e;color:#16a34a}
 .prompt-block .copy-btn.copied{background:#dcfce7;border-color:#22c55e;color:#16a34a}
@@ -74,15 +74,10 @@ tr:hover td{background:#f8fafc}
 .quiz-answer.revealed{border-color:#16a34a;background:#f0fdf4}
 .quiz-answer .answer-mark{display:none;color:#16a34a;font-weight:700;margin-top:12px;font-size:22px}
 .quiz-answer.revealed .answer-mark{display:block}
-.flow-steps{display:flex;flex-direction:column;gap:10px;margin:20px 0}
-.flow-item{display:flex;align-items:center;gap:18px;padding:18px 22px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;font-size:24px}
-.flow-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;background:#eff6ff;color:#2563eb;flex-shrink:0}
-.flow-arrow{text-align:center;font-size:22px;color:#94a3b8;margin:3px 0 3px 18px}
 .divider{border:none;border-top:2px solid #e2e8f0;margin:80px 0}
 .nav-arrow{position:fixed;top:50%;z-index:50;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:28px;display:flex;align-items:center;justify-content:center;transition:all .2s;transform:translateY(-50%);box-shadow:0 2px 6px rgba(0,0,0,.06)}
 .nav-arrow:hover{background:#f1f5f9;color:#1e293b}
-.nav-arrow.left{left:20px}
-.nav-arrow.right{right:20px}
+.nav-arrow.left{left:20px}.nav-arrow.right{right:20px}
 .nav-arrow:disabled{opacity:.2;cursor:default}
 .instructor-notes{position:fixed;bottom:6px;left:20px;right:20px;z-index:90;background:rgba(255,255,255,.97);border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;font-size:16px;color:#475569;line-height:1.5;backdrop-filter:blur(8px);transform:translateY(calc(100% + 12px));transition:transform .3s ease;max-height:140px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.08)}
 .instructor-notes.visible{transform:translateY(0)}
@@ -91,13 +86,14 @@ tr:hover td{background:#f8fafc}
 .notes-toggle:hover{background:#f1f5f9;color:#1e293b}
 .notes-toggle.active{background:#fffbeb;border-color:#f59e0b;color:#d97706}
 .keyboard-hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:80;color:#94a3b8;font-size:14px}
+.tech-card{background:#fff;border:2px solid #e2e8f0;border-radius:16px;padding:28px;margin:24px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.tech-card h3{margin:0 0 12px;color:#2563eb}
+.tech-card .compare{margin:12px 0 0}
 @media(max-width:768px){
   .part-page{padding:32px 28px 60px}
   h1{font-size:36px} h2{font-size:28px} h3{font-size:24px}
-  p,.highlight-box p,.selfcheck-item,.quiz-answer,.prompt-block,.flow-item,td,th,ul,ol,.card h4,.card p,.compare-col p{font-size:18px}
+  p,.highlight-box p,.selfcheck-item,.quiz-answer,.prompt-block,td,th,ul,ol,.card h4,.card p,.compare-col p,.tech-card{font-size:18px}
   .compare{grid-template-columns:1fr}
-  .section-header .tag{font-size:16px}
-  .section-header .subtitle{font-size:22px}
 }
 </style>
 </head>
@@ -112,8 +108,8 @@ tr:hover td{background:#f8fafc}
   </div>
   <div id="partIndicator" class="part-indicator part-lecture"><span class="dot"></span><span id="partName">オープニング</span></div>
   <div style="display:flex;align-items:center;gap:12px">
-    <button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()" title="全画面 (F)">&#x26F6; 全画面</button>
-    <div class="slide-counter"><span id="pageNum">1</span> / <span id="pageTotal">8</span></div>
+    <button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">&#x26F6; 全画面</button>
+    <div class="slide-counter"><span id="pageNum">1</span> / <span id="pageTotal">7</span></div>
   </div>
 </div>
 <div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
@@ -125,292 +121,324 @@ tr:hover td{background:#f8fafc}
 <div class="parts-wrapper">
 
 <!-- ========== PAGE 1: オープニング (5min) ========== -->
-<div class="part-page" data-part="0" data-notes="前回チャレンジの共有から。2-3人に「何を聞いた？結果は？」を聞く。今日のゴール3つを提示。">
+<div class="part-page" data-part="0" data-notes="前回チャレンジの共有から。「何を聞いた？結果は？」を2-3人に聞く。今日のゴール3つを提示。<strong>ポイント:</strong> 今日は第1回の「なんとなく」を「再現できる技術」にする回。">
 <div class="inner">
   <div class="section-header">
     <div class="tag">AI研修 初級編 第2回</div>
     <h1>伝え方で結果が変わる</h1>
-    <p class="subtitle">指示文の「型」を身につける</p>
+    <p class="subtitle">指示の応用テクニック</p>
   </div>
 
   <h2>前回のチャレンジ、やってみましたか？</h2>
-  <p>朝礼原稿・業務報告メール・会議アジェンダ ― どんな結果でしたか？</p>
-  <p><strong>2〜3人、チャットで教えてください。</strong></p>
+  <p>朝礼原稿・業務報告メール・会議アジェンダ ― どうでしたか？</p>
+  <p><strong>チャットで教えてください。</strong></p>
 
   <hr class="divider">
 
   <h2>今日のゴール</h2>
   <div class="selfcheck">
-    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">1</div>指示文の3要素（役割・背景・出力形式）を使って、狙い通りの回答を引き出せる</div>
-    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">2</div>同じお題でも指示文を変えると結果が大きく変わることを実感している</div>
-    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">3</div>「1回で完璧を求めず、やりとりで磨く」使い方が身についている</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">1</div>5つの応用テクニックを知り、場面に応じて使い分けられる</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">2</div>やりとり戦略（大枠→修正→仕上げ）で品質を上げるサイクルが回せる</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">3</div>うまくいかない時の立て直し方を知っている</div>
+  </div>
+
+  <div class="highlight-box info" style="margin-top:32px">
+    <p style="margin:0">前回は「聞き方で結果が変わる」を体験しました。<br>今回は<strong>なぜ変わるのか</strong>を理解し、<strong>どんな場面でも再現できる技術</strong>を身につけます。</p>
   </div>
 </div>
 </div>
 
-<!-- ========== PAGE 2: ミニ講義① 指示文の3要素 (15min) ========== -->
-<div class="part-page" data-part="1" data-notes="「後輩に仕事を頼むときと同じ」の延長で教える。各要素ごとにBad→Goodを見せ、デモで実演。<strong>デモ:</strong> 同じお題で「3要素なし」→「3要素あり」をGeminiで実演して結果を見比べる。">
+<!-- ========== PAGE 2: 復習＋3要素の再定義 (10min) ========== -->
+<div class="part-page" data-part="1" data-notes="前回の3つのコツを軽く復習（1分）。次に「研究で分かったこと」として3要素を再定義する。<strong>ポイント:</strong> 「あなたは○○の専門家です」は最新のAIではあまり効果がないことが研究で分かっている。代わりに状況説明を充実させた方が良い結果が出る。">
 <div class="inner">
   <div class="section-header">
-    <div class="tag">ミニ講義 01 ― 15分</div>
+    <div class="tag">復習＋再定義 ― 10分</div>
     <h1>指示文の3つの要素</h1>
-    <p class="subtitle">この3つを入れるだけで、回答の質が変わります</p>
+    <p class="subtitle">前回の復習＋より効果的なやり方</p>
   </div>
 
-  <h2>要素1：役割を決める</h2>
-  <p>「あなたは○○の専門家です」と最初に伝える</p>
-  <div class="compare">
-    <div class="compare-col bad"><h4>役割なし</h4><p>「メールを書いて」</p></div>
-    <div class="compare-col good"><h4>役割あり</h4><p>「あなたはビジネスマナーの専門家です。メールを書いてください」</p></div>
+  <h2>前回の復習（30秒）</h2>
+  <p>具体的に伝える / 背景を伝える / やりとりを重ねる ― これが基本でした。</p>
+
+  <h2>より効果的な3要素</h2>
+  <p>研究で「あなたは○○の専門家です」だけでは最新AIの精度が上がらないと分かっています。<br>代わりに<strong>状況を詳しく伝える</strong>方が効果的です。</p>
+
+  <div class="card-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card" style="border-top:4px solid #3b82f6">
+      <h4>1. 状況を伝える</h4>
+      <p>誰に？何のために？どんな立場で？</p>
+    </div>
+    <div class="card" style="border-top:4px solid #22c55e">
+      <h4>2. 具体的に指示する</h4>
+      <p>何をしてほしい？条件は？やらなくていいことは？</p>
+    </div>
+    <div class="card" style="border-top:4px solid #8b5cf6">
+      <h4>3. 形を指定する</h4>
+      <p>箇条書き？表？何文字？どんなトーン？</p>
+    </div>
   </div>
 
-  <h2>要素2：背景を伝える</h2>
-  <p>「誰に」「何のために」「どんな状況で」を添える</p>
-  <div class="compare">
-    <div class="compare-col bad"><h4>背景なし</h4><p>「お礼メールを書いて」</p></div>
-    <div class="compare-col good"><h4>背景あり</h4><p>「先日の商談でお会いした取引先の部長に、次回の訪問予定も含めたお礼メールを書いて」</p></div>
-  </div>
-
-  <h2>要素3：出力形式を指定する</h2>
-  <p>「箇条書きで」「表形式で」「○○文字以内で」</p>
-  <div class="compare">
-    <div class="compare-col bad"><h4>形式なし</h4><p>「まとめて」</p></div>
-    <div class="compare-col good"><h4>形式あり</h4><p>「箇条書き5項目、各項目1行。最後に要約を3行で」</p></div>
-  </div>
-
-  <div class="highlight-box info" style="margin-top:40px">
-    <p style="margin:0"><strong>覚え方：</strong>「<strong>誰として</strong>（役割）、<strong>こういう状況で</strong>（背景）、<strong>こんな形で</strong>（出力形式）お願いします」</p>
+  <div class="compare" style="margin-top:32px">
+    <div class="compare-col bad">
+      <h4>効果が薄い</h4>
+      <p>「あなたはメールの専門家です。お礼メールを書いてください」</p>
+    </div>
+    <div class="compare-col good">
+      <h4>効果が高い</h4>
+      <p>「先日の商談でお会いした取引先の部長に、次回の訪問予定も含めたお礼メールを書いてください。丁寧な敬語で、200文字以内で」</p>
+    </div>
   </div>
 </div>
 </div>
 
-<!-- ========== PAGE 3: 実践① 指示文を段階的に改善 (15min) ========== -->
-<div class="part-page" data-part="2" data-notes="全員が同じお題をやる。Step1→結果を見る→Step2で役割追加→Step3で背景追加→Step4で形式追加。各ステップで「何が変わったか」をチャットで共有。">
+<!-- ========== PAGE 3: 5つの応用テクニック (20min) ========== -->
+<div class="part-page" data-part="2" data-notes="5つのテクニックを1つずつ紹介→即実践。各テクニック3-4分。全部はやらなくてもOK。<strong>テクニック3（インタビュー）は第1回テスターで最も好評だったのでしっかりやる。</strong>">
 <div class="inner">
   <div class="section-header">
-    <div class="tag">実践 01 ― 15分</div>
-    <h1>指示文を段階的に<br>改善してみよう</h1>
-    <p class="subtitle">1つずつ要素を足すと、どう変わる？</p>
+    <div class="tag">テクニック紹介＋実践 ― 20分</div>
+    <h1>5つの応用テクニック</h1>
+    <p class="subtitle">場面に応じて使い分ける</p>
   </div>
 
-  <h2>お題：上司への業務報告メール</h2>
+  <div class="tech-card">
+    <h3>テクニック1：手順を分けて指示する</h3>
+    <p>複雑なことを1回で頼まず、「まず○○→次に○○→最後に○○」と分ける</p>
+    <div class="compare">
+      <div class="compare-col bad"><h4>1回で全部</h4><p>「会議の内容をまとめて、問題点を分析して、改善案を出して」</p></div>
+      <div class="compare-col good"><h4>手順を分ける</h4><p>「以下の手順で進めてください。<br>1. 会議メモを箇条書きで整理<br>2. 問題点を3つ挙げる<br>3. 各問題の改善案を1つずつ提案」</p></div>
+    </div>
+  </div>
 
-  <h3>Step 1：何も指定せずに聞く</h3>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>業務報告メールを書いて</div>
-  <p style="color:#64748b">→ どんな結果が出ましたか？</p>
+  <div class="tech-card">
+    <h3>テクニック2：見本を渡す</h3>
+    <p>「この形で書いて」と見本を1つ添えると、AIが形式を真似してくれる</p>
+    <div class="prompt-block" style="border-left-color:#2563eb"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の形式で、今月の業務報告を書いてください。
 
-  <h3>Step 2：役割を追加する</h3>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたは社会人10年目のビジネスパーソンです。業務報告メールを書いてください。</div>
+【見本】
+■ 主な成果
+・○○を実施し、△△の結果を得た
+■ 課題
+・○○について改善が必要
+■ 来月の予定
+・○○を予定</div>
+  </div>
 
-  <h3>Step 3：背景を追加する</h3>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたは社会人10年目のビジネスパーソンです。今週実施した顧客アンケートの結果報告メールを上司に書いてください。回答率は85%で好調でした。改善点として「問い合わせ対応の速度」が挙がっています。</div>
+  <div class="tech-card">
+    <h3>テクニック3：AIに質問させる</h3>
+    <p>情報を整理できていない時に。AIが必要なことを聞き出してくれる</p>
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>業務改善の提案書を作りたいのですが、必要な情報を私に1つずつ質問してください。全ての情報が揃ったら、提案書を作成してください。</div>
+    <p style="color:#64748b;font-size:20px">音声入力と組み合わせると、話すだけで情報を伝えられます。</p>
+  </div>
 
-  <h3>Step 4：出力形式を追加する</h3>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたは社会人10年目のビジネスパーソンです。今週実施した顧客アンケートの結果報告メールを上司に書いてください。回答率は85%で好調でした。改善点として「問い合わせ対応の速度」が挙がっています。箇条書きで、最初に結論、次に詳細、最後に今後の対応予定。全体で200文字程度。</div>
+  <div class="tech-card">
+    <h3>テクニック4：条件と制約を明示する</h3>
+    <p>「やってほしくないこと」も伝えると、余計なことをしなくなる</p>
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>この文章を校正してください。
+- 内容は変えないでください
+- 誤字脱字だけを直してください
+- 修正した箇所は【 】で囲んで教えてください</div>
+  </div>
 
-  <div class="highlight-box success" style="margin-top:32px">
-    <p style="margin:0"><strong>チャットで共有：</strong>Step 1とStep 4の結果を見比べて、「一番変わった！」と思うポイントを教えてください。</p>
+  <div class="tech-card">
+    <h3>テクニック5：AIに自己評価させる</h3>
+    <p>AIの出力をAI自身に振り返らせると、品質が上がる</p>
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>上記の提案書を、以下の観点で自己評価してください。
+- 論理の飛躍はないか
+- 実現可能性はあるか
+- 読む人が理解できる表現か
+問題があれば修正版も出してください。</div>
   </div>
 </div>
 </div>
 
 <!-- ========== PAGE 4: 休憩 (5min) ========== -->
-<div class="part-page" data-part="3" data-notes="「前半で指示文の型を学びました。後半は実際の業務シーンで使ってみましょう」">
+<div class="part-page" data-part="3" data-notes="5つのテクニックの振り返り。「全部覚えなくてOK。まずは1つ使ってみるところから」と伝える。">
 <div class="inner">
   <div class="section-header" style="padding:100px 0">
     <p style="font-size:72px;margin-bottom:20px">&#x2615;</p>
     <h1>休憩タイム</h1>
     <p class="subtitle">5分間</p>
-    <p style="margin-top:32px;color:#64748b">3つの要素、覚えましたか？<br><strong>役割 → 背景 → 出力形式</strong></p>
+    <p style="margin-top:32px;color:#64748b">5つのテクニック、全部覚えなくてOK。<br><strong>まずは1つ使ってみる</strong>ところから。</p>
   </div>
 </div>
 </div>
 
-<!-- ========== PAGE 5: ミニ講義② よくある失敗パターン (10min) ========== -->
-<div class="part-page" data-part="4" data-notes="失敗パターンを先に見せてから対処法。「文字数が守られない」はテスターからも出た困りごと。参加者に「こんな経験ありますか？」と聞くと盛り上がる。">
+<!-- ========== PAGE 5: やりとり戦略＋失敗の立て直し (15min) ========== -->
+<div class="part-page" data-part="4" data-notes="3段階戦略を具体的に実演。<strong>大枠→修正→仕上げ</strong>をGeminiでライブデモ。失敗パターンは参加者に「こういう経験ありますか？」と聞くと盛り上がる。「新しい会話でリセット」も大事なテクニック。">
 <div class="inner">
   <div class="section-header">
-    <div class="tag">ミニ講義 02 ― 10分</div>
-    <h1>よくある失敗パターンと<br>対処法</h1>
+    <div class="tag">ミニ講義 ― 15分</div>
+    <h1>やりとり戦略と<br>失敗の立て直し方</h1>
   </div>
 
+  <h2>やりとりの3段階</h2>
+  <p>1回で完璧を目指さない。<strong>大枠→修正→仕上げ</strong>の3段階で進める。</p>
+
   <table>
-    <thead><tr><th>困りごと</th><th>原因</th><th>対処法</th></tr></thead>
+    <thead><tr><th>段階</th><th>やること</th><th>指示の例</th></tr></thead>
     <tbody>
-      <tr><td>回答が長すぎる</td><td>長さの指定がない</td><td>「○○文字以内で」「箇条書き○項目で」</td></tr>
-      <tr><td>回答が的外れ</td><td>背景情報が足りない</td><td>「目的は○○」「読む人は○○」を追加</td></tr>
-      <tr><td>文字数を守らない</td><td>AIの文字数感覚は不正確</td><td>多めに指定する（1200文字→1800で指定）</td></tr>
-      <tr><td>敬語がおかしい</td><td>敬語レベルの指定なし</td><td>「取引先の部長に送る丁寧な敬語で」</td></tr>
+      <tr><td><strong>1. 大枠</strong></td><td>まず全体の骨子を出す</td><td>「○○の提案書の骨子を箇条書きで」</td></tr>
+      <tr><td><strong>2. 修正</strong></td><td>気になる部分を直す</td><td>「2番目をもっと具体的にして」</td></tr>
+      <tr><td><strong>3. 仕上げ</strong></td><td>最終形にまとめる</td><td>「以上を踏まえて完成版を書いて」</td></tr>
+    </tbody>
+  </table>
+
+  <h2>うまくいかない時の立て直し方</h2>
+
+  <table>
+    <thead><tr><th>困った状況</th><th>対処法</th></tr></thead>
+    <tbody>
+      <tr><td>回答が的外れ</td><td>「そうではなくて、○○という意味です」と明確に否定して再説明</td></tr>
+      <tr><td>長すぎる</td><td>「200文字以内で書き直して」と具体的な数字で指定</td></tr>
+      <tr><td>敬語がおかしい</td><td>「取引先の部長に送れるレベルの丁寧な敬語で」と具体的に</td></tr>
+      <tr><td>何度やってもダメ</td><td><strong>新しい会話を始めてリセットする</strong>（これが一番効く場合も）</td></tr>
     </tbody>
   </table>
 
   <div class="highlight-box warning" style="margin-top:32px">
-    <p style="margin:0"><strong>大事なこと：</strong>1回でうまくいかなくても普通です。「もう少し短くして」「敬語を直して」と追加で伝えればOK。やりとりを重ねて磨いていきましょう。</p>
+    <p style="margin:0"><strong>大事なこと：</strong>「AIに"本当？"と聞いても"はい、正しいです"と返すだけ」です。<br>間違いに気づいたら、指摘して直させるか、新しい会話でやり直しましょう。</p>
   </div>
 </div>
 </div>
 
-<!-- ========== PAGE 6: 実践② 業務シーンで指示文を書く (20min) ========== -->
-<div class="part-page" data-part="5" data-notes="3つのお題から2つ選んでもらう。3要素を意識して書くこと。早く終わった人には3つ目もやってもらう。完成した指示文をチャットで共有。<strong>中級者向け:</strong> 例示テクニック（「このような形式で書いてください」と見本を添える）を試してもらう。">
+<!-- ========== PAGE 6: 実践② 総合演習 (20min) ========== -->
+<div class="part-page" data-part="5" data-notes="3つのお題から1つ選んでもらう。テクニックとやりとり戦略を組み合わせて完成させる。<strong>完成した「指示文」をチャットで共有してもらう（結果ではなく指示文）。</strong>良い指示文をピックアップしてコメント。">
 <div class="inner">
   <div class="section-header">
-    <div class="tag">実践 02 ― 20分</div>
-    <h1>業務シーンで<br>指示文を書いてみよう</h1>
-    <p class="subtitle">3つから2つ選んで取り組む</p>
+    <div class="tag">実践 ― 20分</div>
+    <h1>テクニックを使って<br>業務文書を作ってみよう</h1>
+    <p class="subtitle">3つから1つ選んで取り組む</p>
   </div>
 
-  <p>3つの要素（<strong>役割・背景・出力形式</strong>）を意識して、指示文を自分で書いてみましょう。</p>
+  <p>今日学んだテクニックとやりとり戦略を使って、実際に完成させてください。</p>
 
-  <h2>お題A：会議の案内メール</h2>
-  <p style="color:#64748b">来週の定例会議の案内メールを参加者全員に送りたい。日時・場所・議題を含めて。</p>
-  <div class="highlight-box">
-    <p style="margin:0"><strong>ヒント：</strong>「あなたは○○です。来週の○○会議の案内メールを書いてください。参加者は○人。議題は○○と○○。敬語で、箇条書きを使って。」</p>
-  </div>
+  <h2>お題A：上司への改善提案メール</h2>
+  <p style="color:#64748b">おすすめテクニック：3（AIに質問させる）→ 1（手順を分ける）→ 3段階戦略</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>業務改善の提案メールを上司に送りたいのですが、必要な情報を私に1つずつ質問してください。全ての情報が揃ったら、以下の手順で作成してください。
+1. 現状の課題を整理
+2. 改善案を提案
+3. 期待される効果をまとめ
+4. メール本文にまとめる（300文字程度、丁寧な敬語で）</div>
 
-  <h2>お題B：お断りの返信文</h2>
-  <p style="color:#64748b">取引先からの提案を丁重にお断りするメールを書きたい。今後の関係は維持したい。</p>
+  <h2>お題B：会議の議事録</h2>
+  <p style="color:#64748b">おすすめテクニック：2（見本を渡す）＋ 4（条件と制約）</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の会議メモから議事録を作成してください。
 
-  <h2>お題C：新人向けの手順書</h2>
-  <p style="color:#64748b">自分がよくやる業務の手順を、新人でも分かるように1ページにまとめたい。</p>
+【形式の見本】
+■ 日時：○月○日
+■ 出席者：○○
+■ 決定事項：（箇条書き）
+■ 次回予定：○月○日
+
+【条件】
+- 事実のみ記載し、意見や推測は含めないでください
+- 決定事項と未決定事項を明確に分けてください
+
+【会議メモ】
+・来月のイベント企画について話し合い
+・日程は第3週の土曜で全員合意
+・予算は10万円以内で収める方向
+・会場はまだ未定、候補3つを担当者が来週までに調査
+・広報は再来週から開始</div>
+
+  <h2>お題C：自分の業務の手順書</h2>
+  <p style="color:#64748b">おすすめテクニック：3（AIに質問させる）→ 5（自己評価させる）</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>私がよくやる業務の手順書を作りたいです。まず必要な情報を私に質問してください。手順書ができたら、「新人が読んで迷わないか」の観点で自己評価して、問題があれば修正してください。</div>
 
   <div class="highlight-box success" style="margin-top:40px">
-    <p style="margin:0"><strong>完成したら：</strong>自分が書いた指示文（入力した文）をチャットに貼ってください。結果ではなく「指示文」を共有するのがポイントです。</p>
+    <p style="margin:0"><strong>完成したら：</strong>自分が書いた<strong>指示文</strong>をチャットに貼ってください。<br>「結果」ではなく「どう指示したか」を共有するのがポイントです。</p>
   </div>
 </div>
 </div>
 
-<!-- ========== PAGE 7: 共有＆振り返り (10min) ========== -->
-<div class="part-page" data-part="6" data-notes="チャットに投稿された指示文を2-3個ピックアップして「ここの役割指定がいい！」「背景がしっかりしてる」等コメント。振り返りクイズ→セルフチェック→チャレンジ。">
+<!-- ========== PAGE 7: 振り返り＆次回予告 (15min) ========== -->
+<div class="part-page" data-part="6" data-notes="振り返りクイズ→セルフチェック→チャレンジ。チャレンジは3要素＋テクニック1つ以上を使う条件付き。次回は「メール・議事録・報告書」を実際に作る回。">
 <div class="inner">
   <div class="section-header">
-    <div class="tag">共有＆振り返り ― 10分</div>
+    <div class="tag">振り返り＆次回予告 ― 15分</div>
     <h1>今日できるようになったこと</h1>
   </div>
 
   <h2>振り返りクイズ（タップで答え）</h2>
   <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
-    <strong>Q1.</strong> 指示文の3つの要素は何ですか？
-    <div class="answer-mark">&#x2B55; <strong>役割</strong>（誰として）、<strong>背景</strong>（どんな状況で）、<strong>出力形式</strong>（どんな形で）</div>
+    <strong>Q1.</strong> 指示文の3つの要素は？
+    <div class="answer-mark">&#x2B55; <strong>状況を伝える</strong>（誰に・何のために）、<strong>具体的に指示する</strong>（条件・制約）、<strong>形を指定する</strong>（箇条書き・文字数・トーン）</div>
   </div>
   <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
-    <strong>Q2.</strong> AIが文字数を守らない場合、どうすればいい？
-    <div class="answer-mark">&#x2B55; 多めに指定する（1200文字欲しいなら1800で指定）。または行数・箇条書きの数で指定する。</div>
+    <strong>Q2.</strong> AIへの指示がうまくいかない時、最も効くのは？
+    <div class="answer-mark">&#x2B55; 場合によるが、<strong>新しい会話を始めてリセットする</strong>のが一番効くことも多い。</div>
   </div>
   <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
-    <strong>Q3.</strong> 1回の指示で完璧な回答が出なかったら、失敗？
-    <div class="answer-mark">&#x2B55; 失敗ではありません。「もう少し○○して」と追加で伝えて磨いていくのが普通の使い方です。</div>
+    <strong>Q3.</strong> 「あなたは○○の専門家です」と書くだけで精度は上がる？
+    <div class="answer-mark">△ 最新のAIでは効果が限定的。<strong>状況を詳しく伝える方が効果的</strong>です。</div>
   </div>
 
   <hr class="divider">
 
   <h2>セルフチェック</h2>
-  <p>以下をコピーして、数字を入れてチャットに投稿してください。</p>
   <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>【第2回セルフチェック】
 名前：
-1. 指示文の3要素を使える：　/5
-2. 指示文で結果が変わると実感した：　/5
-3. やりとりを重ねて磨くやり方が分かった：　/5</div>
+1. 5つのテクニックのうち1つ以上使えた：　/5
+2. やりとり戦略（大枠→修正→仕上げ）が分かった：　/5
+3. うまくいかない時の立て直し方を知った：　/5</div>
 
   <hr class="divider">
 
   <h2>今週のチャレンジ</h2>
-  <p>次回までにGeminiで3つ試してみましょう。<strong>3要素を意識して</strong>指示文を書いてください。</p>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたはビジネスメールの専門家です。上司に来月の業務計画を報告するメールを書いてください。計画は3つの項目に分けて、箇条書きで。全体で300文字程度。</div>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたは広報担当です。今月のチームの成果を社内向けに報告する文章を書いてください。読む人は他部署の社員。明るいトーンで、箇条書き5項目で。</div>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたは研修担当です。来月の社内勉強会のテーマを5つ提案してください。対象は若手社員。各テーマに「なぜこのテーマが良いか」の理由を1行添えて。</div>
-  <p style="color:#64748b">結果が良くても悪くても大丈夫。次回の冒頭で教えてください。</p>
-</div>
-</div>
+  <p><strong>3要素＋テクニック1つ以上</strong>を使って、以下を試してみてください。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>来月の部署の目標をまとめたいのですが、必要な情報を私に質問してください。情報が揃ったら、以下の形式でまとめてください。
+■ 目標（箇条書き3つ）
+■ 具体的なアクション
+■ 担当者と期限</div>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の文章を校正してください。
+- 内容は変えずに、誤字脱字と読みにくい表現だけを直してください
+- 修正した箇所は【 】で囲んでください
 
-<!-- ========== PAGE 8: 発展トピック＆次回予告 (10min) ========== -->
-<div class="part-page" data-part="7" data-notes="発展トピックは中級者向け。時間がなければ「興味がある方は試してみてください」と案内だけでOK。次回予告で「型を使って実際の業務文書を作る」への期待を作る。">
-<div class="inner">
-  <div class="section-header">
-    <div class="tag">発展トピック＆次回予告</div>
-    <h1>さらに精度を上げるコツ</h1>
-  </div>
-
-  <h2>発展：見本を入れるともっと良くなる</h2>
-  <p>「このような形式で書いてください」と見本を1つ添えると、AIが形式を真似てくれます。</p>
-  <div class="prompt-block" style="border-left-color:#7c3aed"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の形式で、今月の売上報告を書いてください。
-
-【見本】
-■ 4月の売上実績
-・売上高：○○万円（前年比○○%）
-・主な要因：○○
-・来月の見込み：○○</div>
-
-  <h2>発展：自分の情報をAIに覚えさせる</h2>
-  <p>ChatGPTの「カスタム指示」やGeminiの「パーソナライズ」設定に、自分の役職・業種・好みの文体を登録しておくと、毎回背景を説明しなくても良くなります。</p>
+（ここに自分の文章を貼る）</div>
 
   <hr class="divider">
 
   <h2>次回予告：第3回「業務文書を素早く作る」</h2>
   <div class="highlight-box" style="border-color:#c4b5fd">
-    <p style="margin:0">今日学んだ指示文の「型」を使って、<strong>メール・議事録・報告書</strong>を実際に作ります。<br>AIに下書きを作らせて、自分の言葉で仕上げるサイクルを体験しましょう。</p>
+    <p style="margin:0">今日学んだテクニックを使って、<strong>メール・議事録・報告書</strong>を実際に完成させます。<br>「AIの下書き＋自分の仕上げ」のサイクルを体験しましょう。</p>
   </div>
   <p style="text-align:center;margin-top:40px;font-size:32px">お疲れさまでした！</p>
 </div>
 </div>
 
-</div><!-- /parts-wrapper -->
+</div>
 
 <div class="keyboard-hint">← → パート移動 ／ N 講師メモ ／ Space タイマー ／ F 全画面</div>
 
 <script>
 const PARTS=[
   {name:'オープニング',minutes:5,type:'lecture'},
-  {name:'ミニ講義①: 指示文の3要素',minutes:15,type:'lecture'},
-  {name:'実践①: 指示文を改善',minutes:15,type:'handson'},
+  {name:'復習＋3要素の再定義',minutes:10,type:'lecture'},
+  {name:'5つの応用テクニック',minutes:20,type:'handson'},
   {name:'休憩',minutes:5,type:'break'},
-  {name:'ミニ講義②: 失敗パターン',minutes:10,type:'lecture'},
-  {name:'実践②: 業務シーンで書く',minutes:20,type:'handson'},
-  {name:'共有＆振り返り',minutes:10,type:'review'},
-  {name:'発展＆次回予告',minutes:10,type:'review'}
+  {name:'やりとり戦略＋立て直し',minutes:15,type:'lecture'},
+  {name:'実践: 総合演習',minutes:20,type:'handson'},
+  {name:'振り返り＆次回予告',minutes:15,type:'review'}
 ];
-
-const pageLog=[];
-let pageEnterTime=Date.now();
-function logPageTransition(from,to){const now=Date.now();pageLog.push({from:from+1,to:to+1,elapsed:Math.round(totalSeconds),dwellMs:now-pageEnterTime,timestamp:new Date().toISOString()});pageEnterTime=now;}
-function exportLog(){const summary=PARTS.map((p,i)=>{const entries=pageLog.filter(l=>l.from===i+1);const totalDwell=entries.reduce((s,e)=>s+e.dwellMs,0);return{part:p.name,planned:p.minutes+'分',actual:Math.round(totalDwell/60000)+'分',entries:entries.length}});const data=JSON.stringify({summary,detail:pageLog},null,2);const blob=new Blob([data],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='session-02-log-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
-
+const pageLog=[];let pageEnterTime=Date.now();
+function logPageTransition(f,t){const n=Date.now();pageLog.push({from:f+1,to:t+1,elapsed:Math.round(totalSeconds),dwellMs:n-pageEnterTime,timestamp:new Date().toISOString()});pageEnterTime=n}
+function exportLog(){const s=PARTS.map((p,i)=>{const e=pageLog.filter(l=>l.from===i+1);const d=e.reduce((a,b)=>a+b.dwellMs,0);return{part:p.name,planned:p.minutes+'分',actual:Math.round(d/60000)+'分'}});const j=JSON.stringify({summary:s,detail:pageLog},null,2);const b=new Blob([j],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='session-02-log-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
 let currentPage=0,timerRunning=false,totalSeconds=0,partSeconds=0,timerInterval=null,notesVisible=false;
-const pages=document.querySelectorAll('.part-page');
-const totalPages=pages.length;
-document.getElementById('pageTotal').textContent=totalPages;
-
-function showPage(i){if(i<0||i>=totalPages)return;logPageTransition(currentPage,i);pages.forEach((p,idx)=>{p.classList.remove('active','prev');if(idx===i)p.classList.add('active');else if(idx<i)p.classList.add('prev')});pages[i].scrollTop=0;currentPage=i;document.getElementById('pageNum').textContent=i+1;document.getElementById('progressFill').style.width=((i+1)/totalPages*100)+'%';document.getElementById('navLeft').disabled=i===0;document.getElementById('navRight').disabled=i===totalPages-1;updatePartIndicator();updateNotes()}
-function nextPage(){showPage(currentPage+1)}
-function prevPage(){showPage(currentPage-1)}
-
-function updatePartIndicator(){const pi=parseInt(pages[currentPage].dataset.part)||0;const part=PARTS[pi];const ind=document.getElementById('partIndicator');const map={lecture:'part-lecture',handson:'part-handson',break:'part-break',review:'part-review'};ind.className='part-indicator '+map[part.type];document.getElementById('partName').textContent=part.name;resetPartTimer(part.minutes)}
-
-let currentPartMin=5;
-function resetPartTimer(m){currentPartMin=m;partSeconds=m*60;updatePartTimeDisplay()}
+const pages=document.querySelectorAll('.part-page');const totalPages=pages.length;document.getElementById('pageTotal').textContent=totalPages;
+function showPage(i){if(i<0||i>=totalPages)return;logPageTransition(currentPage,i);pages.forEach((p,x)=>{p.classList.remove('active','prev');if(x===i)p.classList.add('active');else if(x<i)p.classList.add('prev')});pages[i].scrollTop=0;currentPage=i;document.getElementById('pageNum').textContent=i+1;document.getElementById('progressFill').style.width=((i+1)/totalPages*100)+'%';document.getElementById('navLeft').disabled=i===0;document.getElementById('navRight').disabled=i===totalPages-1;updatePartIndicator();updateNotes()}
+function nextPage(){showPage(currentPage+1)}function prevPage(){showPage(currentPage-1)}
+function updatePartIndicator(){const pi=parseInt(pages[currentPage].dataset.part)||0;const p=PARTS[pi];const ind=document.getElementById('partIndicator');const m={lecture:'part-lecture',handson:'part-handson',break:'part-break',review:'part-review'};ind.className='part-indicator '+m[p.type];document.getElementById('partName').textContent=p.name;resetPartTimer(p.minutes)}
+let cpm=5;function resetPartTimer(m){cpm=m;partSeconds=m*60;updatePartTimeDisplay()}
 function toggleTimer(){if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerToggle').textContent='Start';document.getElementById('timerToggle').classList.remove('active')}else{timerInterval=setInterval(tick,1000);timerRunning=true;document.getElementById('timerToggle').textContent='Pause';document.getElementById('timerToggle').classList.add('active')}}
 function tick(){totalSeconds++;partSeconds--;updateTotalTimeDisplay();updatePartTimeDisplay()}
 function updateTotalTimeDisplay(){const m=Math.floor(totalSeconds/60),s=totalSeconds%60;document.getElementById('totalTime').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
 function updatePartTimeDisplay(){const el=document.getElementById('partTime');if(partSeconds<=0){const o=Math.abs(partSeconds),m=Math.floor(o/60),s=o%60;el.textContent='-'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value overtime'}else if(partSeconds<=60){const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value warning'}else{const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value'}}
-
 function updateNotes(){document.getElementById('instructorNotes').innerHTML=pages[currentPage].dataset.notes||''}
 function toggleNotes(){notesVisible=!notesVisible;document.getElementById('instructorNotes').classList.toggle('visible',notesVisible);document.getElementById('notesToggle').classList.toggle('active',notesVisible)}
-
 function copyText(btn){const t=btn.parentElement.textContent.replace(/コピー(済み ✓)?/g,'').trim();navigator.clipboard.writeText(t).then(()=>{btn.textContent='コピー済み ✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('copied')},1500)})}
-
-function toggleFullscreen(){if(!document.fullscreenElement){document.documentElement.requestFullscreen().catch(()=>{})}else{document.exitFullscreen()}}
+function toggleFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
 document.addEventListener('fullscreenchange',()=>{document.getElementById('fsBtn').innerHTML=document.fullscreenElement?'&#x26F6; 終了':'&#x26F6; 全画面'});
-
-document.addEventListener('keydown',e=>{
-  if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextPage()}
-  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevPage()}
-  else if(e.key==='n'||e.key==='N'){toggleNotes()}
-  else if(e.key===' '){e.preventDefault();toggleTimer()}
-  else if(e.key==='f'||e.key==='F'){toggleFullscreen()}
-  else if(e.key==='Home'){e.preventDefault();showPage(0)}
-  else if(e.key==='End'){e.preventDefault();showPage(totalPages-1)}
-  else if(e.key==='l'||e.key==='L'){exportLog()}
-});
-
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextPage()}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevPage()}else if(e.key==='n'||e.key==='N')toggleNotes();else if(e.key===' '){e.preventDefault();toggleTimer()}else if(e.key==='f'||e.key==='F')toggleFullscreen();else if(e.key==='Home'){e.preventDefault();showPage(0)}else if(e.key==='End'){e.preventDefault();showPage(totalPages-1)}else if(e.key==='l'||e.key==='L')exportLog()});
 showPage(0);
 </script>
 </body>
