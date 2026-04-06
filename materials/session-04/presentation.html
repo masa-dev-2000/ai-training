@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI研修 初級編 第4回：情報を読み込ませて整理する</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;background:#f8f9fb;color:#1e293b;line-height:1.7}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:6px 20px;background:rgba(255,255,255,.95);border-bottom:1px solid #e2e8f0;font-size:13px;backdrop-filter:blur(8px);height:44px}
+.timer-section{display:flex;align-items:center;gap:16px}.timer-label{color:#64748b;font-size:11px}.timer-value{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:#1e293b}.timer-value.warning{color:#d97706}.timer-value.overtime{color:#dc2626;animation:pulse 1s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.timer-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#1e293b;cursor:pointer;font-size:12px;transition:background .2s}.timer-btn:hover{background:#f1f5f9}.timer-btn.active{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.fs-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#64748b;cursor:pointer;font-size:12px;transition:background .2s}.fs-btn:hover{background:#f1f5f9}
+.part-indicator{display:flex;align-items:center;gap:6px;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:500}.part-indicator .dot{width:7px;height:7px;border-radius:50%}
+.part-lecture{background:#eff6ff;color:#2563eb}.part-lecture .dot{background:#3b82f6}.part-handson{background:#f0fdf4;color:#16a34a}.part-handson .dot{background:#22c55e}.part-break{background:#f8fafc;color:#64748b}.part-break .dot{background:#94a3b8}.part-review{background:#faf5ff;color:#7c3aed}.part-review .dot{background:#8b5cf6}
+.slide-counter{color:#64748b;font-size:12px}
+.progress-bar{position:fixed;bottom:0;left:0;right:0;height:3px;background:#e2e8f0;z-index:100}.progress-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);transition:width .3s ease}
+.parts-wrapper{position:fixed;top:44px;bottom:3px;left:0;right:0;overflow:hidden}
+.part-page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;padding:60px 72px 80px;opacity:0;transform:translateX(50px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;scroll-behavior:smooth}.part-page.active{opacity:1;transform:translateX(0);pointer-events:auto}.part-page.prev{transform:translateX(-50px)}.part-page .inner{max-width:960px;margin:0 auto}
+h1{font-size:56px;font-weight:700;margin-bottom:20px;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.25}
+h2{font-size:40px;font-weight:700;margin:72px 0 20px;color:#1e293b}h3{font-size:30px;font-weight:600;margin:40px 0 14px;color:#334155}
+p{font-size:26px;color:#475569;margin-bottom:16px}ul,ol{font-size:24px;padding-left:36px;color:#475569}li{margin-bottom:10px}li strong{color:#1e293b}
+.section-header{text-align:center;padding:80px 0 60px}.section-header .tag{font-size:20px;color:#64748b;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px}.section-header .subtitle{font-size:26px;color:#64748b;margin-bottom:0}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:22px}th{background:#f1f5f9;padding:14px 20px;text-align:left;font-weight:600;color:#475569;border-bottom:3px solid #e2e8f0}td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{background:#f8fafc}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin:20px 0}.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}.card h4{font-size:24px;margin-bottom:8px;color:#1e293b}.card p{font-size:20px;color:#64748b;margin-bottom:0}
+.prompt-block{background:#fff;border:1px solid #e2e8f0;border-left:6px solid #22c55e;border-radius:12px;padding:20px 20px 16px;margin:18px 0;font-size:22px;color:#1e293b;line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:10px;white-space:pre-wrap}.prompt-block .copy-btn{align-self:flex-end;padding:6px 14px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:13px;flex-shrink:0}.prompt-block .copy-btn:hover{background:#dcfce7;border-color:#22c55e;color:#16a34a}.prompt-block .copy-btn.copied{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.highlight-box{background:#f8fafc;border-radius:14px;padding:24px 28px;margin:20px 0;border:1px solid #e2e8f0;font-size:24px}.highlight-box.warning{border-color:#fbbf24;background:#fffbeb}.highlight-box.success{border-color:#86efac;background:#f0fdf4}.highlight-box.info{border-color:#93c5fd;background:#eff6ff}.highlight-box p{font-size:24px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}.compare-col{background:#fff;border-radius:14px;padding:24px}.compare-col.bad{border:3px solid #fca5a5}.compare-col.bad h4{color:#dc2626}.compare-col.good{border:3px solid #86efac}.compare-col.good h4{color:#16a34a}.compare-col p{font-size:22px}
+.selfcheck{display:flex;flex-direction:column;gap:14px;margin:20px 0}.selfcheck-item{display:flex;align-items:center;gap:18px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px 24px;font-size:24px}.selfcheck-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0}
+.quiz-answer{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:22px 26px;margin:14px 0;cursor:pointer;transition:all .2s;font-size:24px}.quiz-answer:hover{border-color:#3b82f6;background:#f8fafc}.quiz-answer.revealed{border-color:#16a34a;background:#f0fdf4}.quiz-answer .answer-mark{display:none;color:#16a34a;font-weight:700;margin-top:12px;font-size:22px}.quiz-answer.revealed .answer-mark{display:block}
+.divider{border:none;border-top:2px solid #e2e8f0;margin:80px 0}
+.nav-arrow{position:fixed;top:50%;z-index:50;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:28px;display:flex;align-items:center;justify-content:center;transition:all .2s;transform:translateY(-50%);box-shadow:0 2px 6px rgba(0,0,0,.06)}.nav-arrow:hover{background:#f1f5f9;color:#1e293b}.nav-arrow.left{left:20px}.nav-arrow.right{right:20px}.nav-arrow:disabled{opacity:.2;cursor:default}
+.instructor-notes{position:fixed;bottom:6px;left:20px;right:20px;z-index:90;background:rgba(255,255,255,.97);border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;font-size:16px;color:#475569;line-height:1.5;backdrop-filter:blur(8px);transform:translateY(calc(100% + 12px));transition:transform .3s ease;max-height:140px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.08)}.instructor-notes.visible{transform:translateY(0)}.instructor-notes strong{color:#d97706}
+.notes-toggle{position:fixed;bottom:12px;right:20px;z-index:91;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.06)}.notes-toggle:hover{background:#f1f5f9;color:#1e293b}.notes-toggle.active{background:#fffbeb;border-color:#f59e0b;color:#d97706}
+.keyboard-hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:80;color:#94a3b8;font-size:14px}
+.industry-switcher{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap}.industry-btn{padding:10px 20px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;color:#64748b;cursor:pointer;font-size:16px;font-weight:600;transition:all .2s}.industry-btn:hover{border-color:#3b82f6;color:#2563eb}.industry-btn.active{background:#2563eb;color:#fff;border-color:#2563eb}.industry-content{display:none}.industry-content.active{display:block}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin:20px 0}.flow-item{display:flex;align-items:center;gap:18px;padding:18px 22px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;font-size:24px}.flow-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;background:#eff6ff;color:#2563eb;flex-shrink:0}.flow-arrow{text-align:center;font-size:22px;color:#94a3b8;margin:3px 0 3px 18px}
+@media(max-width:768px){.part-page{padding:32px 28px 60px}h1{font-size:36px}h2{font-size:28px}h3{font-size:24px}p,.highlight-box p,.selfcheck-item,.quiz-answer,.prompt-block,td,th,ul,ol,.card h4,.card p,.compare-col p,.flow-item{font-size:18px}.compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="timer-section">
+    <a href="../../index.html" style="color:#64748b;text-decoration:none;font-size:14px;margin-right:8px">&#x1F3E0;</a>
+    <button class="timer-btn" id="timerToggle" onclick="toggleTimer()">Start</button>
+    <div><div class="timer-label">経過時間</div><div class="timer-value" id="totalTime">00:00</div></div>
+    <div><div class="timer-label">パート残り</div><div class="timer-value" id="partTime">--:--</div></div>
+  </div>
+  <div id="partIndicator" class="part-indicator part-lecture"><span class="dot"></span><span id="partName">オープニング</span></div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">&#x26F6; 全画面</button>
+    <div class="slide-counter"><span id="pageNum">1</span> / <span id="pageTotal">9</span></div>
+  </div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<button class="nav-arrow left" id="navLeft" onclick="prevPage()">&#8592;</button>
+<button class="nav-arrow right" id="navRight" onclick="nextPage()">&#8594;</button>
+<button class="notes-toggle" id="notesToggle" onclick="toggleNotes()">N</button>
+<div class="instructor-notes" id="instructorNotes"></div>
+
+<div class="parts-wrapper">
+
+<!-- ========== PAGE 1: オープニング (5min) ========== -->
+<div class="part-page" data-part="0" data-notes="前回は「書く力」、今回は「調べる力」。AIが得意な「大量の情報を素早く読む」を活用する。チャレンジ（記事の要約）を試した人は最初の演習で比べてみよう。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">AI研修 初級編 第4回</div>
+    <h1>情報を読み込ませて<br>整理する</h1>
+    <p class="subtitle">「読む時間」を劇的に短縮する</p>
+  </div>
+
+  <h2>今日のゴール</h2>
+  <div class="selfcheck">
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">1</div>長い文書をAIに要約させ、目的に応じて粒度を使い分けられる</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">2</div>複数の選択肢を比較表にまとめ、判断材料を整理できる</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">3</div>要約結果の正確性を確認する習慣が身についている</div>
+  </div>
+
+  <div class="highlight-box info" style="margin-top:32px">
+    <p style="margin:0">前回は「ゼロから文書を書く」力でした。<br>今回は逆に「<strong>すでにある大量の情報を素早く理解する</strong>」力を身につけます。<br><br>前回のチャレンジ（記事の要約）を試した方は、今日の方法で精度がどう変わるか比べてみましょう。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 2: ミニ講義① 要約の3段階 (10min) ========== -->
+<div class="part-page" data-part="1" data-notes="要約には「粒度」がある。目的に応じて使い分ける。デモ：同じ文書を3つの粒度で要約してみせる。<strong>ポイント:</strong> 「要約して」だけだとAIが勝手に粒度を決めてしまう。自分で指定することが大事。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">ミニ講義 01 ― 10分</div>
+    <h1>要約には「粒度」がある</h1>
+    <p class="subtitle">目的に応じて使い分ける</p>
+  </div>
+
+  <h2>同じ文書でも3通りの要約が作れる</h2>
+
+  <div class="card-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card" style="border-top:4px solid #22c55e">
+      <h4>1行要約</h4>
+      <p>「結局何の話？」を1文で掴む。<br>忙しい上司に報告する時に便利</p>
+    </div>
+    <div class="card" style="border-top:4px solid #3b82f6">
+      <h4>箇条書き要約</h4>
+      <p>要点を3〜5個に整理。<br>自分が内容を理解する時に便利</p>
+    </div>
+    <div class="card" style="border-top:4px solid #8b5cf6">
+      <h4>構造化要約</h4>
+      <p>セクションごとに整理。<br>報告書や資料に使う時に便利</p>
+    </div>
+  </div>
+
+  <h2>「要約して」だけではダメな理由</h2>
+  <div class="compare">
+    <div class="compare-col bad">
+      <h4>指定なし</h4>
+      <p>「この記事を要約して」<br><br>→ AIが勝手に長さや形式を決める。目的に合わない要約が出てくる</p>
+    </div>
+    <div class="compare-col good">
+      <h4>粒度を指定</h4>
+      <p>「この記事を<strong>箇条書き5項目</strong>で要約して。各項目は<strong>1行</strong>で。最後に<strong>1文で全体の結論</strong>を付けて」<br><br>→ 目的に合った要約が出る</p>
+    </div>
+  </div>
+
+  <div class="highlight-box warning">
+    <p style="margin:0"><strong>要約の注意点：</strong>AIの要約は「それっぽくまとめる」だけで、正確性は保証されない。<br>特に<strong>数字・固有名詞・因果関係</strong>は原文と照合して確認すること。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 3: 実践① 要約の粒度を使い分ける (20min) ========== -->
+<div class="part-page" data-part="2" data-notes="同じ文書を3つの粒度で要約する。参加者が自分で記事を見つけてきてもOK。<strong>大事:</strong> 要約結果を原文と照合する「正確性チェック」を必ずやる。数字が変わっていないか、因果関係が歪んでいないか。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 01 ― 20分</div>
+    <h1>3つの粒度で<br>要約してみよう</h1>
+    <p class="subtitle">同じ文書で3パターンの要約を作り比べる</p>
+  </div>
+
+  <p>まず、AIに読ませる文書を用意しましょう。<br>以下のどちらかの方法で文書を用意してください。</p>
+
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card" style="border-top:4px solid #3b82f6">
+      <h4>方法A：ネットの記事を使う</h4>
+      <p>業界ニュースや公式サイトの記事を見つけて、本文をコピーしてAIに貼り付ける</p>
+    </div>
+    <div class="card" style="border-top:4px solid #22c55e">
+      <h4>方法B：ファイルをアップロード</h4>
+      <p>手元のPDFやWordファイルをGeminiにドラッグ＆ドロップする</p>
+    </div>
+  </div>
+
+  <h2>Step 1：1行要約</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の文書を1文で要約してください。「この文書は○○について書かれており、結論は○○です」の形で。
+
+（ここに文書を貼り付ける、またはファイルをアップロード）</div>
+
+  <h2>Step 2：箇条書き要約</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>同じ文書を、要点を箇条書き5項目で要約してください。各項目は1行で簡潔に。最も重要な項目を一番上にしてください。</div>
+
+  <h2>Step 3：構造化要約</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>同じ文書を、以下のセクションに分けて構造化して要約してください。
+■ 概要（2行）
+■ 主なポイント（箇条書き）
+■ 具体的なデータや数字
+■ 今後の見通しや影響
+■ 自分の業務に関係しそうな点</div>
+
+  <h2>正確性チェック</h2>
+  <p>要約が出たら、原文と照合して以下を確認してください。</p>
+  <div class="card-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card"><h4>数字は合ってる？</h4><p>金額・割合・日付が原文通りか</p></div>
+    <div class="card"><h4>因果関係は正しい？</h4><p>「AだからB」の論理が歪んでいないか</p></div>
+    <div class="card"><h4>重要な情報が抜けてない？</h4><p>原文にあった大事なポイントが消えていないか</p></div>
+  </div>
+
+  <div class="highlight-box success" style="margin-top:32px">
+    <p style="margin:0"><strong>3つの要約を比べてみてください。</strong><br>同じ文書なのに、粒度を変えるだけで全く違う要約が出ます。<br>どの場面でどの粒度を使うか、イメージが湧きましたか？</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 4: 休憩 (5min) ========== -->
+<div class="part-page" data-part="3" data-notes="「後半は比較表と論点整理です。情報を整理する強力な武器になります」">
+<div class="inner">
+  <div class="section-header" style="padding:100px 0">
+    <p style="font-size:72px;margin-bottom:20px">&#x2615;</p>
+    <h1>休憩タイム</h1>
+    <p class="subtitle">5分間</p>
+    <p style="margin-top:32px;color:#64748b">要約の3段階、どの場面で使いそうですか？<br>後半は<strong>比較表と論点整理</strong>を学びます。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 5: ミニ講義② 比較表と論点整理 (10min) ========== -->
+<div class="part-page" data-part="4" data-notes="比較表は「観点をAIに丸投げしない」が鉄則。自分で「何と何を、どの観点で比較したいか」を指定する。論点整理は3パターン（メリデメ/賛否/SWOT）を場面で使い分け。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">ミニ講義 02 ― 10分</div>
+    <h1>比較表と論点整理</h1>
+    <p class="subtitle">判断材料を一瞬で整理する</p>
+  </div>
+
+  <h2>比較表のコツ：観点を自分で決める</h2>
+  <div class="compare">
+    <div class="compare-col bad">
+      <h4>丸投げ</h4>
+      <p>「AとBを比較して」<br><br>→ AIが的外れな観点で比較する可能性がある</p>
+    </div>
+    <div class="compare-col good">
+      <h4>観点を指定</h4>
+      <p>「AとBを<strong>コスト・効果・手間の3つの観点</strong>で比較表にまとめて」<br><br>→ 自分の判断に必要な情報が出てくる</p>
+    </div>
+  </div>
+
+  <h2>論点整理の3パターン</h2>
+  <div class="card-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card" style="border-top:4px solid #22c55e">
+      <h4>メリット・デメリット</h4>
+      <p>選択肢が1つで「やるかやらないか」を判断する時</p>
+    </div>
+    <div class="card" style="border-top:4px solid #3b82f6">
+      <h4>賛成・反対の論点</h4>
+      <p>意見が分かれるテーマを整理する時</p>
+    </div>
+    <div class="card" style="border-top:4px solid #8b5cf6">
+      <h4>SWOT分析</h4>
+      <p>強み・弱み・機会・脅威の4つで状況を把握する時</p>
+    </div>
+  </div>
+
+  <div class="highlight-box info">
+    <p style="margin:0"><strong>使い分けのコツ：</strong><br>「AにするかBにするか」→ 比較表<br>「これをやるべきか」→ メリット・デメリット<br>「この方針でいいか」→ 賛成・反対の論点<br>「全体の状況を把握したい」→ SWOT分析</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 6: 実践② 比較表を作る (10min) ========== -->
+<div class="part-page" data-part="5" data-notes="業種切替でお題を選ぶ。<strong>ポイント:</strong> 観点の指定が大事。AIに「他にどんな観点があるか」を聞くテクニックも教える。出てきた比較表を自分で確認・修正する。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 02 ― 10分</div>
+    <h1>比較表を作ってみよう</h1>
+  </div>
+
+  <div class="industry-switcher">
+    <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
+    <button class="industry-btn" onclick="switchIndustry('B',this)">B. 技術・専門職系</button>
+    <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
+  </div>
+
+  <div class="industry-content active" data-group="A">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>地域サロンの運営方式を3つ比較する表を作ってください。
+
+比較する方式：
+1. 直営（社協が直接運営）
+2. ボランティア委託（地域のボランティア団体に運営を委託）
+3. 共同運営（社協＋ボランティアの共同）
+
+比較の観点：
+- 運営コスト
+- 人員確保のしやすさ
+- 地域住民の参加しやすさ
+- 継続性・安定性
+- 社協の負担
+
+表形式で、各観点について◎○△で評価し、理由も簡単に添えてください。</div>
+  </div>
+  <div class="industry-content" data-group="B">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>外壁仕上げ材を3つ比較する表を作ってください。
+
+比較する材料：
+1. タイル
+2. 塗装（吹き付け）
+3. サイディング
+
+比較の観点：
+- 初期コスト（㎡あたり）
+- メンテナンス頻度
+- 耐久年数
+- デザインの自由度
+- 施工期間
+
+表形式で、各観点について具体的な数値や評価を入れてください。</div>
+  </div>
+  <div class="industry-content" data-group="C">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>集客施策を3つ比較する表を作ってください。
+
+比較する施策：
+1. SNS広告（Instagram/LINE）
+2. チラシ配布（ポスティング）
+3. ポイント制度（スタンプカード等）
+
+比較の観点：
+- 月額コスト
+- 効果が出るまでの期間
+- 新規客の獲得力
+- リピーター獲得力
+- 運用の手間
+
+表形式で、各観点について具体的に評価してください。</div>
+  </div>
+
+  <h3>追加テクニック：観点を広げる</h3>
+  <p>自分が思いつかない観点もAIに聞ける。</p>
+  <div class="prompt-block" style="border-left-color:#2563eb"><span class="copy-btn" onclick="copyText(this)">コピー</span>上記の比較表に、他に検討すべき観点があれば3つ追加して、表を更新してください。</div>
+</div>
+</div>
+
+<!-- ========== PAGE 7: 実践③ 論点整理 (10min) ========== -->
+<div class="part-page" data-part="6" data-notes="メリデメ or 賛否 or SWOTから1つ選んでやってもらう。業種別のテーマで実践。時間があればもう1パターンも試す。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 03 ― 10分</div>
+    <h1>論点を整理してみよう</h1>
+    <p class="subtitle">3パターンから1つ選んで実践</p>
+  </div>
+
+  <div class="industry-switcher">
+    <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
+    <button class="industry-btn" onclick="switchIndustry('B',this)">B. 技術・専門職系</button>
+    <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
+  </div>
+
+  <h2>パターン1：メリット・デメリット</h2>
+  <div class="industry-content active" data-group="A">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>地域サロンの開催頻度を「週1回→週2回」に増やすことのメリットとデメリットを整理してください。
+
+それぞれ5つずつ挙げて、最後に「総合的にやるべきか」の判断材料をまとめてください。</div>
+  </div>
+  <div class="industry-content" data-group="B">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>現場にタブレット端末を導入して日報をデジタル化することのメリットとデメリットを整理してください。
+
+それぞれ5つずつ挙げて、最後に「導入すべきか」の判断材料をまとめてください。</div>
+  </div>
+  <div class="industry-content" data-group="C">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>店舗のSNSアカウントを毎日更新する体制にすることのメリットとデメリットを整理してください。
+
+それぞれ5つずつ挙げて、最後に「やるべきか」の判断材料をまとめてください。</div>
+  </div>
+
+  <h2>パターン2：SWOT分析</h2>
+  <div class="industry-content active" data-group="A">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>社会福祉協議会が「オンラインでの住民相談窓口」を開設することについてSWOT分析してください。
+
+■ 強み（Strengths）
+■ 弱み（Weaknesses）
+■ 機会（Opportunities）
+■ 脅威（Threats）
+
+各項目3つずつ。最後に「どう進めるべきか」の提言を添えてください。</div>
+  </div>
+  <div class="industry-content" data-group="B">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>自社がBIM（建築情報モデリング）を本格導入することについてSWOT分析してください。
+
+■ 強み（Strengths）
+■ 弱み（Weaknesses）
+■ 機会（Opportunities）
+■ 脅威（Threats）
+
+各項目3つずつ。最後に「どう進めるべきか」の提言を添えてください。</div>
+  </div>
+  <div class="industry-content" data-group="C">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>自店舗がデリバリーサービスを始めることについてSWOT分析してください。
+
+■ 強み（Strengths）
+■ 弱み（Weaknesses）
+■ 機会（Opportunities）
+■ 脅威（Threats）
+
+各項目3つずつ。最後に「どう進めるべきか」の提言を添えてください。</div>
+  </div>
+
+  <div class="highlight-box warning" style="margin-top:40px">
+    <p style="margin:0"><strong>AIの分析を鵜呑みにしない。</strong><br>AIは一般論を出してくれるが、自分の組織の事情は知らない。「うちの場合はここが違う」を自分で修正することが大事。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 8: 実践④ 自分の業務資料で要約 (10min) ========== -->
+<div class="part-page" data-part="7" data-notes="自分の業務で実際に使える資料で要約を試す。最も「使った！」という実感が出るパート。<strong>注意:</strong> OK/NGルール（第1回の3段階）を守って。機密情報は伏せてから入力。ファイルアップロードの手順も案内。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 04 ― 10分</div>
+    <h1>自分の業務資料で<br>やってみよう</h1>
+    <p class="subtitle">実際に仕事で使える資料を1つ要約する</p>
+  </div>
+
+  <p>以下のどれかを試してみてください。</p>
+
+  <h2>選択A：長いメールや文書を要約する</h2>
+  <p>最近受け取った長いメールや通知文をAIに要約させてみましょう。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の文書を要約してください。
+- まず1行で結論を述べてください
+- 次に要点を箇条書き3つでまとめてください
+- 最後に「自分がやるべきこと」があれば教えてください
+
+（ここに文書を貼り付ける）</div>
+
+  <h2>選択B：PDFをアップロードして要約する</h2>
+  <p>手元のPDF資料をGeminiにドラッグ＆ドロップして読み込ませましょう。</p>
+  <div class="highlight-box">
+    <p style="margin:0"><strong>やり方：</strong>Geminiの入力欄にPDFファイルをドラッグ＆ドロップする（または「＋」ボタンからアップロード）。その後に指示を入力。</p>
+  </div>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>アップロードした資料の要点を、箇条書き5項目で要約してください。
+各項目は1行で。最も重要な項目を一番上に。
+この資料の中で特に注意すべき数字やデータがあれば別途教えてください。</div>
+
+  <h2>選択C：比較や論点整理を自分のテーマでやる</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>（自分の業務テーマ）について、メリットとデメリットを5つずつ整理してください。
+最後に「どちらが良いか」の判断材料をまとめてください。</div>
+
+  <div class="highlight-box warning" style="margin-top:32px">
+    <p style="margin:0"><strong>注意：</strong>業務資料を使う場合はOK/NGルール（第1回で学んだ3段階）を守ってください。<br>個人情報・機密情報は伏せてから入力。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 9: 振り返り＆次回予告 (10min) ========== -->
+<div class="part-page" data-part="8" data-notes="クイズ→セルフチェック→チャレンジ。チャレンジは第5回（NotebookLM）への橋渡し。「複数の資料を読み込ませてまとめる」がテーマ。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">振り返り＆次回予告 ― 10分</div>
+    <h1>今日できるようになったこと</h1>
+  </div>
+
+  <h2>振り返りクイズ（タップで答え）</h2>
+  <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
+    <strong>Q1.</strong> 「この記事を要約して」とだけ言うと、何が問題？
+    <div class="answer-mark">&#x2B55; AIが勝手に粒度を決めてしまう。<strong>「1行で」「箇条書き5項目で」等、粒度を自分で指定する</strong>ことが大事。</div>
+  </div>
+  <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
+    <strong>Q2.</strong> 比較表を作る時、何を自分で決めるべき？
+    <div class="answer-mark">&#x2B55; <strong>比較の「観点」を自分で決める。</strong>AIに丸投げすると的外れな観点で比較される。コスト・効果・手間など、自分の判断に必要な観点を指定する。</div>
+  </div>
+  <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
+    <strong>Q3.</strong> AIの要約結果で特に注意して確認すべきことは？
+    <div class="answer-mark">&#x2B55; <strong>数字・固有名詞・因果関係。</strong>AIは「それっぽく」まとめるので、金額が変わっていたり、「AだからB」の論理が歪んでいることがある。</div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>セルフチェック</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>【第4回セルフチェック】
+名前：
+1. 要約の粒度を使い分けられた：　/5
+2. 比較表を観点を指定して作れた：　/5
+3. 要約結果を原文と照合して確認した：　/5</div>
+
+  <hr class="divider">
+
+  <h2>今週のチャレンジ</h2>
+  <p>次回の演習で同じテーマを使います。事前に試しておくと面白くなります。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>自分の業界に関するニュース記事や資料を3つ集めて、以下の形式で要約してください。
+
+■ 記事1の要点（箇条書き3つ）
+■ 記事2の要点（箇条書き3つ）
+■ 記事3の要点（箇条書き3つ）
+■ 3つの記事に共通するテーマや傾向</div>
+
+  <hr class="divider">
+
+  <h2>次回予告：第5回「深く調べてまとめる」</h2>
+  <div class="highlight-box" style="border-color:#c4b5fd">
+    <p style="margin:0">今日は「1つの文書を要約する」力を身につけました。<br>次回は<strong>NotebookLM</strong>を使って、<strong>複数の資料をまとめて読み込ませ、体系的に調査してレポートにまとめる</strong>方法を学びます。</p>
+  </div>
+  <p style="text-align:center;margin-top:40px;font-size:32px">お疲れさまでした！</p>
+</div>
+</div>
+
+</div>
+
+<div class="keyboard-hint">← → パート移動 ／ N 講師メモ ／ Space タイマー ／ F 全画面</div>
+
+<script>
+const PARTS=[
+  {name:'オープニング',minutes:5,type:'lecture'},
+  {name:'ミニ講義: 要約の3段階',minutes:10,type:'lecture'},
+  {name:'実践①: 3粒度で要約',minutes:20,type:'handson'},
+  {name:'休憩',minutes:5,type:'break'},
+  {name:'ミニ講義: 比較表と論点整理',minutes:10,type:'lecture'},
+  {name:'実践②: 比較表',minutes:10,type:'handson'},
+  {name:'実践③: 論点整理',minutes:10,type:'handson'},
+  {name:'実践④: 自分の業務資料',minutes:10,type:'handson'},
+  {name:'振り返り＆次回予告',minutes:10,type:'review'}
+];
+function switchIndustry(g,b){document.querySelectorAll('.industry-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.industry-content').forEach(c=>{c.classList.toggle('active',c.dataset.group===g)})}
+const pageLog=[];let pageEnterTime=Date.now();
+function logPageTransition(f,t){const n=Date.now();pageLog.push({from:f+1,to:t+1,elapsed:Math.round(totalSeconds),dwellMs:n-pageEnterTime,timestamp:new Date().toISOString()});pageEnterTime=n}
+function exportLog(){const s=PARTS.map((p,i)=>{const e=pageLog.filter(l=>l.from===i+1);const d=e.reduce((a,b)=>a+b.dwellMs,0);return{part:p.name,planned:p.minutes+'分',actual:Math.round(d/60000)+'分'}});const j=JSON.stringify({summary:s,detail:pageLog},null,2);const b=new Blob([j],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='session-04-log-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
+let currentPage=0,timerRunning=false,totalSeconds=0,partSeconds=0,timerInterval=null,notesVisible=false;
+const pages=document.querySelectorAll('.part-page');const totalPages=pages.length;document.getElementById('pageTotal').textContent=totalPages;
+function showPage(i){if(i<0||i>=totalPages)return;logPageTransition(currentPage,i);pages.forEach((p,x)=>{p.classList.remove('active','prev');if(x===i)p.classList.add('active');else if(x<i)p.classList.add('prev')});pages[i].scrollTop=0;currentPage=i;document.getElementById('pageNum').textContent=i+1;document.getElementById('progressFill').style.width=((i+1)/totalPages*100)+'%';document.getElementById('navLeft').disabled=i===0;document.getElementById('navRight').disabled=i===totalPages-1;updatePartIndicator();updateNotes()}
+function nextPage(){showPage(currentPage+1)}function prevPage(){showPage(currentPage-1)}
+function updatePartIndicator(){const pi=parseInt(pages[currentPage].dataset.part)||0;const p=PARTS[pi];const ind=document.getElementById('partIndicator');const m={lecture:'part-lecture',handson:'part-handson',break:'part-break',review:'part-review'};ind.className='part-indicator '+m[p.type];document.getElementById('partName').textContent=p.name;resetPartTimer(p.minutes)}
+let cpm=5;function resetPartTimer(m){cpm=m;partSeconds=m*60;updatePartTimeDisplay()}
+function toggleTimer(){if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerToggle').textContent='Start';document.getElementById('timerToggle').classList.remove('active')}else{timerInterval=setInterval(tick,1000);timerRunning=true;document.getElementById('timerToggle').textContent='Pause';document.getElementById('timerToggle').classList.add('active')}}
+function tick(){totalSeconds++;partSeconds--;updateTotalTimeDisplay();updatePartTimeDisplay()}
+function updateTotalTimeDisplay(){const m=Math.floor(totalSeconds/60),s=totalSeconds%60;document.getElementById('totalTime').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function updatePartTimeDisplay(){const el=document.getElementById('partTime');if(partSeconds<=0){const o=Math.abs(partSeconds),m=Math.floor(o/60),s=o%60;el.textContent='-'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value overtime'}else if(partSeconds<=60){const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value warning'}else{const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value'}}
+function updateNotes(){document.getElementById('instructorNotes').innerHTML=pages[currentPage].dataset.notes||''}
+function toggleNotes(){notesVisible=!notesVisible;document.getElementById('instructorNotes').classList.toggle('visible',notesVisible);document.getElementById('notesToggle').classList.toggle('active',notesVisible)}
+function copyText(btn){const t=btn.parentElement.textContent.replace(/コピー(済み ✓)?/g,'').trim();navigator.clipboard.writeText(t).then(()=>{btn.textContent='コピー済み ✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('copied')},1500)})}
+function toggleFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
+document.addEventListener('fullscreenchange',()=>{document.getElementById('fsBtn').innerHTML=document.fullscreenElement?'&#x26F6; 終了':'&#x26F6; 全画面'});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextPage()}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevPage()}else if(e.key==='n'||e.key==='N')toggleNotes();else if(e.key===' '){e.preventDefault();toggleTimer()}else if(e.key==='f'||e.key==='F')toggleFullscreen();else if(e.key==='Home'){e.preventDefault();showPage(0)}else if(e.key==='End'){e.preventDefault();showPage(totalPages-1)}else if(e.key==='l'||e.key==='L')exportLog()});
+showPage(0);
+</script>
+</body>
+</html>
