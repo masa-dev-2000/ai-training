@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI研修 初級編 第8回：自分の業務で実践する</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;background:#f8f9fb;color:#1e293b;line-height:1.7}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:6px 20px;background:rgba(255,255,255,.95);border-bottom:1px solid #e2e8f0;font-size:13px;backdrop-filter:blur(8px);height:44px}
+.timer-section{display:flex;align-items:center;gap:16px}.timer-label{color:#64748b;font-size:11px}.timer-value{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:#1e293b}.timer-value.warning{color:#d97706}.timer-value.overtime{color:#dc2626;animation:pulse 1s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.timer-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#1e293b;cursor:pointer;font-size:12px;transition:background .2s}.timer-btn:hover{background:#f1f5f9}.timer-btn.active{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.fs-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#64748b;cursor:pointer;font-size:12px;transition:background .2s}.fs-btn:hover{background:#f1f5f9}
+.part-indicator{display:flex;align-items:center;gap:6px;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:500}.part-indicator .dot{width:7px;height:7px;border-radius:50%}
+.part-lecture{background:#eff6ff;color:#2563eb}.part-lecture .dot{background:#3b82f6}.part-handson{background:#f0fdf4;color:#16a34a}.part-handson .dot{background:#22c55e}.part-break{background:#f8fafc;color:#64748b}.part-break .dot{background:#94a3b8}.part-review{background:#faf5ff;color:#7c3aed}.part-review .dot{background:#8b5cf6}
+.slide-counter{color:#64748b;font-size:12px}
+.progress-bar{position:fixed;bottom:0;left:0;right:0;height:3px;background:#e2e8f0;z-index:100}.progress-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);transition:width .3s ease}
+.parts-wrapper{position:fixed;top:44px;bottom:3px;left:0;right:0;overflow:hidden}
+.part-page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;padding:60px 72px 80px;opacity:0;transform:translateX(50px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;scroll-behavior:smooth}.part-page.active{opacity:1;transform:translateX(0);pointer-events:auto}.part-page.prev{transform:translateX(-50px)}.part-page .inner{max-width:960px;margin:0 auto}
+h1{font-size:56px;font-weight:700;margin-bottom:20px;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.25}
+h2{font-size:40px;font-weight:700;margin:72px 0 20px;color:#1e293b}h3{font-size:30px;font-weight:600;margin:40px 0 14px;color:#334155}
+p{font-size:26px;color:#475569;margin-bottom:16px}ul,ol{font-size:24px;padding-left:36px;color:#475569}li{margin-bottom:10px}li strong{color:#1e293b}
+.section-header{text-align:center;padding:80px 0 60px}.section-header .tag{font-size:20px;color:#64748b;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px}.section-header .subtitle{font-size:26px;color:#64748b;margin-bottom:0}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:22px}th{background:#f1f5f9;padding:14px 20px;text-align:left;font-weight:600;color:#475569;border-bottom:3px solid #e2e8f0}td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{background:#f8fafc}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin:20px 0}.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}.card h4{font-size:24px;margin-bottom:8px;color:#1e293b}.card p{font-size:20px;color:#64748b;margin-bottom:0}
+.prompt-block{background:#fff;border:1px solid #e2e8f0;border-left:6px solid #22c55e;border-radius:12px;padding:20px 20px 16px;margin:18px 0;font-size:22px;color:#1e293b;line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:10px;white-space:pre-wrap}.prompt-block .copy-btn{align-self:flex-end;padding:6px 14px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:13px;flex-shrink:0}.prompt-block .copy-btn:hover{background:#dcfce7;border-color:#22c55e;color:#16a34a}.prompt-block .copy-btn.copied{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.highlight-box{background:#f8fafc;border-radius:14px;padding:24px 28px;margin:20px 0;border:1px solid #e2e8f0;font-size:24px}.highlight-box.warning{border-color:#fbbf24;background:#fffbeb}.highlight-box.success{border-color:#86efac;background:#f0fdf4}.highlight-box.info{border-color:#93c5fd;background:#eff6ff}.highlight-box p{font-size:24px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}.compare-col{background:#fff;border-radius:14px;padding:24px}.compare-col.bad{border:3px solid #fca5a5}.compare-col.bad h4{color:#dc2626}.compare-col.good{border:3px solid #86efac}.compare-col.good h4{color:#16a34a}.compare-col p{font-size:22px}
+.selfcheck{display:flex;flex-direction:column;gap:14px;margin:20px 0}.selfcheck-item{display:flex;align-items:center;gap:18px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px 24px;font-size:24px}.selfcheck-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0}
+.quiz-answer{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:22px 26px;margin:14px 0;cursor:pointer;transition:all .2s;font-size:24px}.quiz-answer:hover{border-color:#3b82f6;background:#f8fafc}.quiz-answer.revealed{border-color:#16a34a;background:#f0fdf4}.quiz-answer .answer-mark{display:none;color:#16a34a;font-weight:700;margin-top:12px;font-size:22px}.quiz-answer.revealed .answer-mark{display:block}
+.divider{border:none;border-top:2px solid #e2e8f0;margin:80px 0}
+.nav-arrow{position:fixed;top:50%;z-index:50;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:28px;display:flex;align-items:center;justify-content:center;transition:all .2s;transform:translateY(-50%);box-shadow:0 2px 6px rgba(0,0,0,.06)}.nav-arrow:hover{background:#f1f5f9;color:#1e293b}.nav-arrow.left{left:20px}.nav-arrow.right{right:20px}.nav-arrow:disabled{opacity:.2;cursor:default}
+.instructor-notes{position:fixed;bottom:6px;left:20px;right:20px;z-index:90;background:rgba(255,255,255,.97);border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;font-size:16px;color:#475569;line-height:1.5;backdrop-filter:blur(8px);transform:translateY(calc(100% + 12px));transition:transform .3s ease;max-height:140px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.08)}.instructor-notes.visible{transform:translateY(0)}.instructor-notes strong{color:#d97706}
+.notes-toggle{position:fixed;bottom:12px;right:20px;z-index:91;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.06)}.notes-toggle:hover{background:#f1f5f9;color:#1e293b}.notes-toggle.active{background:#fffbeb;border-color:#f59e0b;color:#d97706}
+.keyboard-hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:80;color:#94a3b8;font-size:14px}
+.industry-switcher{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap}.industry-btn{padding:10px 20px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;color:#64748b;cursor:pointer;font-size:16px;font-weight:600;transition:all .2s}.industry-btn:hover{border-color:#3b82f6;color:#2563eb}.industry-btn.active{background:#2563eb;color:#fff;border-color:#2563eb}.industry-content{display:none}.industry-content.active{display:block}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin:20px 0}.flow-item{display:flex;align-items:center;gap:18px;padding:18px 22px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;font-size:24px}.flow-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;background:#eff6ff;color:#2563eb;flex-shrink:0}.flow-arrow{text-align:center;font-size:22px;color:#94a3b8;margin:3px 0 3px 18px}
+@media(max-width:768px){.part-page{padding:32px 28px 60px}h1{font-size:36px}h2{font-size:28px}h3{font-size:24px}p,.highlight-box p,.selfcheck-item,.quiz-answer,.prompt-block,td,th,ul,ol,.card h4,.card p,.compare-col p,.flow-item{font-size:18px}.compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="timer-section">
+    <a href="../../index.html" style="color:#64748b;text-decoration:none;font-size:14px;margin-right:8px">&#x1F3E0;</a>
+    <button class="timer-btn" id="timerToggle" onclick="toggleTimer()">Start</button>
+    <div><div class="timer-label">経過時間</div><div class="timer-value" id="totalTime">00:00</div></div>
+    <div><div class="timer-label">パート残り</div><div class="timer-value" id="partTime">--:--</div></div>
+  </div>
+  <div id="partIndicator" class="part-indicator part-lecture"><span class="dot"></span><span id="partName">オープニング</span></div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">&#x26F6; 全画面</button>
+    <div class="slide-counter"><span id="pageNum">1</span> / <span id="pageTotal">8</span></div>
+  </div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<button class="nav-arrow left" id="navLeft" onclick="prevPage()">&#8592;</button>
+<button class="nav-arrow right" id="navRight" onclick="nextPage()">&#8594;</button>
+<button class="notes-toggle" id="notesToggle" onclick="toggleNotes()">N</button>
+<div class="instructor-notes" id="instructorNotes"></div>
+
+<div class="parts-wrapper">
+
+<!-- ========== PAGE 1: オープニング (10min) ========== -->
+<div class="part-page" data-part="0" data-notes="最終回。全8回の振り返りを1分ずつ。5つのスキル（聞く力・書く力・調べる力の基本・調べる力の拡張・考える力・まとめる力）を復習。卒業課題の説明。テーマ選定を促す。<strong>雰囲気:</strong> 達成感と「これからが本番」の期待感を作る。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">AI研修 初級編 第8回（最終回）</div>
+    <h1>自分の業務で<br>実践する</h1>
+    <p class="subtitle">全8回のスキルを統合する卒業課題</p>
+  </div>
+
+  <h2>全8回の振り返り：5つの力</h2>
+  <div class="card-grid" style="grid-template-columns:repeat(5,1fr)">
+    <div class="card" style="border-top:4px solid #22c55e;text-align:center">
+      <h4>聞く力</h4>
+      <p>第1〜2回<br>プロンプトの書き方、役割設定</p>
+    </div>
+    <div class="card" style="border-top:4px solid #3b82f6;text-align:center">
+      <h4>書く力</h4>
+      <p>第3回<br>ビジネス文書、議事録</p>
+    </div>
+    <div class="card" style="border-top:4px solid #8b5cf6;text-align:center">
+      <h4>調べる力</h4>
+      <p>第4〜5回<br>要約、NotebookLM、ディープリサーチ</p>
+    </div>
+    <div class="card" style="border-top:4px solid #f59e0b;text-align:center">
+      <h4>考える力</h4>
+      <p>第6回<br>壁打ち、企画</p>
+    </div>
+    <div class="card" style="border-top:4px solid #dc2626;text-align:center">
+      <h4>まとめる力</h4>
+      <p>第7回<br>資料作成、レビュー</p>
+    </div>
+  </div>
+
+  <div class="highlight-box info" style="margin-top:32px">
+    <p style="margin:0">今日はこの<strong>5つの力すべてを使って</strong>、自分の業務テーマで卒業課題に取り組みます。<br>制限時間は約60分。AIを使いこなして、実務で使えるアウトプットを作りましょう。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 2: 卒業課題の説明 (5min) ========== -->
+<div class="part-page" data-part="1" data-notes="卒業課題の進め方を説明。「テーマ選定→調査→整理→企画→文書化→資料骨子」の流れ。60分で完成させる。完璧でなくてOK、「AIを使って一通りの流れを回す」ことが目的。テーマ選びに迷う人には例を出す。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">卒業課題の説明 ― 5分</div>
+    <h1>卒業課題の進め方</h1>
+    <p class="subtitle">60分で「調査→整理→企画→資料化」を完成させる</p>
+  </div>
+
+  <h2>卒業課題の流れ</h2>
+  <div class="flow-steps">
+    <div class="flow-item"><div class="flow-num" style="background:#dcfce7;color:#16a34a">1</div><strong>テーマ選定（今すぐ）：</strong>自分の業務テーマを1つ決める</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num" style="background:#eff6ff;color:#2563eb">2</div><strong>調査フェーズ（15分）：</strong>NotebookLM/ディープリサーチ/Perplexityで調べる</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num" style="background:#faf5ff;color:#7c3aed">3</div><strong>整理＋企画フェーズ（15分）：</strong>要約・比較・ブレスト・企画骨子を作る</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num" style="background:#fffbeb;color:#d97706">4</div><strong>文書化＋資料化フェーズ（15分）：</strong>報告書/企画書を書き、資料アウトラインを作る</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num" style="background:#fef2f2;color:#dc2626">5</div><strong>発表（15分）：</strong>1人2〜3分で成果を共有</div>
+  </div>
+
+  <h2>テーマの例</h2>
+  <div class="card-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card" style="border-top:4px solid #22c55e">
+      <h4>A. 公共・福祉系</h4>
+      <p>地域の見守り活動の改善案／ボランティア確保の戦略／新規事業の企画</p>
+    </div>
+    <div class="card" style="border-top:4px solid #3b82f6">
+      <h4>B. 技術・専門職系</h4>
+      <p>安全管理の改善提案／新技術の導入計画／人材育成プログラム</p>
+    </div>
+    <div class="card" style="border-top:4px solid #8b5cf6">
+      <h4>C. 顧客対応系</h4>
+      <p>新メニュー開発の企画／集客施策の提案／顧客満足度向上策</p>
+    </div>
+  </div>
+
+  <div class="highlight-box warning">
+    <p style="margin:0"><strong>完璧を求めない。</strong><br>60分で完璧な企画書は作れません。大事なのは<strong>「AIを使って一通りの流れを回す」</strong>こと。<br>「こうやれば仕事で使える」という実感を掴むことが目標です。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 3: 卒業課題: 調査フェーズ (15min) ========== -->
+<div class="part-page" data-part="2" data-notes="調査フェーズ。NotebookLM/ディープリサーチ/Perplexityのどれかを使う。<strong>ポイント:</strong> 時間が限られているので「どのツールで何を調べるか」を最初に決めてから始める。全部使う必要はない。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">卒業課題: 調査フェーズ ― 15分</div>
+    <h1>調査する</h1>
+    <p class="subtitle">テーマについて情報を集める</p>
+  </div>
+
+  <p>選んだテーマについて、AIツールを使って調査しましょう。</p>
+
+  <h2>どのツールを使う？</h2>
+  <table>
+    <tr><th>やりたいこと</th><th>ツール</th></tr>
+    <tr><td>手元の資料（PDF等）を深掘りしたい</td><td><strong>NotebookLM</strong></td></tr>
+    <tr><td>Web全体から最新情報を調べたい</td><td><strong>ディープリサーチ（Gemini）</strong></td></tr>
+    <tr><td>特定の事実や数字を確認したい</td><td><strong>Perplexity</strong></td></tr>
+    <tr><td>テーマの背景を広く理解したい</td><td><strong>Geminiに直接質問</strong></td></tr>
+  </table>
+
+  <h2>調査のプロンプト</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>（自分のテーマ）について調査してください。
+
+以下の観点でまとめてください：
+1. 現状の概要（何が起きているか）
+2. 主な課題や問題点
+3. 先進的な取り組み事例（3つ以上）
+4. 数字やデータ（統計・実績等）
+5. 今後の見通しやトレンド</div>
+
+  <h2>出典を確認する</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>調査結果の中で、特に重要な数字やデータについて、出典（情報源）を教えてください。
+政府統計や公的機関のデータがあれば優先して教えてください。</div>
+
+  <div class="highlight-box info">
+    <p style="margin:0"><strong>15分で完璧に調べなくてOK。</strong><br>「テーマの全体像が掴めた」「主要な課題が分かった」レベルで次のフェーズに進みましょう。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 4: 卒業課題: 整理＋企画フェーズ (15min) ========== -->
+<div class="part-page" data-part="3" data-notes="整理＋企画フェーズ。調査結果を整理し、企画の骨子を作る。<strong>ポイント:</strong> 要約→比較or論点整理→ブレスト→企画骨子の流れ。全部やる時間がない場合は「要約→企画骨子」だけでもOK。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">卒業課題: 整理＋企画フェーズ ― 15分</div>
+    <h1>整理して企画する</h1>
+    <p class="subtitle">調査結果をまとめ、提案を形にする</p>
+  </div>
+
+  <h2>Step 1：調査結果を整理する</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>先ほどの調査結果を整理してください。
+
+■ 要点まとめ（箇条書き5つ）
+■ 主な課題（優先度順に3つ）
+■ 参考になる事例（最も参考になるもの1つを詳しく）</div>
+
+  <h2>Step 2：アイデアを出して企画の骨子を作る</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>調査結果を踏まえて、（自分のテーマ）に対する提案のアイデアを5つ出してください。
+その中から最も実現性が高いものを1つ選んで、以下の形式で企画の骨子を作ってください。
+
+■ 背景（なぜ必要か）- 3行
+■ 課題（解決すべき問題）- 箇条書き3つ
+■ 提案内容（具体的に何をするか）- 5W1Hで
+■ 期待される効果 - 箇条書き3つ
+■ リスクと対策 - 2つ
+■ 必要なリソース - 概算</div>
+
+  <h2>Step 3：弱点チェック</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>この企画の弱点を3つ指摘してください。
+また、上司に提案した場合に聞かれそうな質問と回答案も2つ教えてください。</div>
+
+  <div class="highlight-box success">
+    <p style="margin:0"><strong>ここまでで「調査→整理→企画」が完了。</strong><br>次は文書にまとめ、発表資料のアウトラインを作ります。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 5: 卒業課題: 文書化＋資料化フェーズ (15min) ========== -->
+<div class="part-page" data-part="4" data-notes="文書化＋資料化フェーズ。企画骨子を報告書or企画書の形にまとめ、発表用のアウトラインを作る。<strong>ポイント:</strong> 報告書と発表資料は別物。報告書は詳細を書く、発表資料は要点だけ。時間がなければアウトラインだけでもOK。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">卒業課題: 文書化＋資料化フェーズ ― 15分</div>
+    <h1>文書にまとめ<br>資料を作る</h1>
+    <p class="subtitle">報告書と発表資料のアウトラインを作成</p>
+  </div>
+
+  <h2>Step 1：報告書・企画書を作る</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>先ほどの企画骨子を元に、正式な企画書（または報告書）の形にまとめてください。
+
+条件：
+- A4で1〜2ページ程度の分量
+- ビジネス文書として通用する文体
+- 見出し・箇条書きを使って読みやすく
+- 数字やデータがあれば出典も記載</div>
+
+  <h2>Step 2：発表資料のアウトラインを作る</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>この企画書の内容を、2〜3分の発表用スライド（5枚程度）のアウトラインにしてください。
+
+各スライドについて：
+- タイトル
+- 伝えたいメッセージ（1文で）
+- 載せる要点（箇条書き2〜3個）
+
+「1ページ1メッセージ」を守ってください。</div>
+
+  <h2>Step 3：発表の練習</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>このアウトラインを元に、2分間の発表スクリプト（話す内容）を書いてください。
+
+条件：
+- 自然な話し言葉で
+- 最初に結論を述べる
+- データや事例を1つ入れる
+- 最後に「次のアクション」を明確に</div>
+
+  <div class="highlight-box info">
+    <p style="margin:0"><strong>全部できなくてもOK。</strong><br>「テーマについて調べて→企画を考えて→発表できる形にまとめた」という<strong>一連の流れを体験</strong>できればOKです。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 6: 休憩 (5min) ========== -->
+<div class="part-page" data-part="5" data-notes="発表前の休憩。「完璧でなくて大丈夫。AIを使って一通りの流れを回せたことが素晴らしい」と声をかける。発表は1人2〜3分。">
+<div class="inner">
+  <div class="section-header" style="padding:100px 0">
+    <p style="font-size:72px;margin-bottom:20px">&#x2615;</p>
+    <h1>休憩タイム</h1>
+    <p class="subtitle">5分間 ― 発表の準備をしましょう</p>
+    <p style="margin-top:32px;color:#64748b">完璧でなくて大丈夫です。<br>AIを使って<strong>一通りの流れを回せたこと</strong>が素晴らしい成果です。<br><br>この後、1人<strong>2〜3分</strong>で成果を発表します。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 7: 成果発表＆フィードバック (15min) ========== -->
+<div class="part-page" data-part="6" data-notes="各参加者が2〜3分で発表。発表内容：テーマ・使ったAIツール・分かったこと・企画の概要・感想。<strong>フィードバック:</strong> 講師＋参加者同士で「良かった点」「参考になった点」を共有。批判ではなく「良かった点」に焦点。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">成果発表＆フィードバック ― 15分</div>
+    <h1>成果発表</h1>
+    <p class="subtitle">1人2〜3分で卒業課題の成果を共有</p>
+  </div>
+
+  <h2>発表のポイント</h2>
+  <div class="flow-steps">
+    <div class="flow-item"><div class="flow-num">1</div><strong>テーマと背景（30秒）：</strong>何について取り組んだか</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num">2</div><strong>使ったAIツール（30秒）：</strong>どのツールをどう使ったか</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num">3</div><strong>分かったこと・企画の概要（1分）：</strong>調査で分かったこと、提案の要点</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num">4</div><strong>感想・気づき（30秒）：</strong>AIを使ってみてどう感じたか</div>
+  </div>
+
+  <h2>フィードバックの視点</h2>
+  <div class="card-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card" style="border-top:4px solid #22c55e">
+      <h4>良かった点</h4>
+      <p>「この部分のAI活用が上手いと思った」</p>
+    </div>
+    <div class="card" style="border-top:4px solid #3b82f6">
+      <h4>参考になった点</h4>
+      <p>「この使い方は自分の業務でも試したい」</p>
+    </div>
+    <div class="card" style="border-top:4px solid #8b5cf6">
+      <h4>発展のヒント</h4>
+      <p>「こうするともっと良くなりそう」</p>
+    </div>
+  </div>
+
+  <div class="highlight-box success">
+    <p style="margin:0"><strong>他の人の発表を聞くことも大事な学び。</strong><br>「こんな使い方があるのか」「自分の業務でも応用できそう」というヒントが見つかります。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 8: 全体振り返り＆卒業 (10min) ========== -->
+<div class="part-page" data-part="7" data-notes="最終振り返り。5つの力の最終セルフチェック。「研修前の自分」と「今の自分」の変化を振り返る。今後のアクションプラン。修了証の案内（あれば）。<strong>雰囲気:</strong> 達成感を共有し「これからが本番」の前向きな気持ちで終わる。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">全体振り返り＆卒業 ― 10分</div>
+    <h1>全8回の振り返り<br>＆卒業</h1>
+  </div>
+
+  <h2>5つの力：最終セルフチェック</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>【最終セルフチェック】
+名前：
+
+■ 聞く力（プロンプトの書き方）：　/5
+■ 書く力（ビジネス文書作成）：　/5
+■ 調べる力（要約・調査・出典確認）：　/5
+■ 考える力（壁打ち・企画）：　/5
+■ まとめる力（資料作成・レビュー）：　/5
+
+合計：　/25
+
+■ 研修前の自分と今の自分で一番変わったこと：
+
+■ 明日から業務で使いたいAI活用法：</div>
+
+  <hr class="divider">
+
+  <h2>「研修前の自分」と「今の自分」</h2>
+  <div class="compare">
+    <div class="compare-col bad">
+      <h4>研修前</h4>
+      <p>AIって何ができるの？<br>使い方が分からない<br>怖くて使えない<br>仕事で使えるイメージがない</p>
+    </div>
+    <div class="compare-col good">
+      <h4>今の自分</h4>
+      <p>5つのスキルが身についた<br>業務で使えるプロンプトが書ける<br>安全に使う方法を知っている<br><strong>自分の業務で実践できる</strong></p>
+    </div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>今後のアクションプラン</h2>
+  <div class="selfcheck">
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#dcfce7;color:#16a34a">1</div><strong>明日から：</strong>毎日1回、業務でAIを使ってみる（メール下書き、要約、調べもの）</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">2</div><strong>1週間以内：</strong>研修で学んだ技を1つ、実際の業務で試す</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#faf5ff;color:#7c3aed">3</div><strong>1ヶ月以内：</strong>「AIを使って○○が楽になった」と言える体験を1つ作る</div>
+  </div>
+
+  <div class="highlight-box" style="border-color:#f59e0b;background:#fffbeb;margin-top:40px">
+    <p style="margin:0"><strong>大事なこと：</strong>AIは日々進化します。今日学んだことをベースに、<strong>新しい機能やツールが出たら試してみる</strong>姿勢が一番大事。<br>「AIを使いこなす人」は、完璧な人ではなく<strong>「試し続ける人」</strong>です。</p>
+  </div>
+
+  <div style="text-align:center;margin-top:60px">
+    <p style="font-size:48px;margin-bottom:16px;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;font-weight:700">修了おめでとうございます！</p>
+    <p style="font-size:28px;color:#64748b">全8回の研修、お疲れさまでした。<br>ここからが「AI活用」の本当のスタートです。</p>
+  </div>
+</div>
+</div>
+
+</div>
+
+<div class="keyboard-hint">← → パート移動 ／ N 講師メモ ／ Space タイマー ／ F 全画面</div>
+
+<script>
+const PARTS=[
+  {name:'オープニング',minutes:10,type:'lecture'},
+  {name:'卒業課題の説明',minutes:5,type:'lecture'},
+  {name:'卒業課題: 調査フェーズ',minutes:15,type:'handson'},
+  {name:'卒業課題: 整理＋企画フェーズ',minutes:15,type:'handson'},
+  {name:'卒業課題: 文書化＋資料化フェーズ',minutes:15,type:'handson'},
+  {name:'休憩',minutes:5,type:'break'},
+  {name:'成果発表＆フィードバック',minutes:15,type:'review'},
+  {name:'全体振り返り＆卒業',minutes:10,type:'review'}
+];
+function switchIndustry(g,b){document.querySelectorAll('.industry-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.industry-content').forEach(c=>{c.classList.toggle('active',c.dataset.group===g)})}
+const pageLog=[];let pageEnterTime=Date.now();
+function logPageTransition(f,t){const n=Date.now();pageLog.push({from:f+1,to:t+1,elapsed:Math.round(totalSeconds),dwellMs:n-pageEnterTime,timestamp:new Date().toISOString()});pageEnterTime=n}
+function exportLog(){const s=PARTS.map((p,i)=>{const e=pageLog.filter(l=>l.from===i+1);const d=e.reduce((a,b)=>a+b.dwellMs,0);return{part:p.name,planned:p.minutes+'分',actual:Math.round(d/60000)+'分'}});const j=JSON.stringify({summary:s,detail:pageLog},null,2);const b=new Blob([j],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='session-08-log-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
+let currentPage=0,timerRunning=false,totalSeconds=0,partSeconds=0,timerInterval=null,notesVisible=false;
+const pages=document.querySelectorAll('.part-page');const totalPages=pages.length;document.getElementById('pageTotal').textContent=totalPages;
+function showPage(i){if(i<0||i>=totalPages)return;logPageTransition(currentPage,i);pages.forEach((p,x)=>{p.classList.remove('active','prev');if(x===i)p.classList.add('active');else if(x<i)p.classList.add('prev')});pages[i].scrollTop=0;currentPage=i;document.getElementById('pageNum').textContent=i+1;document.getElementById('progressFill').style.width=((i+1)/totalPages*100)+'%';document.getElementById('navLeft').disabled=i===0;document.getElementById('navRight').disabled=i===totalPages-1;updatePartIndicator();updateNotes()}
+function nextPage(){showPage(currentPage+1)}function prevPage(){showPage(currentPage-1)}
+function updatePartIndicator(){const pi=parseInt(pages[currentPage].dataset.part)||0;const p=PARTS[pi];const ind=document.getElementById('partIndicator');const m={lecture:'part-lecture',handson:'part-handson',break:'part-break',review:'part-review'};ind.className='part-indicator '+m[p.type];document.getElementById('partName').textContent=p.name;resetPartTimer(p.minutes)}
+let cpm=5;function resetPartTimer(m){cpm=m;partSeconds=m*60;updatePartTimeDisplay()}
+function toggleTimer(){if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerToggle').textContent='Start';document.getElementById('timerToggle').classList.remove('active')}else{timerInterval=setInterval(tick,1000);timerRunning=true;document.getElementById('timerToggle').textContent='Pause';document.getElementById('timerToggle').classList.add('active')}}
+function tick(){totalSeconds++;partSeconds--;updateTotalTimeDisplay();updatePartTimeDisplay()}
+function updateTotalTimeDisplay(){const m=Math.floor(totalSeconds/60),s=totalSeconds%60;document.getElementById('totalTime').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function updatePartTimeDisplay(){const el=document.getElementById('partTime');if(partSeconds<=0){const o=Math.abs(partSeconds),m=Math.floor(o/60),s=o%60;el.textContent='-'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value overtime'}else if(partSeconds<=60){const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value warning'}else{const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value'}}
+function updateNotes(){document.getElementById('instructorNotes').innerHTML=pages[currentPage].dataset.notes||''}
+function toggleNotes(){notesVisible=!notesVisible;document.getElementById('instructorNotes').classList.toggle('visible',notesVisible);document.getElementById('notesToggle').classList.toggle('active',notesVisible)}
+function copyText(btn){const t=btn.parentElement.textContent.replace(/コピー(済み ✓)?/g,'').trim();navigator.clipboard.writeText(t).then(()=>{btn.textContent='コピー済み ✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('copied')},1500)})}
+function toggleFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
+document.addEventListener('fullscreenchange',()=>{document.getElementById('fsBtn').innerHTML=document.fullscreenElement?'&#x26F6; 終了':'&#x26F6; 全画面'});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextPage()}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevPage()}else if(e.key==='n'||e.key==='N')toggleNotes();else if(e.key===' '){e.preventDefault();toggleTimer()}else if(e.key==='f'||e.key==='F')toggleFullscreen();else if(e.key==='Home'){e.preventDefault();showPage(0)}else if(e.key==='End'){e.preventDefault();showPage(totalPages-1)}else if(e.key==='l'||e.key==='L')exportLog()});
+showPage(0);
+</script>
+</body>
+</html>

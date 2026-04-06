@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI研修 初級編 第5回：深く調べてまとめる</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;background:#f8f9fb;color:#1e293b;line-height:1.7}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:6px 20px;background:rgba(255,255,255,.95);border-bottom:1px solid #e2e8f0;font-size:13px;backdrop-filter:blur(8px);height:44px}
+.timer-section{display:flex;align-items:center;gap:16px}.timer-label{color:#64748b;font-size:11px}.timer-value{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:#1e293b}.timer-value.warning{color:#d97706}.timer-value.overtime{color:#dc2626;animation:pulse 1s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.timer-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#1e293b;cursor:pointer;font-size:12px;transition:background .2s}.timer-btn:hover{background:#f1f5f9}.timer-btn.active{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.fs-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#64748b;cursor:pointer;font-size:12px;transition:background .2s}.fs-btn:hover{background:#f1f5f9}
+.part-indicator{display:flex;align-items:center;gap:6px;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:500}.part-indicator .dot{width:7px;height:7px;border-radius:50%}
+.part-lecture{background:#eff6ff;color:#2563eb}.part-lecture .dot{background:#3b82f6}.part-handson{background:#f0fdf4;color:#16a34a}.part-handson .dot{background:#22c55e}.part-break{background:#f8fafc;color:#64748b}.part-break .dot{background:#94a3b8}.part-review{background:#faf5ff;color:#7c3aed}.part-review .dot{background:#8b5cf6}
+.slide-counter{color:#64748b;font-size:12px}
+.progress-bar{position:fixed;bottom:0;left:0;right:0;height:3px;background:#e2e8f0;z-index:100}.progress-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);transition:width .3s ease}
+.parts-wrapper{position:fixed;top:44px;bottom:3px;left:0;right:0;overflow:hidden}
+.part-page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;padding:60px 72px 80px;opacity:0;transform:translateX(50px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;scroll-behavior:smooth}.part-page.active{opacity:1;transform:translateX(0);pointer-events:auto}.part-page.prev{transform:translateX(-50px)}.part-page .inner{max-width:960px;margin:0 auto}
+h1{font-size:56px;font-weight:700;margin-bottom:20px;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.25}
+h2{font-size:40px;font-weight:700;margin:72px 0 20px;color:#1e293b}h3{font-size:30px;font-weight:600;margin:40px 0 14px;color:#334155}
+p{font-size:26px;color:#475569;margin-bottom:16px}ul,ol{font-size:24px;padding-left:36px;color:#475569}li{margin-bottom:10px}li strong{color:#1e293b}
+.section-header{text-align:center;padding:80px 0 60px}.section-header .tag{font-size:20px;color:#64748b;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px}.section-header .subtitle{font-size:26px;color:#64748b;margin-bottom:0}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:22px}th{background:#f1f5f9;padding:14px 20px;text-align:left;font-weight:600;color:#475569;border-bottom:3px solid #e2e8f0}td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{background:#f8fafc}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin:20px 0}.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}.card h4{font-size:24px;margin-bottom:8px;color:#1e293b}.card p{font-size:20px;color:#64748b;margin-bottom:0}
+.prompt-block{background:#fff;border:1px solid #e2e8f0;border-left:6px solid #22c55e;border-radius:12px;padding:20px 20px 16px;margin:18px 0;font-size:22px;color:#1e293b;line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:10px;white-space:pre-wrap}.prompt-block .copy-btn{align-self:flex-end;padding:6px 14px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:13px;flex-shrink:0}.prompt-block .copy-btn:hover{background:#dcfce7;border-color:#22c55e;color:#16a34a}.prompt-block .copy-btn.copied{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.highlight-box{background:#f8fafc;border-radius:14px;padding:24px 28px;margin:20px 0;border:1px solid #e2e8f0;font-size:24px}.highlight-box.warning{border-color:#fbbf24;background:#fffbeb}.highlight-box.success{border-color:#86efac;background:#f0fdf4}.highlight-box.info{border-color:#93c5fd;background:#eff6ff}.highlight-box p{font-size:24px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}.compare-col{background:#fff;border-radius:14px;padding:24px}.compare-col.bad{border:3px solid #fca5a5}.compare-col.bad h4{color:#dc2626}.compare-col.good{border:3px solid #86efac}.compare-col.good h4{color:#16a34a}.compare-col p{font-size:22px}
+.selfcheck{display:flex;flex-direction:column;gap:14px;margin:20px 0}.selfcheck-item{display:flex;align-items:center;gap:18px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px 24px;font-size:24px}.selfcheck-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0}
+.quiz-answer{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:22px 26px;margin:14px 0;cursor:pointer;transition:all .2s;font-size:24px}.quiz-answer:hover{border-color:#3b82f6;background:#f8fafc}.quiz-answer.revealed{border-color:#16a34a;background:#f0fdf4}.quiz-answer .answer-mark{display:none;color:#16a34a;font-weight:700;margin-top:12px;font-size:22px}.quiz-answer.revealed .answer-mark{display:block}
+.divider{border:none;border-top:2px solid #e2e8f0;margin:80px 0}
+.nav-arrow{position:fixed;top:50%;z-index:50;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:28px;display:flex;align-items:center;justify-content:center;transition:all .2s;transform:translateY(-50%);box-shadow:0 2px 6px rgba(0,0,0,.06)}.nav-arrow:hover{background:#f1f5f9;color:#1e293b}.nav-arrow.left{left:20px}.nav-arrow.right{right:20px}.nav-arrow:disabled{opacity:.2;cursor:default}
+.instructor-notes{position:fixed;bottom:6px;left:20px;right:20px;z-index:90;background:rgba(255,255,255,.97);border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;font-size:16px;color:#475569;line-height:1.5;backdrop-filter:blur(8px);transform:translateY(calc(100% + 12px));transition:transform .3s ease;max-height:140px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.08)}.instructor-notes.visible{transform:translateY(0)}.instructor-notes strong{color:#d97706}
+.notes-toggle{position:fixed;bottom:12px;right:20px;z-index:91;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.06)}.notes-toggle:hover{background:#f1f5f9;color:#1e293b}.notes-toggle.active{background:#fffbeb;border-color:#f59e0b;color:#d97706}
+.keyboard-hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:80;color:#94a3b8;font-size:14px}
+.industry-switcher{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap}.industry-btn{padding:10px 20px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;color:#64748b;cursor:pointer;font-size:16px;font-weight:600;transition:all .2s}.industry-btn:hover{border-color:#3b82f6;color:#2563eb}.industry-btn.active{background:#2563eb;color:#fff;border-color:#2563eb}.industry-content{display:none}.industry-content.active{display:block}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin:20px 0}.flow-item{display:flex;align-items:center;gap:18px;padding:18px 22px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;font-size:24px}.flow-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;background:#eff6ff;color:#2563eb;flex-shrink:0}.flow-arrow{text-align:center;font-size:22px;color:#94a3b8;margin:3px 0 3px 18px}
+@media(max-width:768px){.part-page{padding:32px 28px 60px}h1{font-size:36px}h2{font-size:28px}h3{font-size:24px}p,.highlight-box p,.selfcheck-item,.quiz-answer,.prompt-block,td,th,ul,ol,.card h4,.card p,.compare-col p,.flow-item{font-size:18px}.compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="timer-section">
+    <a href="../../index.html" style="color:#64748b;text-decoration:none;font-size:14px;margin-right:8px">&#x1F3E0;</a>
+    <button class="timer-btn" id="timerToggle" onclick="toggleTimer()">Start</button>
+    <div><div class="timer-label">経過時間</div><div class="timer-value" id="totalTime">00:00</div></div>
+    <div><div class="timer-label">パート残り</div><div class="timer-value" id="partTime">--:--</div></div>
+  </div>
+  <div id="partIndicator" class="part-indicator part-lecture"><span class="dot"></span><span id="partName">オープニング</span></div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">&#x26F6; 全画面</button>
+    <div class="slide-counter"><span id="pageNum">1</span> / <span id="pageTotal">9</span></div>
+  </div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<button class="nav-arrow left" id="navLeft" onclick="prevPage()">&#8592;</button>
+<button class="nav-arrow right" id="navRight" onclick="nextPage()">&#8594;</button>
+<button class="notes-toggle" id="notesToggle" onclick="toggleNotes()">N</button>
+<div class="instructor-notes" id="instructorNotes"></div>
+
+<div class="parts-wrapper">
+
+<!-- ========== PAGE 1: オープニング (5min) ========== -->
+<div class="part-page" data-part="0" data-notes="前回は「調べる力（要約・比較）」、今回は「調べる力の拡張」。NotebookLMという新しいツールを使い、複数の資料をまとめて読み込ませる。チャレンジ（3つの記事を集めて要約）を試した人はNotebookLMとの違いを体感しよう。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">AI研修 初級編 第5回</div>
+    <h1>深く調べて<br>まとめる</h1>
+    <p class="subtitle">NotebookLMで複数資料を体系的に調査する</p>
+  </div>
+
+  <h2>今日のゴール</h2>
+  <div class="selfcheck">
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">1</div>NotebookLMに複数資料を読み込ませてQ&Aできる</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">2</div>ディープリサーチでレポート形式の調査結果を取得できる</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">3</div>出典を確認して正確な情報を使い分けられる</div>
+  </div>
+
+  <div class="highlight-box info" style="margin-top:32px">
+    <p style="margin:0">前回は「1つの文書を要約する」力を身につけました。<br>今回は<strong>複数の資料をまとめて読み込ませ、体系的に調査する</strong>力を身につけます。<br><br>前回のチャレンジ（3つの記事を集めて要約）を試した方は、今日のNotebookLMとの違いを体感してみましょう。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 2: ミニ講義① NotebookLMとは (10min) ========== -->
+<div class="part-page" data-part="1" data-notes="NotebookLMは「自分の資料だけを元にAIが答えてくれる」ツール。通常のAIチャットとの最大の違いは「あなたがアップした資料だけ」を情報源にすること。ハルシネーションが起きにくい。デモ：資料をアップロードして質問する流れを見せる。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">ミニ講義 01 ― 10分</div>
+    <h1>NotebookLMとは</h1>
+    <p class="subtitle">複数資料をまとめて読み込み、Q&Aする</p>
+  </div>
+
+  <h2>NotebookLMの特徴</h2>
+  <div class="card-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card" style="border-top:4px solid #22c55e">
+      <h4>複数資料を一括アップ</h4>
+      <p>PDF、Webページ、テキストなど複数の資料をまとめて読み込ませる</p>
+    </div>
+    <div class="card" style="border-top:4px solid #3b82f6">
+      <h4>資料ベースのQ&A</h4>
+      <p>アップした資料の中身だけを根拠にAIが回答してくれる</p>
+    </div>
+    <div class="card" style="border-top:4px solid #8b5cf6">
+      <h4>出典が明確</h4>
+      <p>どの資料のどの部分を根拠にしているか、出典が表示される</p>
+    </div>
+  </div>
+
+  <h2>通常のAIチャットとの違い</h2>
+  <div class="compare">
+    <div class="compare-col bad">
+      <h4>通常のAIチャット</h4>
+      <p>学習データ全体から回答を生成<br><br>→ 情報源が不明確<br>→ ハルシネーション（でっちあげ）が起きやすい<br>→ 「何を根拠に言っているの？」が分からない</p>
+    </div>
+    <div class="compare-col good">
+      <h4>NotebookLM</h4>
+      <p><strong>あなたがアップした資料だけ</strong>が情報源<br><br>→ 出典が明確に表示される<br>→ ハルシネーションが起きにくい<br>→ 根拠を確認しながら使える</p>
+    </div>
+  </div>
+
+  <h2>資料の追加方法</h2>
+  <div class="flow-steps">
+    <div class="flow-item"><div class="flow-num">1</div>NotebookLM（notebooklm.google.com）にアクセス</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num">2</div>「新しいノートブック」を作成</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num">3</div>「ソースを追加」からPDF・Webページ・テキストをアップロード</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num">4</div>チャット欄で質問を入力 → 資料に基づいた回答が返る</div>
+  </div>
+
+  <div class="highlight-box warning">
+    <p style="margin:0"><strong>注意：</strong>NotebookLMは「アップした資料の中」しか見ない。<br>資料に書いていない情報は「分かりません」と返ってくる。これが<strong>信頼性の高さ</strong>の理由。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 3: 実践① NotebookLMで資料を読み込む (20min) ========== -->
+<div class="part-page" data-part="2" data-notes="業種別の資料テーマでNotebookLMを実践。資料はWebページのURLを貼り付けるだけでもOK。<strong>大事:</strong> 出典表示（引用マーク）をクリックして「どの資料のどこに書いてあるか」を確認する習慣をつけさせる。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 01 ― 20分</div>
+    <h1>NotebookLMで<br>資料を読み込む</h1>
+    <p class="subtitle">複数資料をアップロードしてQ&Aする</p>
+  </div>
+
+  <h2>Step 1：ノートブックを作成し、資料を追加する</h2>
+  <p>NotebookLMにアクセスして、業種に合った資料を2〜3個追加してください。</p>
+
+  <div class="industry-switcher">
+    <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
+    <button class="industry-btn" onclick="switchIndustry('B',this)">B. 技術・専門職系</button>
+    <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
+  </div>
+
+  <div class="industry-content active" data-group="A">
+    <div class="highlight-box info">
+      <p style="margin:0"><strong>追加する資料の例：</strong><br>厚生労働省の福祉計画資料、地域包括ケアシステムの解説ページ、社会福祉協議会の活動報告書など。<br>WebページのURLを貼り付けるか、PDFをアップロードしてください。</p>
+    </div>
+  </div>
+  <div class="industry-content" data-group="B">
+    <div class="highlight-box info">
+      <p style="margin:0"><strong>追加する資料の例：</strong><br>国土交通省の建設業ガイドライン、建設業法の解説ページ、業界団体の安全管理資料など。<br>WebページのURLを貼り付けるか、PDFをアップロードしてください。</p>
+    </div>
+  </div>
+  <div class="industry-content" data-group="C">
+    <div class="highlight-box info">
+      <p style="margin:0"><strong>追加する資料の例：</strong><br>業界団体の市場動向レポート、経済産業省の中小企業白書、飲食業界の動向記事など。<br>WebページのURLを貼り付けるか、PDFをアップロードしてください。</p>
+    </div>
+  </div>
+
+  <h2>Step 2：資料に質問してみる</h2>
+
+  <div class="industry-content active" data-group="A">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>アップロードした資料をもとに、以下の質問に答えてください。
+
+1. 地域包括ケアにおける社協の役割は何ですか？
+2. 今後の課題として挙げられているものは？
+3. 複数の資料で共通して指摘されているポイントは？</div>
+  </div>
+  <div class="industry-content" data-group="B">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>アップロードした資料をもとに、以下の質問に答えてください。
+
+1. 建設業の担い手確保のために推奨されている施策は？
+2. 今後の規制変更で注意すべき点は？
+3. 複数の資料で共通して指摘されているポイントは？</div>
+  </div>
+  <div class="industry-content" data-group="C">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>アップロードした資料をもとに、以下の質問に答えてください。
+
+1. 市場の主なトレンドは何ですか？
+2. 中小企業が直面している共通の課題は？
+3. 複数の資料で共通して指摘されているポイントは？</div>
+  </div>
+
+  <h2>Step 3：出典を確認する</h2>
+  <p>回答に表示される引用マーク（番号）をクリックして、元の資料のどの部分が根拠になっているか確認してください。</p>
+
+  <div class="highlight-box success" style="margin-top:32px">
+    <p style="margin:0"><strong>出典が表示されるのがNotebookLMの最大の強み。</strong><br>「AIが言っている」のではなく「この資料のここに書いてある」と根拠を示せる。<br>業務の報告書や提案書に使う情報は、必ず出典を確認しましょう。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 4: 休憩 (5min) ========== -->
+<div class="part-page" data-part="3" data-notes="「後半はディープリサーチです。NotebookLMは自分の資料を深掘り、ディープリサーチはWeb全体から体系的に調べる。使い分けを学びます」">
+<div class="inner">
+  <div class="section-header" style="padding:100px 0">
+    <p style="font-size:72px;margin-bottom:20px">&#x2615;</p>
+    <h1>休憩タイム</h1>
+    <p class="subtitle">5分間</p>
+    <p style="margin-top:32px;color:#64748b">NotebookLMの「出典が見える」感覚、いかがでしたか？<br>後半は<strong>ディープリサーチと出典確認</strong>を学びます。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 5: ミニ講義② ディープリサーチと出典確認 (10min) ========== -->
+<div class="part-page" data-part="4" data-notes="ディープリサーチはGemini/Perplexityの機能で、Web上の情報を体系的に調べてレポート形式でまとめてくれる。NotebookLMとの使い分け：自分の資料を深掘り→NotebookLM、Web全体から新しい情報を調査→ディープリサーチ。出典の信頼性を確認する方法も教える。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">ミニ講義 02 ― 10分</div>
+    <h1>ディープリサーチと<br>出典確認</h1>
+    <p class="subtitle">Web全体から体系的に調査する</p>
+  </div>
+
+  <h2>ディープリサーチとは</h2>
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card" style="border-top:4px solid #3b82f6">
+      <h4>Gemini Deep Research</h4>
+      <p>Geminiの「ディープリサーチ」機能。Web上の複数ソースを自動で調べ、レポート形式でまとめてくれる</p>
+    </div>
+    <div class="card" style="border-top:4px solid #8b5cf6">
+      <h4>Perplexity</h4>
+      <p>検索特化型AI。質問に対して複数のWebソースを引用しながら回答。ファクトチェックに便利</p>
+    </div>
+  </div>
+
+  <h2>NotebookLMとの使い分け</h2>
+  <table>
+    <tr><th>用途</th><th>ツール</th><th>特徴</th></tr>
+    <tr><td>自分の資料を深掘りしたい</td><td><strong>NotebookLM</strong></td><td>アップした資料だけが情報源</td></tr>
+    <tr><td>Web全体から最新情報を調査</td><td><strong>ディープリサーチ</strong></td><td>自動で複数サイトを巡回</td></tr>
+    <tr><td>特定の事実を確認したい</td><td><strong>Perplexity</strong></td><td>出典URL付きで回答</td></tr>
+  </table>
+
+  <h2>出典の信頼性チェック</h2>
+  <div class="card-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card"><h4>発信元は？</h4><p>政府機関・学術論文は信頼度高。個人ブログ・SNSは低</p></div>
+    <div class="card"><h4>いつの情報？</h4><p>古い情報が混じっていないか。日付を確認</p></div>
+    <div class="card"><h4>複数ソースで一致？</h4><p>1つの情報源だけでなく、複数で確認できるか</p></div>
+  </div>
+
+  <div class="highlight-box warning">
+    <p style="margin:0"><strong>ディープリサーチも万能ではない。</strong><br>AIが「レポート風」にまとめてくれるが、元のソース自体が間違っている可能性もある。<br>重要な数字や事実は、<strong>必ず原典に当たって確認</strong>すること。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 6: 実践② ディープリサーチでレポート作成 (15min) ========== -->
+<div class="part-page" data-part="5" data-notes="GeminiのDeep Researchを使う。業種別のテーマで実践。<strong>ポイント:</strong> レポートが出たら「出典リンク」を確認して、実際にリンク先を開いて情報が正しいかチェックさせる。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 02 ― 15分</div>
+    <h1>ディープリサーチで<br>レポート作成</h1>
+    <p class="subtitle">Gemini Deep Researchでテーマを調査する</p>
+  </div>
+
+  <p>Geminiの「ディープリサーチ」機能を使って、業界テーマについて調査レポートを作成しましょう。</p>
+
+  <div class="industry-switcher">
+    <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
+    <button class="industry-btn" onclick="switchIndustry('B',this)">B. 技術・専門職系</button>
+    <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
+  </div>
+
+  <div class="industry-content active" data-group="A">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>地域の認知症高齢者見守りネットワークの先進事例について調査してください。
+
+以下の観点でレポートにまとめてください：
+1. 全国の先進的な取り組み事例（3つ以上）
+2. 各事例の特徴と成功要因
+3. 社会福祉協議会が果たしている役割
+4. 導入にあたっての課題と対策
+5. 自治体の規模別の適用可能性</div>
+  </div>
+  <div class="industry-content" data-group="B">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>建設業の働き方改革と2024年問題について調査してください。
+
+以下の観点でレポートにまとめてください：
+1. 2024年問題の概要と建設業への影響
+2. 先進的に取り組んでいる企業の事例（3つ以上）
+3. 労働時間削減のための具体的な施策
+4. ICT活用による生産性向上の方法
+5. 中小建設会社が取り組むべき優先事項</div>
+  </div>
+  <div class="industry-content" data-group="C">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>飲食業界のインバウンド対応成功事例について調査してください。
+
+以下の観点でレポートにまとめてください：
+1. インバウンド対応で成功している飲食店の事例（3つ以上）
+2. 多言語対応の具体的な方法とコスト
+3. キャッシュレス決済の導入状況
+4. SNSを活用した海外向け集客の方法
+5. 小規模店舗でも始められる対応策</div>
+  </div>
+
+  <h3>レポートが出たら</h3>
+  <div class="flow-steps">
+    <div class="flow-item"><div class="flow-num">1</div>出典リンクを確認する（実際にリンクを開いてみる）</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num">2</div>レポートの内容と出典元の内容が一致しているか確認</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num">3</div>不明な点があれば追加の質問をする</div>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 7: 実践③ 出典の信頼性を確認する (10min) ========== -->
+<div class="part-page" data-part="6" data-notes="ディープリサーチの結果を題材に、出典の信頼性をチェックする練習。リンク切れ、情報の古さ、発信元の偏りなどを見つける。<strong>ポイント:</strong> 「AIが言っているから正しい」ではなく「どこに書いてあるか確認する」習慣を定着させる。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 03 ― 10分</div>
+    <h1>出典の信頼性を<br>確認する</h1>
+    <p class="subtitle">ディープリサーチの結果を検証する</p>
+  </div>
+
+  <p>実践2で得たディープリサーチのレポートを使って、出典の信頼性をチェックしましょう。</p>
+
+  <h2>チェック項目</h2>
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card" style="border-top:4px solid #dc2626">
+      <h4>要注意サイン</h4>
+      <p>リンク切れ（404エラー）<br>情報が3年以上前<br>個人ブログが唯一の根拠<br>数字の出典が不明確</p>
+    </div>
+    <div class="card" style="border-top:4px solid #22c55e">
+      <h4>信頼できるサイン</h4>
+      <p>政府機関・公的機関のサイト<br>複数のソースで同じ事実を確認<br>具体的なデータや日付がある<br>著者や発行元が明確</p>
+    </div>
+  </div>
+
+  <h2>Perplexityでクロスチェック</h2>
+  <p>ディープリサーチで得た情報が正しいか、Perplexityで別角度から確認してみましょう。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の情報が正しいか確認してください。出典も含めて教えてください。
+
+（ディープリサーチのレポートから気になる事実や数字を貼り付ける）</div>
+
+  <h2>矛盾を見つけたら</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>先ほどの調査レポートで以下の点が気になります。
+- （矛盾点や疑問点を記載）
+
+最新の正確な情報を、信頼できるソース付きで教えてください。</div>
+
+  <div class="highlight-box success">
+    <p style="margin:0"><strong>「AIの回答を別のAIで検証する」</strong>のは有効なテクニック。<br>1つのツールを盲信せず、複数の情報源で確認する癖をつけましょう。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 8: 実践④ 自分の業務テーマで調査 (10min) ========== -->
+<div class="part-page" data-part="7" data-notes="自分の業務テーマでNotebookLMまたはディープリサーチを使う。最も実感が出るパート。<strong>注意:</strong> 機密情報は入力しない。テーマ選びに迷う人には「最近困っていること」「上司に聞かれて調べたいこと」を提案。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 04 ― 10分</div>
+    <h1>自分の業務テーマで<br>調査する</h1>
+    <p class="subtitle">NotebookLMまたはディープリサーチを使う</p>
+  </div>
+
+  <p>自分の業務に関するテーマで、今日学んだツールを使って調査してみましょう。</p>
+
+  <h2>選択A：NotebookLMで自分の資料を深掘り</h2>
+  <p>手元の業務資料（PDF・報告書など）をNotebookLMにアップして質問する。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>アップロードした資料をもとに、以下を教えてください。
+1. この資料の要点を箇条書き5つで
+2. 特に注意すべき数字やデータ
+3. 私が上司に報告する場合、どのポイントを押さえるべきか</div>
+
+  <h2>選択B：ディープリサーチで業界情報を調べる</h2>
+  <p>自分の業界や業務に関するテーマでディープリサーチを実行する。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>（自分の業務テーマ）について、最新の動向を調査してください。
+
+以下の観点でまとめてください：
+1. 現状の概要
+2. 最近の変化やトレンド
+3. 先進的な取り組み事例
+4. 今後の見通し</div>
+
+  <div class="highlight-box warning" style="margin-top:32px">
+    <p style="margin:0"><strong>注意：</strong>業務資料を使う場合はOK/NGルール（第1回で学んだ3段階）を守ってください。<br>個人情報・機密情報は伏せてから入力。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 9: 振り返り＆次回予告 (10min) ========== -->
+<div class="part-page" data-part="8" data-notes="クイズ→セルフチェック→チャレンジ。チャレンジは第6回（壁打ち）への橋渡し。「自分のテーマでミニレポートを作る」ことで調査力を定着させる。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">振り返り＆次回予告 ― 10分</div>
+    <h1>今日できるようになったこと</h1>
+  </div>
+
+  <h2>振り返りクイズ（タップで答え）</h2>
+  <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
+    <strong>Q1.</strong> NotebookLMと通常のAIチャットの最大の違いは？
+    <div class="answer-mark">&#x2B55; NotebookLMは<strong>アップした資料だけ</strong>を情報源にする。通常のAIは学習データ全体から回答するため、出典が不明確でハルシネーションが起きやすい。</div>
+  </div>
+  <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
+    <strong>Q2.</strong> ディープリサーチの結果を使う時、何を確認すべき？
+    <div class="answer-mark">&#x2B55; <strong>出典の信頼性。</strong>リンク切れがないか、情報が古くないか、発信元が信頼できるか、複数のソースで確認できるかをチェックする。</div>
+  </div>
+  <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
+    <strong>Q3.</strong> 「自分の資料を深掘りしたい」時と「Web全体から調べたい」時、どのツールを使う？
+    <div class="answer-mark">&#x2B55; 自分の資料を深掘り → <strong>NotebookLM</strong>、Web全体から調査 → <strong>ディープリサーチ</strong>（Gemini）、特定の事実確認 → <strong>Perplexity</strong>。</div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>セルフチェック</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>【第5回セルフチェック】
+名前：
+1. NotebookLMに資料を読み込ませてQ&Aできた：　/5
+2. ディープリサーチでレポートを取得できた：　/5
+3. 出典を確認して信頼性を評価できた：　/5</div>
+
+  <hr class="divider">
+
+  <h2>今週のチャレンジ</h2>
+  <p>次回の演習で活用します。事前に試しておくと効果的です。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>自分の業務テーマについて、NotebookLMまたはディープリサーチを使ってミニレポートを作成してください。
+
+■ テーマ：
+■ 調査方法（NotebookLM/ディープリサーチ/Perplexity）：
+■ 分かったこと（箇条書き5つ）：
+■ 信頼できる出典（3つ以上）：
+■ まだ分からないこと・追加で調べたいこと：</div>
+
+  <hr class="divider">
+
+  <h2>次回予告：第6回「AIと一緒に考える」</h2>
+  <div class="highlight-box" style="border-color:#c4b5fd">
+    <p style="margin:0">今日は「深く調べてまとめる」力を身につけました。<br>次回はAIを<strong>壁打ち相手</strong>にして、<strong>アイデアを広げ、企画の骨子を作る</strong>方法を学びます。<br>「1人で考えるよりAIと一緒に考えると視野が広がる」を体感しましょう。</p>
+  </div>
+  <p style="text-align:center;margin-top:40px;font-size:32px">お疲れさまでした！</p>
+</div>
+</div>
+
+</div>
+
+<div class="keyboard-hint">← → パート移動 ／ N 講師メモ ／ Space タイマー ／ F 全画面</div>
+
+<script>
+const PARTS=[
+  {name:'オープニング',minutes:5,type:'lecture'},
+  {name:'ミニ講義: NotebookLMとは',minutes:10,type:'lecture'},
+  {name:'実践①: NotebookLMで資料を読み込む',minutes:20,type:'handson'},
+  {name:'休憩',minutes:5,type:'break'},
+  {name:'ミニ講義: ディープリサーチと出典確認',minutes:10,type:'lecture'},
+  {name:'実践②: ディープリサーチでレポート作成',minutes:15,type:'handson'},
+  {name:'実践③: 出典の信頼性を確認する',minutes:10,type:'handson'},
+  {name:'実践④: 自分の業務テーマで調査',minutes:10,type:'handson'},
+  {name:'振り返り＆次回予告',minutes:10,type:'review'}
+];
+function switchIndustry(g,b){document.querySelectorAll('.industry-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.industry-content').forEach(c=>{c.classList.toggle('active',c.dataset.group===g)})}
+const pageLog=[];let pageEnterTime=Date.now();
+function logPageTransition(f,t){const n=Date.now();pageLog.push({from:f+1,to:t+1,elapsed:Math.round(totalSeconds),dwellMs:n-pageEnterTime,timestamp:new Date().toISOString()});pageEnterTime=n}
+function exportLog(){const s=PARTS.map((p,i)=>{const e=pageLog.filter(l=>l.from===i+1);const d=e.reduce((a,b)=>a+b.dwellMs,0);return{part:p.name,planned:p.minutes+'分',actual:Math.round(d/60000)+'分'}});const j=JSON.stringify({summary:s,detail:pageLog},null,2);const b=new Blob([j],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='session-05-log-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
+let currentPage=0,timerRunning=false,totalSeconds=0,partSeconds=0,timerInterval=null,notesVisible=false;
+const pages=document.querySelectorAll('.part-page');const totalPages=pages.length;document.getElementById('pageTotal').textContent=totalPages;
+function showPage(i){if(i<0||i>=totalPages)return;logPageTransition(currentPage,i);pages.forEach((p,x)=>{p.classList.remove('active','prev');if(x===i)p.classList.add('active');else if(x<i)p.classList.add('prev')});pages[i].scrollTop=0;currentPage=i;document.getElementById('pageNum').textContent=i+1;document.getElementById('progressFill').style.width=((i+1)/totalPages*100)+'%';document.getElementById('navLeft').disabled=i===0;document.getElementById('navRight').disabled=i===totalPages-1;updatePartIndicator();updateNotes()}
+function nextPage(){showPage(currentPage+1)}function prevPage(){showPage(currentPage-1)}
+function updatePartIndicator(){const pi=parseInt(pages[currentPage].dataset.part)||0;const p=PARTS[pi];const ind=document.getElementById('partIndicator');const m={lecture:'part-lecture',handson:'part-handson',break:'part-break',review:'part-review'};ind.className='part-indicator '+m[p.type];document.getElementById('partName').textContent=p.name;resetPartTimer(p.minutes)}
+let cpm=5;function resetPartTimer(m){cpm=m;partSeconds=m*60;updatePartTimeDisplay()}
+function toggleTimer(){if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerToggle').textContent='Start';document.getElementById('timerToggle').classList.remove('active')}else{timerInterval=setInterval(tick,1000);timerRunning=true;document.getElementById('timerToggle').textContent='Pause';document.getElementById('timerToggle').classList.add('active')}}
+function tick(){totalSeconds++;partSeconds--;updateTotalTimeDisplay();updatePartTimeDisplay()}
+function updateTotalTimeDisplay(){const m=Math.floor(totalSeconds/60),s=totalSeconds%60;document.getElementById('totalTime').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function updatePartTimeDisplay(){const el=document.getElementById('partTime');if(partSeconds<=0){const o=Math.abs(partSeconds),m=Math.floor(o/60),s=o%60;el.textContent='-'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value overtime'}else if(partSeconds<=60){const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value warning'}else{const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value'}}
+function updateNotes(){document.getElementById('instructorNotes').innerHTML=pages[currentPage].dataset.notes||''}
+function toggleNotes(){notesVisible=!notesVisible;document.getElementById('instructorNotes').classList.toggle('visible',notesVisible);document.getElementById('notesToggle').classList.toggle('active',notesVisible)}
+function copyText(btn){const t=btn.parentElement.textContent.replace(/コピー(済み ✓)?/g,'').trim();navigator.clipboard.writeText(t).then(()=>{btn.textContent='コピー済み ✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('copied')},1500)})}
+function toggleFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
+document.addEventListener('fullscreenchange',()=>{document.getElementById('fsBtn').innerHTML=document.fullscreenElement?'&#x26F6; 終了':'&#x26F6; 全画面'});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextPage()}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevPage()}else if(e.key==='n'||e.key==='N')toggleNotes();else if(e.key===' '){e.preventDefault();toggleTimer()}else if(e.key==='f'||e.key==='F')toggleFullscreen();else if(e.key==='Home'){e.preventDefault();showPage(0)}else if(e.key==='End'){e.preventDefault();showPage(totalPages-1)}else if(e.key==='l'||e.key==='L')exportLog()});
+showPage(0);
+</script>
+</body>
+</html>

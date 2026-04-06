@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI研修 初級編 第7回：人に伝わる資料を作る</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;background:#f8f9fb;color:#1e293b;line-height:1.7}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:6px 20px;background:rgba(255,255,255,.95);border-bottom:1px solid #e2e8f0;font-size:13px;backdrop-filter:blur(8px);height:44px}
+.timer-section{display:flex;align-items:center;gap:16px}.timer-label{color:#64748b;font-size:11px}.timer-value{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:#1e293b}.timer-value.warning{color:#d97706}.timer-value.overtime{color:#dc2626;animation:pulse 1s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.timer-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#1e293b;cursor:pointer;font-size:12px;transition:background .2s}.timer-btn:hover{background:#f1f5f9}.timer-btn.active{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.fs-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#64748b;cursor:pointer;font-size:12px;transition:background .2s}.fs-btn:hover{background:#f1f5f9}
+.part-indicator{display:flex;align-items:center;gap:6px;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:500}.part-indicator .dot{width:7px;height:7px;border-radius:50%}
+.part-lecture{background:#eff6ff;color:#2563eb}.part-lecture .dot{background:#3b82f6}.part-handson{background:#f0fdf4;color:#16a34a}.part-handson .dot{background:#22c55e}.part-break{background:#f8fafc;color:#64748b}.part-break .dot{background:#94a3b8}.part-review{background:#faf5ff;color:#7c3aed}.part-review .dot{background:#8b5cf6}
+.slide-counter{color:#64748b;font-size:12px}
+.progress-bar{position:fixed;bottom:0;left:0;right:0;height:3px;background:#e2e8f0;z-index:100}.progress-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);transition:width .3s ease}
+.parts-wrapper{position:fixed;top:44px;bottom:3px;left:0;right:0;overflow:hidden}
+.part-page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;padding:60px 72px 80px;opacity:0;transform:translateX(50px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;scroll-behavior:smooth}.part-page.active{opacity:1;transform:translateX(0);pointer-events:auto}.part-page.prev{transform:translateX(-50px)}.part-page .inner{max-width:960px;margin:0 auto}
+h1{font-size:56px;font-weight:700;margin-bottom:20px;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.25}
+h2{font-size:40px;font-weight:700;margin:72px 0 20px;color:#1e293b}h3{font-size:30px;font-weight:600;margin:40px 0 14px;color:#334155}
+p{font-size:26px;color:#475569;margin-bottom:16px}ul,ol{font-size:24px;padding-left:36px;color:#475569}li{margin-bottom:10px}li strong{color:#1e293b}
+.section-header{text-align:center;padding:80px 0 60px}.section-header .tag{font-size:20px;color:#64748b;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px}.section-header .subtitle{font-size:26px;color:#64748b;margin-bottom:0}
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:22px}th{background:#f1f5f9;padding:14px 20px;text-align:left;font-weight:600;color:#475569;border-bottom:3px solid #e2e8f0}td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{background:#f8fafc}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin:20px 0}.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}.card h4{font-size:24px;margin-bottom:8px;color:#1e293b}.card p{font-size:20px;color:#64748b;margin-bottom:0}
+.prompt-block{background:#fff;border:1px solid #e2e8f0;border-left:6px solid #22c55e;border-radius:12px;padding:20px 20px 16px;margin:18px 0;font-size:22px;color:#1e293b;line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:10px;white-space:pre-wrap}.prompt-block .copy-btn{align-self:flex-end;padding:6px 14px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:13px;flex-shrink:0}.prompt-block .copy-btn:hover{background:#dcfce7;border-color:#22c55e;color:#16a34a}.prompt-block .copy-btn.copied{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.highlight-box{background:#f8fafc;border-radius:14px;padding:24px 28px;margin:20px 0;border:1px solid #e2e8f0;font-size:24px}.highlight-box.warning{border-color:#fbbf24;background:#fffbeb}.highlight-box.success{border-color:#86efac;background:#f0fdf4}.highlight-box.info{border-color:#93c5fd;background:#eff6ff}.highlight-box p{font-size:24px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}.compare-col{background:#fff;border-radius:14px;padding:24px}.compare-col.bad{border:3px solid #fca5a5}.compare-col.bad h4{color:#dc2626}.compare-col.good{border:3px solid #86efac}.compare-col.good h4{color:#16a34a}.compare-col p{font-size:22px}
+.selfcheck{display:flex;flex-direction:column;gap:14px;margin:20px 0}.selfcheck-item{display:flex;align-items:center;gap:18px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px 24px;font-size:24px}.selfcheck-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0}
+.quiz-answer{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:22px 26px;margin:14px 0;cursor:pointer;transition:all .2s;font-size:24px}.quiz-answer:hover{border-color:#3b82f6;background:#f8fafc}.quiz-answer.revealed{border-color:#16a34a;background:#f0fdf4}.quiz-answer .answer-mark{display:none;color:#16a34a;font-weight:700;margin-top:12px;font-size:22px}.quiz-answer.revealed .answer-mark{display:block}
+.divider{border:none;border-top:2px solid #e2e8f0;margin:80px 0}
+.nav-arrow{position:fixed;top:50%;z-index:50;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:28px;display:flex;align-items:center;justify-content:center;transition:all .2s;transform:translateY(-50%);box-shadow:0 2px 6px rgba(0,0,0,.06)}.nav-arrow:hover{background:#f1f5f9;color:#1e293b}.nav-arrow.left{left:20px}.nav-arrow.right{right:20px}.nav-arrow:disabled{opacity:.2;cursor:default}
+.instructor-notes{position:fixed;bottom:6px;left:20px;right:20px;z-index:90;background:rgba(255,255,255,.97);border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;font-size:16px;color:#475569;line-height:1.5;backdrop-filter:blur(8px);transform:translateY(calc(100% + 12px));transition:transform .3s ease;max-height:140px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.08)}.instructor-notes.visible{transform:translateY(0)}.instructor-notes strong{color:#d97706}
+.notes-toggle{position:fixed;bottom:12px;right:20px;z-index:91;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.06)}.notes-toggle:hover{background:#f1f5f9;color:#1e293b}.notes-toggle.active{background:#fffbeb;border-color:#f59e0b;color:#d97706}
+.keyboard-hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:80;color:#94a3b8;font-size:14px}
+.industry-switcher{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap}.industry-btn{padding:10px 20px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;color:#64748b;cursor:pointer;font-size:16px;font-weight:600;transition:all .2s}.industry-btn:hover{border-color:#3b82f6;color:#2563eb}.industry-btn.active{background:#2563eb;color:#fff;border-color:#2563eb}.industry-content{display:none}.industry-content.active{display:block}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin:20px 0}.flow-item{display:flex;align-items:center;gap:18px;padding:18px 22px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;font-size:24px}.flow-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;background:#eff6ff;color:#2563eb;flex-shrink:0}.flow-arrow{text-align:center;font-size:22px;color:#94a3b8;margin:3px 0 3px 18px}
+@media(max-width:768px){.part-page{padding:32px 28px 60px}h1{font-size:36px}h2{font-size:28px}h3{font-size:24px}p,.highlight-box p,.selfcheck-item,.quiz-answer,.prompt-block,td,th,ul,ol,.card h4,.card p,.compare-col p,.flow-item{font-size:18px}.compare{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="timer-section">
+    <a href="../../index.html" style="color:#64748b;text-decoration:none;font-size:14px;margin-right:8px">&#x1F3E0;</a>
+    <button class="timer-btn" id="timerToggle" onclick="toggleTimer()">Start</button>
+    <div><div class="timer-label">経過時間</div><div class="timer-value" id="totalTime">00:00</div></div>
+    <div><div class="timer-label">パート残り</div><div class="timer-value" id="partTime">--:--</div></div>
+  </div>
+  <div id="partIndicator" class="part-indicator part-lecture"><span class="dot"></span><span id="partName">オープニング</span></div>
+  <div style="display:flex;align-items:center;gap:12px">
+    <button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">&#x26F6; 全画面</button>
+    <div class="slide-counter"><span id="pageNum">1</span> / <span id="pageTotal">9</span></div>
+  </div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<button class="nav-arrow left" id="navLeft" onclick="prevPage()">&#8592;</button>
+<button class="nav-arrow right" id="navRight" onclick="nextPage()">&#8594;</button>
+<button class="notes-toggle" id="notesToggle" onclick="toggleNotes()">N</button>
+<div class="instructor-notes" id="instructorNotes"></div>
+
+<div class="parts-wrapper">
+
+<!-- ========== PAGE 1: オープニング (5min) ========== -->
+<div class="part-page" data-part="0" data-notes="前回は「考える力の拡張」（壁打ち・企画）。今回は「まとめる力」。考えたことを人に伝わる資料にまとめる。チャレンジ（スライド構成を作る）を試した人は最初の演習で比べてみよう。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">AI研修 初級編 第7回</div>
+    <h1>人に伝わる<br>資料を作る</h1>
+    <p class="subtitle">発表資料の構成をAIと一緒に作る</p>
+  </div>
+
+  <h2>今日のゴール</h2>
+  <div class="selfcheck">
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">1</div>発表資料のアウトラインをAIに構成させられる</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">2</div>各ページの要点を対話で詰められる</div>
+    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">3</div>AIにレビューしてもらい改善できる</div>
+  </div>
+
+  <div class="highlight-box info" style="margin-top:32px">
+    <p style="margin:0">前回は「AIと一緒に考える」力を身につけました。<br>今回は考えたことを<strong>人に伝わる資料の形</strong>にまとめる力を身につけます。<br><br>前回のチャレンジ（スライド構成を作る）を試した方は、今日の方法と比べてみましょう。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 2: ミニ講義① 資料作成の最速パターン (10min) ========== -->
+<div class="part-page" data-part="1" data-notes="資料作成の鉄則：アウトライン→中身→レビュー。いきなりスライドを作り始めない。「1ページ1メッセージ」が最も大事な原則。AIは構成を作るのが得意、人間はメッセージを決めるのが大事。デモ：テーマからアウトラインを作る流れを見せる。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">ミニ講義 01 ― 10分</div>
+    <h1>資料作成の最速パターン</h1>
+    <p class="subtitle">アウトライン → 中身 → レビュー</p>
+  </div>
+
+  <h2>資料作成の3ステップ</h2>
+  <div class="flow-steps">
+    <div class="flow-item"><div class="flow-num">1</div><strong>アウトライン：</strong>全体の構成とストーリーを決める（AIが得意）</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num">2</div><strong>中身を詰める：</strong>各ページの要点・データ・話す内容を作る（対話で）</div>
+    <div class="flow-arrow">↓</div>
+    <div class="flow-item"><div class="flow-num">3</div><strong>レビュー：</strong>AIに見せて「伝わるか？」を確認する（AIが客観的に）</div>
+  </div>
+
+  <h2>最も大事な原則：1ページ1メッセージ</h2>
+  <div class="compare">
+    <div class="compare-col bad">
+      <h4>ダメなスライド</h4>
+      <p>1枚にあれもこれも詰め込む<br><br>→ 何が言いたいか分からない<br>→ 聞いている人が迷子になる<br>→ 情報過多で記憶に残らない</p>
+    </div>
+    <div class="compare-col good">
+      <h4>良いスライド</h4>
+      <p><strong>1ページで伝えることは1つだけ</strong><br><br>→ メッセージが明確<br>→ 聞いている人が理解しやすい<br>→ 記憶に残る</p>
+    </div>
+  </div>
+
+  <div class="highlight-box info">
+    <p style="margin:0"><strong>AIの役割と人間の役割：</strong><br>AI → 構成の提案、情報の整理、文章の下書き<br>人間 → <strong>伝えたいメッセージを決める</strong>、最終判断、自分の言葉に直す</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 3: 実践① アウトラインを作る (20min) ========== -->
+<div class="part-page" data-part="2" data-notes="業種別のテーマでアウトラインを作る。5〜7枚のスライド構成。<strong>大事:</strong> アウトラインの段階で「各スライドのメッセージ」を1文で書かせる。「タイトルだけ」のアウトラインではなく「何を伝えるか」が入ったアウトラインにする。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 01 ― 20分</div>
+    <h1>アウトラインを作る</h1>
+    <p class="subtitle">5〜7枚のスライド構成をAIと作る</p>
+  </div>
+
+  <div class="industry-switcher">
+    <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
+    <button class="industry-btn" onclick="switchIndustry('B',this)">B. 技術・専門職系</button>
+    <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
+  </div>
+
+  <div class="industry-content active" data-group="A">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下のテーマで発表資料のアウトラインを作ってください。
+
+【テーマ】地域住民向け：社協の事業紹介
+【対象者】地域住民（高齢者が多い）
+【発表時間】10分
+【目的】社協の活動を知ってもらい、参加を促す
+
+5〜7枚のスライド構成で、各スライドについて：
+- タイトル
+- 伝えたいメッセージ（1文で）
+- 載せる内容（箇条書き2〜3個）
+を書いてください。</div>
+  </div>
+  <div class="industry-content" data-group="B">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下のテーマで発表資料のアウトラインを作ってください。
+
+【テーマ】施主向け：品質管理体制の紹介
+【対象者】施主（発注者側の担当者）
+【発表時間】10分
+【目的】自社の品質管理への取り組みを伝え、信頼を得る
+
+5〜7枚のスライド構成で、各スライドについて：
+- タイトル
+- 伝えたいメッセージ（1文で）
+- 載せる内容（箇条書き2〜3個）
+を書いてください。</div>
+  </div>
+  <div class="industry-content" data-group="C">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下のテーマで発表資料のアウトラインを作ってください。
+
+【テーマ】本部向け：新規出店エリアの市場分析
+【対象者】本部の経営陣
+【発表時間】10分
+【目的】新しいエリアへの出店を提案し、承認を得る
+
+5〜7枚のスライド構成で、各スライドについて：
+- タイトル
+- 伝えたいメッセージ（1文で）
+- 載せる内容（箇条書き2〜3個）
+を書いてください。</div>
+  </div>
+
+  <h3>アウトラインの調整</h3>
+  <p>出てきたアウトラインを確認して、調整しましょう。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>このアウトラインについて、以下を修正してください。
+- （順番を入れ替えたい/追加したい/削除したいスライドがあれば記載）
+- 全体のストーリーとして「○○→○○→○○」の流れで伝えたい
+- 最後に聞いた人にとってほしいアクションは「○○」です</div>
+
+  <div class="highlight-box success" style="margin-top:32px">
+    <p style="margin:0"><strong>アウトラインの段階で「各スライドのメッセージ」が明確になっていることが重要。</strong><br>タイトルだけのアウトラインは、結局中身を作る時に迷う。「このスライドで何を伝えるか」が1文で書けているか確認しましょう。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 4: 休憩 (5min) ========== -->
+<div class="part-page" data-part="3" data-notes="「後半はアウトラインを元に各ページの中身を詰め、AIにレビューしてもらいます。画像生成も体験します」">
+<div class="inner">
+  <div class="section-header" style="padding:100px 0">
+    <p style="font-size:72px;margin-bottom:20px">&#x2615;</p>
+    <h1>休憩タイム</h1>
+    <p class="subtitle">5分間</p>
+    <p style="margin-top:32px;color:#64748b">アウトラインの「1ページ1メッセージ」、意識できましたか？<br>後半は<strong>各ページの中身を詰め、レビュー＆画像生成</strong>を体験します。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 5: ミニ講義② 各ページの中身を詰める (10min) ========== -->
+<div class="part-page" data-part="4" data-notes="各スライドの中身を詰める方法。要点の箇条書き、話す内容のスクリプト、データの整理。画像生成の紹介（Gemini）。デモ：1枚のスライドの中身を対話で作る流れを見せる。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">ミニ講義 02 ― 10分</div>
+    <h1>各ページの中身を<br>詰める</h1>
+    <p class="subtitle">対話で要点を作り、話す内容を整理する</p>
+  </div>
+
+  <h2>スライドの中身を作る3つの質問</h2>
+  <div class="card-grid" style="grid-template-columns:repeat(3,1fr)">
+    <div class="card" style="border-top:4px solid #22c55e">
+      <h4>要点は何？</h4>
+      <p>「このスライドの要点を箇条書き3つで」<br>スライドに載せる内容</p>
+    </div>
+    <div class="card" style="border-top:4px solid #3b82f6">
+      <h4>何を話す？</h4>
+      <p>「このスライドで話す内容を200文字で」<br>口頭で補足する内容</p>
+    </div>
+    <div class="card" style="border-top:4px solid #8b5cf6">
+      <h4>データは？</h4>
+      <p>「説得力を持たせるデータを提案して」<br>数字やグラフのネタ</p>
+    </div>
+  </div>
+
+  <h2>画像生成でビジュアルを作る</h2>
+  <p>Geminiの画像生成機能で、スライドに使えるビジュアルを作れます。</p>
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card" style="border-top:4px solid #f59e0b">
+      <h4>使えるもの</h4>
+      <p>概念図・イメージイラスト・アイコン風画像・背景画像</p>
+    </div>
+    <div class="card" style="border-top:4px solid #64748b">
+      <h4>注意点</h4>
+      <p>正確なグラフ・組織図・文字入り画像は不向き。あくまでイメージ用</p>
+    </div>
+  </div>
+
+  <div class="highlight-box warning">
+    <p style="margin:0"><strong>スライドに文字を詰め込まない。</strong><br>スライドは「見る」もの。詳しい説明は口頭で補足する。<br>1スライドの文字量は<strong>箇条書き3〜5個</strong>が目安。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 6: 実践② スライドの中身を対話で作る (15min) ========== -->
+<div class="part-page" data-part="5" data-notes="実践1で作ったアウトラインから2〜3枚を選んで中身を詰める。<strong>大事:</strong> 「要点」「話す内容」「データ」の3つを揃えさせる。全スライドをやる時間はないので、最も大事な2〜3枚に集中。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 02 ― 15分</div>
+    <h1>スライドの中身を<br>対話で作る</h1>
+    <p class="subtitle">2〜3枚のスライドを具体的に仕上げる</p>
+  </div>
+
+  <p>実践1で作ったアウトラインから、最も大事な2〜3枚を選んで中身を詰めましょう。</p>
+
+  <h2>Step 1：要点を作る</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>先ほどのアウトラインの「（スライドタイトル）」について、スライドに載せる要点を箇条書き3つで作ってください。
+
+条件：
+- 各箇条書きは1行で簡潔に
+- 聞いている人が一目で理解できるように
+- 専門用語は避けて平易な言葉で</div>
+
+  <h2>Step 2：話す内容を作る</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>このスライドを見せながら口頭で話す内容を200文字程度で書いてください。
+
+条件：
+- スライドの箇条書きを補足する形で
+- 具体例やエピソードを1つ入れる
+- 聞いている人が「なるほど」と思える内容</div>
+
+  <h2>Step 3：データを提案してもらう</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>このスライドに説得力を持たせるために、使えそうなデータや数字を3つ提案してください。
+
+条件：
+- 実際に入手可能なデータ（出典があるもの）
+- 聞いている人が「おっ」と思う数字
+- グラフや図にできるデータだとなお良い</div>
+
+  <div class="highlight-box success">
+    <p style="margin:0"><strong>2〜3枚を具体的に仕上げるだけで、資料全体の方向性が見えてきます。</strong><br>残りのスライドも同じ要領で作れます。全部一気にやらなくてOK。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 7: 実践③ AIにレビューしてもらう (10min) ========== -->
+<div class="part-page" data-part="6" data-notes="作った資料のアウトラインと中身をAIにレビューさせる。「この資料を見た人に何が伝わる？」「分かりにくい部分はどこ？」「もっと説得力を持たせるには？」の3つの質問で改善点を見つける。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 03 ― 10分</div>
+    <h1>AIにレビューしてもらう</h1>
+    <p class="subtitle">客観的な視点で資料を改善する</p>
+  </div>
+
+  <p>作った資料（アウトライン＋中身）をAIにレビューしてもらいましょう。</p>
+
+  <h2>レビュー質問1：何が伝わる？</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の発表資料のアウトラインと内容を見て、この資料を見た人に「何が一番伝わるか」を教えてください。
+また、「伝わらなそうなこと」があれば指摘してください。
+
+（アウトラインと中身を貼り付ける）</div>
+
+  <h2>レビュー質問2：分かりにくい部分は？</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>この資料の中で、聞いている人が「分かりにくい」と感じそうな部分はどこですか？
+改善案もセットで教えてください。</div>
+
+  <h2>レビュー質問3：説得力を上げるには？</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>この資料にもっと説得力を持たせるために、何を追加・変更すべきですか？
+具体的な改善案を3つ教えてください。</div>
+
+  <div class="highlight-box info">
+    <p style="margin:0"><strong>レビューのコツ：</strong>AIのレビューは「別の人の目」で見てもらうのと同じ。<br>全ての指摘を反映する必要はないが、「確かにそうだ」と思う部分は修正しよう。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 8: 実践④ 画像生成を試す (10min) ========== -->
+<div class="part-page" data-part="7" data-notes="Geminiの画像生成でスライド用のビジュアルを作る体験。1〜2枚作れれば十分。<strong>注意:</strong> 完璧な画像を求めない。「イメージを伝える」レベルでOK。文字入り画像やグラフはAI画像生成には不向き。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">実践 04 ― 10分</div>
+    <h1>画像生成を試す</h1>
+    <p class="subtitle">Geminiで発表資料のビジュアルを作る</p>
+  </div>
+
+  <p>Geminiの画像生成機能を使って、スライドに使えるビジュアルを1〜2枚作ってみましょう。</p>
+
+  <h2>画像生成のプロンプト例</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下のスライドに合うイメージ画像を生成してください。
+
+【スライドのテーマ】（自分のスライドのテーマを記入）
+【雰囲気】明るい・親しみやすい・ビジネス向け
+【色調】青と白を基調に
+【含めたい要素】（人物、建物、自然など）
+
+プレゼンテーション資料に使う画像なので、シンプルで分かりやすいデザインでお願いします。</div>
+
+  <h3>業種別の画像プロンプト例</h3>
+
+  <div class="industry-switcher">
+    <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
+    <button class="industry-btn" onclick="switchIndustry('B',this)">B. 技術・専門職系</button>
+    <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
+  </div>
+
+  <div class="industry-content active" data-group="A">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>地域の高齢者と子どもたちが一緒に楽しそうに活動しているイラストを生成してください。温かみのある色使いで、福祉のプレゼンテーション資料に使うイメージ画像です。シンプルで優しい雰囲気のデザインで。</div>
+  </div>
+  <div class="industry-content" data-group="B">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>建設現場で安全管理を行っている様子のイラストを生成してください。ヘルメットをかぶった作業員が協力している場面。ビジネス向けのプレゼンテーション資料に使う画像で、プロフェッショナルなデザインで。</div>
+  </div>
+  <div class="industry-content" data-group="C">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>飲食店で外国人観光客がスタッフと笑顔で会話しているイラストを生成してください。明るく活気のある雰囲気で、プレゼンテーション資料に使うビジネス向けのデザインで。</div>
+  </div>
+
+  <div class="highlight-box warning" style="margin-top:32px">
+    <p style="margin:0"><strong>画像生成の限界：</strong><br>正確なグラフ・組織図・文字入り画像はAI画像生成には不向きです。<br>「雰囲気を伝えるイメージ画像」として使いましょう。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 9: 振り返り＆次回予告 (10min) ========== -->
+<div class="part-page" data-part="8" data-notes="クイズ→セルフチェック→チャレンジ。チャレンジは第8回（卒業課題）への橋渡し。「自分のテーマで発表資料のアウトライン＋2〜3枚の中身を作っておく」。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">振り返り＆次回予告 ― 10分</div>
+    <h1>今日できるようになったこと</h1>
+  </div>
+
+  <h2>振り返りクイズ（タップで答え）</h2>
+  <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
+    <strong>Q1.</strong> 資料作成で最も大事な原則は？
+    <div class="answer-mark">&#x2B55; <strong>1ページ1メッセージ。</strong>1枚のスライドで伝えることは1つだけ。詰め込むと何が言いたいか分からなくなる。</div>
+  </div>
+  <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
+    <strong>Q2.</strong> 資料作成の3ステップは？
+    <div class="answer-mark">&#x2B55; <strong>アウトライン → 中身を詰める → レビュー。</strong>いきなりスライドを作り始めず、まず全体の構成を決める。</div>
+  </div>
+  <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
+    <strong>Q3.</strong> AIの画像生成が得意なこと・不得意なことは？
+    <div class="answer-mark">&#x2B55; 得意：<strong>イメージイラスト、雰囲気を伝える画像。</strong>不得意：正確なグラフ、組織図、文字入り画像。</div>
+  </div>
+
+  <hr class="divider">
+
+  <h2>セルフチェック</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>【第7回セルフチェック】
+名前：
+1. 発表資料のアウトラインをAIに構成させられた：　/5
+2. 各ページの要点を対話で詰められた：　/5
+3. AIにレビューしてもらい改善できた：　/5</div>
+
+  <hr class="divider">
+
+  <h2>今週のチャレンジ（卒業課題の準備）</h2>
+  <p>次回は最終回「卒業課題」です。今のうちにテーマと資料を準備しておきましょう。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>【卒業課題の準備】
+次回の卒業課題では、自分の業務テーマについて「調査→整理→企画→資料化」を一通り行います。
+
+今のうちに以下を考えておいてください：
+1. テーマ（何について取り組むか）
+2. 背景（なぜそのテーマが重要か）
+3. 使いたいAIツール（Gemini/NotebookLM/Perplexity等）
+4. 最終的にどんな形のアウトプットにしたいか（企画書/報告書/提案資料等）</div>
+
+  <hr class="divider">
+
+  <h2>次回予告：第8回「自分の業務で実践する」（最終回）</h2>
+  <div class="highlight-box" style="border-color:#c4b5fd">
+    <p style="margin:0">今日は「人に伝わる資料を作る」力を身につけました。<br>次回は全8回の総まとめ。<strong>全てのスキルを統合して、自分の業務テーマで卒業課題</strong>に取り組みます。<br>テーマを決めて来てくださいね！</p>
+  </div>
+  <p style="text-align:center;margin-top:40px;font-size:32px">お疲れさまでした！</p>
+</div>
+</div>
+
+</div>
+
+<div class="keyboard-hint">← → パート移動 ／ N 講師メモ ／ Space タイマー ／ F 全画面</div>
+
+<script>
+const PARTS=[
+  {name:'オープニング',minutes:5,type:'lecture'},
+  {name:'ミニ講義: 資料作成の最速パターン',minutes:10,type:'lecture'},
+  {name:'実践①: アウトラインを作る',minutes:20,type:'handson'},
+  {name:'休憩',minutes:5,type:'break'},
+  {name:'ミニ講義: 各ページの中身を詰める',minutes:10,type:'lecture'},
+  {name:'実践②: スライドの中身を対話で作る',minutes:15,type:'handson'},
+  {name:'実践③: AIにレビューしてもらう',minutes:10,type:'handson'},
+  {name:'実践④: 画像生成を試す',minutes:10,type:'handson'},
+  {name:'振り返り＆次回予告',minutes:10,type:'review'}
+];
+function switchIndustry(g,b){document.querySelectorAll('.industry-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.industry-content').forEach(c=>{c.classList.toggle('active',c.dataset.group===g)})}
+const pageLog=[];let pageEnterTime=Date.now();
+function logPageTransition(f,t){const n=Date.now();pageLog.push({from:f+1,to:t+1,elapsed:Math.round(totalSeconds),dwellMs:n-pageEnterTime,timestamp:new Date().toISOString()});pageEnterTime=n}
+function exportLog(){const s=PARTS.map((p,i)=>{const e=pageLog.filter(l=>l.from===i+1);const d=e.reduce((a,b)=>a+b.dwellMs,0);return{part:p.name,planned:p.minutes+'分',actual:Math.round(d/60000)+'分'}});const j=JSON.stringify({summary:s,detail:pageLog},null,2);const b=new Blob([j],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='session-07-log-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
+let currentPage=0,timerRunning=false,totalSeconds=0,partSeconds=0,timerInterval=null,notesVisible=false;
+const pages=document.querySelectorAll('.part-page');const totalPages=pages.length;document.getElementById('pageTotal').textContent=totalPages;
+function showPage(i){if(i<0||i>=totalPages)return;logPageTransition(currentPage,i);pages.forEach((p,x)=>{p.classList.remove('active','prev');if(x===i)p.classList.add('active');else if(x<i)p.classList.add('prev')});pages[i].scrollTop=0;currentPage=i;document.getElementById('pageNum').textContent=i+1;document.getElementById('progressFill').style.width=((i+1)/totalPages*100)+'%';document.getElementById('navLeft').disabled=i===0;document.getElementById('navRight').disabled=i===totalPages-1;updatePartIndicator();updateNotes()}
+function nextPage(){showPage(currentPage+1)}function prevPage(){showPage(currentPage-1)}
+function updatePartIndicator(){const pi=parseInt(pages[currentPage].dataset.part)||0;const p=PARTS[pi];const ind=document.getElementById('partIndicator');const m={lecture:'part-lecture',handson:'part-handson',break:'part-break',review:'part-review'};ind.className='part-indicator '+m[p.type];document.getElementById('partName').textContent=p.name;resetPartTimer(p.minutes)}
+let cpm=5;function resetPartTimer(m){cpm=m;partSeconds=m*60;updatePartTimeDisplay()}
+function toggleTimer(){if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerToggle').textContent='Start';document.getElementById('timerToggle').classList.remove('active')}else{timerInterval=setInterval(tick,1000);timerRunning=true;document.getElementById('timerToggle').textContent='Pause';document.getElementById('timerToggle').classList.add('active')}}
+function tick(){totalSeconds++;partSeconds--;updateTotalTimeDisplay();updatePartTimeDisplay()}
+function updateTotalTimeDisplay(){const m=Math.floor(totalSeconds/60),s=totalSeconds%60;document.getElementById('totalTime').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function updatePartTimeDisplay(){const el=document.getElementById('partTime');if(partSeconds<=0){const o=Math.abs(partSeconds),m=Math.floor(o/60),s=o%60;el.textContent='-'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value overtime'}else if(partSeconds<=60){const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value warning'}else{const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value'}}
+function updateNotes(){document.getElementById('instructorNotes').innerHTML=pages[currentPage].dataset.notes||''}
+function toggleNotes(){notesVisible=!notesVisible;document.getElementById('instructorNotes').classList.toggle('visible',notesVisible);document.getElementById('notesToggle').classList.toggle('active',notesVisible)}
+function copyText(btn){const t=btn.parentElement.textContent.replace(/コピー(済み ✓)?/g,'').trim();navigator.clipboard.writeText(t).then(()=>{btn.textContent='コピー済み ✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('copied')},1500)})}
+function toggleFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
+document.addEventListener('fullscreenchange',()=>{document.getElementById('fsBtn').innerHTML=document.fullscreenElement?'&#x26F6; 終了':'&#x26F6; 全画面'});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextPage()}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevPage()}else if(e.key==='n'||e.key==='N')toggleNotes();else if(e.key===' '){e.preventDefault();toggleTimer()}else if(e.key==='f'||e.key==='F')toggleFullscreen();else if(e.key==='Home'){e.preventDefault();showPage(0)}else if(e.key==='End'){e.preventDefault();showPage(totalPages-1)}else if(e.key==='l'||e.key==='L')exportLog()});
+showPage(0);
+</script>
+</body>
+</html>
