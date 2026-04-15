@@ -392,43 +392,55 @@ td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
     <p class="subtitle">目的に応じて使い分ける</p>
   </div>
 
-  <h2>主なAIサービスの特徴</h2>
-  <table>
-    <thead><tr><th>サービス</th><th>特徴</th><th>向いている用途</th></tr></thead>
-    <tbody>
-      <tr><td><strong>Gemini</strong></td><td>Google連携が強み</td><td>Gmail・カレンダー・マップと連携した作業</td></tr>
-      <tr><td><strong>ChatGPT</strong></td><td>利用者が最も多い。幅広い用途</td><td>文章作成、壁打ち、アイデア出し</td></tr>
-      <tr><td><strong>Claude</strong></td><td>正確さ重視。嘘をつきにくい</td><td>正確な文書作成、長い資料の読み込み</td></tr>
-      <tr><td><strong>Perplexity</strong></td><td>出典を明示してくれる</td><td>調べもの、事実確認</td></tr>
-    </tbody>
-  </table>
+  <h2>主なAIサービスの「本当の」違い</h2>
+
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card" style="border-top:4px solid #4285f4">
+      <h4>Gemini（Google）</h4>
+      <p><strong>唯一の強み：</strong>NotebookLM（複数資料を読み込んで質問できる専用ツール）、Gmail・カレンダー・マップとの深い連携。スマホに入っているNano（通信不要で動くAI）</p>
+      <p><strong>注意点：</strong>Google自社サービスを推す傾向あり</p>
+    </div>
+    <div class="card" style="border-top:4px solid #10a37f">
+      <h4>ChatGPT（OpenAI）</h4>
+      <p><strong>唯一の強み：</strong>自分専用のAI（GPTs）を作れるエコシステム（300万件以上が作成済み）。利用者が最も多く、ネット上の情報も豊富</p>
+      <p><strong>注意点：</strong>追従性が強い（こちらの意見に同調しやすく、間違いを指摘してくれない傾向）</p>
+    </div>
+    <div class="card" style="border-top:4px solid #d97706">
+      <h4>Claude（Anthropic）</h4>
+      <p><strong>唯一の強み：</strong>23,000語の行動規範（哲学者が設計）で「嘘をつかない」「分からないことは分からないと言う」が組み込まれている。大量の文書を一度に読める</p>
+      <p><strong>注意点：</strong>安全性を重視しすぎて拒否する場面がある</p>
+    </div>
+    <div class="card" style="border-top:4px solid #20808d">
+      <h4>Perplexity</h4>
+      <p><strong>唯一の強み：</strong>回答に出典URLが付く。「どこからこの情報を取ったか」が見える</p>
+      <p><strong>注意点：</strong>引用の37%にAIの作り話が混じっているという調査結果あり。出典があっても鵜呑みにしない</p>
+    </div>
+  </div>
 
   <h2>無料と有料の違い</h2>
   <table>
-    <thead><tr><th></th><th>無料版</th><th>有料版（月額2,000〜3,000円程度）</th></tr></thead>
+    <thead><tr><th></th><th>無料版</th><th>有料版（月額約3,000円〜）</th></tr></thead>
     <tbody>
-      <tr><td><strong>回答の賢さ</strong></td><td>標準的なモデル</td><td>より賢いモデルが使える</td></tr>
+      <tr><td><strong>回答の賢さ</strong></td><td>標準モデル</td><td>より賢いモデルが使える</td></tr>
       <tr><td><strong>使える回数</strong></td><td>制限あり</td><td>大幅に増える</td></tr>
-      <tr><td><strong>記憶機能</strong></td><td>限定的</td><td>より多くの情報を覚えてくれる</td></tr>
-      <tr><td><strong>画像生成</strong></td><td>制限あり</td><td>自由に使える</td></tr>
+      <tr><td><strong>自分専用のAI</strong></td><td>作れない or 制限</td><td>GPTs/Gems/Projectsが使える</td></tr>
     </tbody>
   </table>
 
   <h2>「速い回答」と「じっくり考えた回答」</h2>
-  <p>最近のAIには回答モードの選択肢があります。</p>
   <div class="compare">
     <div class="compare-col" style="border:2px solid #3b82f6">
-      <h4 style="color:#3b82f6">速い回答（Fast / Flash）</h4>
-      <p>素早く回答。簡単な質問や下書き向き。<br>料金が安い or 無料で使える場合が多い</p>
+      <h4 style="color:#3b82f6">速い回答（Flash / Fast）</h4>
+      <p>素早く回答。下書きや簡単な質問向き。<br>無料でも使える</p>
     </div>
     <div class="compare-col" style="border:2px solid #8b5cf6">
       <h4 style="color:#8b5cf6">じっくり考えた回答（Pro / 推論モード）</h4>
-      <p>時間をかけて深く考える。複雑な分析や正確さが求められる場面で有効。<br>有料版で使える場合が多い</p>
+      <p>時間をかけて深く考える。<br>複雑な分析向き。有料版で使える</p>
     </div>
   </div>
 
   <div class="highlight-box info" style="margin-top:24px">
-    <p style="margin:0"><strong>まずは無料版で十分。</strong>使い慣れてきて「もっと賢い回答が欲しい」「回数制限がきつい」と感じたら有料版を検討してください。</p>
+    <p style="margin:0"><strong>まずは無料版で十分。</strong>使い慣れてきて「回数制限がきつい」「自分専用のAIを作りたい」と感じたら有料版を検討してください。</p>
   </div>
 </div>
 </div>
@@ -448,56 +460,119 @@ td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
     <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
   </div>
 
+  <p>実際の業務では、1回のプロンプトで全部やるのではなく、<strong>会話を重ねて段階的に作っていく</strong>のが自然です。<br>以下の流れで進めてみましょう。</p>
+
   <div class="industry-content active" data-group="A">
     <h2>お題：助成金事業の中間報告書</h2>
-    <p style="color:#64748b">テクニック3（質問させる）→テクニック1（手順分割）→テクニック2（見本）→3段階戦略で仕上げ</p>
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>助成金事業の中間報告書を作成したいのですが、必要な情報を私に1つずつ質問してください。
+  </div>
+  <div class="industry-content" data-group="B">
+    <h2>お題：施主への月次進捗報告書</h2>
+  </div>
+  <div class="industry-content" data-group="C">
+    <h2>お題：本部への月次売上報告</h2>
+  </div>
 
-情報が揃ったら、以下の手順で作成してください。
+  <h3>Step 1：まずAIに質問させて情報を集める（テクニック3）</h3>
+  <div class="industry-content active" data-group="A">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>助成金事業の中間報告書を作りたいです。必要な情報を私に1つずつ質問してください。</div>
+  </div>
+  <div class="industry-content" data-group="B">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>施主に提出する月次進捗報告書を作りたいです。必要な情報を私に1つずつ質問してください。</div>
+  </div>
+  <div class="industry-content" data-group="C">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>本部に提出する月次売上報告を作りたいです。必要な情報を私に1つずつ質問してください。</div>
+  </div>
+  <p style="color:#64748b">→ AIが質問してくるので、答えていく。情報が揃ったらStep 2へ。</p>
+
+  <h3>Step 2：手順を指定して作成させる（テクニック1＋2）</h3>
+  <div class="industry-content active" data-group="A">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>ありがとうございます。では以下の手順で報告書を作成してください。
 1. 事業概要を整理
 2. 実績（参加者数、実施回数）をまとめる
 3. 成果と課題を分析
 4. 今後の予定を記載
 
-報告書の形式は、各項目を■で区切り、実績は箇条書きで。全体で500文字程度。</div>
+形式は各項目を■で区切り、実績は箇条書きで。全体で500文字程度。</div>
   </div>
-
   <div class="industry-content" data-group="B">
-    <h2>お題：施主への月次進捗報告書</h2>
-    <p style="color:#64748b">テクニック3（質問させる）→テクニック1（手順分割）→テクニック2（見本）→3段階戦略で仕上げ</p>
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>施主に提出する月次工事進捗報告書を作成したいのですが、必要な情報を私に1つずつ質問してください。
-
-情報が揃ったら、以下の手順で作成してください。
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>ありがとうございます。では以下の手順で報告書を作成してください。
 1. 工事概要を整理
-2. 今月の進捗（完了工程、進捗率）をまとめる
+2. 今月の進捗をまとめる
 3. 品質・安全管理の状況を記載
 4. 来月の予定を記載
 
-形式は各項目を■で区切り、進捗は箇条書きで。全体で500文字程度。</div>
+形式は各項目を■で区切り、箇条書きで。全体で500文字程度。</div>
   </div>
-
   <div class="industry-content" data-group="C">
-    <h2>お題：本部への月次売上報告</h2>
-    <p style="color:#64748b">テクニック3（質問させる）→テクニック1（手順分割）→テクニック2（見本）→3段階戦略で仕上げ</p>
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>本部に提出する月次売上報告書を作成したいのですが、必要な情報を私に1つずつ質問してください。
-
-情報が揃ったら、以下の手順で作成してください。
-1. 売上実績（前年比、客数）を整理
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>ありがとうございます。では以下の手順で報告書を作成してください。
+1. 売上実績を整理
 2. 好調だった点を分析
-3. 課題を3つ挙げる
+3. 課題を挙げる
 4. 来月の施策を提案
 
 形式は各項目を■で区切り、数字は具体的に。全体で500文字程度。</div>
   </div>
+  <p style="color:#64748b">→ 報告書が出てくる。気になる箇所があればStep 3へ。</p>
 
-  <div class="highlight-box success" style="margin-top:40px">
-    <p style="margin:0"><strong>完成したら：</strong>自分が書いた<strong>指示文</strong>をチャットに貼ってください。「結果」ではなく「どう指示したか」を共有するのがポイントです。</p>
+  <h3>Step 3：修正を重ねて仕上げる（やりとり戦略）</h3>
+  <div class="prompt-block" style="border-left-color:#2563eb"><span class="copy-btn" onclick="copyText(this)">コピー</span>成果の部分をもう少し具体的に書いてください</div>
+  <div class="prompt-block" style="border-left-color:#2563eb"><span class="copy-btn" onclick="copyText(this)">コピー</span>全体をもう少し短くして、300文字程度にしてください</div>
+  <div class="prompt-block" style="border-left-color:#2563eb"><span class="copy-btn" onclick="copyText(this)">コピー</span>この報告書を上司が読んで分かりにくい部分がないか確認してください</div>
+
+  <div class="highlight-box info" style="margin-top:32px">
+    <p style="margin:0"><strong>ポイント：</strong>テクニックを1つのプロンプトに全部詰め込む必要はありません。<br><strong>会話を重ねて段階的に完成させる</strong>のが自然な使い方です。<br><br>ただし、この流れを毎回やるのが面倒な場合は → 次のページへ</p>
   </div>
 </div>
 </div>
 
-<!-- ========== PAGE 9: 振り返り＆次回予告 (10min) ========== -->
-<div class="part-page" data-part="8" data-notes="クイズ→セルフチェック→チャレンジ。チャレンジは3要素＋テクニック1つ以上を使う条件付き。次回は「メール・議事録・報告書」を実際に作る回。">
+<!-- ========== PAGE 9: 毎回書くのがめんどくさい場合 (発展) ========== -->
+<div class="part-page" data-part="8" data-notes="「毎回長いプロンプトを書くのは現実的ではない」という正直な話。3つの解決策を紹介。これが分かると日常的にAIを使い続けられるようになる。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">発展トピック</div>
+    <h1>毎回書くのが<br>めんどくさい場合</h1>
+    <p class="subtitle">テクニックを「仕組み化」する3つの方法</p>
+  </div>
+
+  <p>正直なところ、毎回あの長いプロンプトを書くのは大変です。<br>そこで、<strong>一度設定しておけば毎回書かなくてよくなる方法</strong>が3つあります。</p>
+
+  <h2>方法1：カスタム指示に登録する</h2>
+  <p>AIに「毎回こういうスタイルで回答して」とあらかじめ設定しておく機能。</p>
+  <ul>
+    <li><strong>ChatGPT</strong>：設定 → カスタム指示 → 「回答の仕方」に登録</li>
+    <li><strong>Gemini</strong>：パーソナライズ設定に登録</li>
+    <li><strong>Claude</strong>：プロジェクト機能で指示をセット</li>
+  </ul>
+  <div class="prompt-block" style="border-left-color:#8b5cf6"><span class="copy-btn" onclick="copyText(this)">コピー</span>【カスタム指示の例】
+- 回答は箇条書きを基本にしてください
+- 不明な点があれば実行前に質問してください
+- 手順がある場合はステップに分けて回答してください
+- 敬語は「です・ます」調で統一してください</div>
+
+  <h2>方法2：プロンプトのひな形を保存しておく</h2>
+  <p>よく使うプロンプトをメモ帳やスプレッドシートにストックして、コピペで使い回す。</p>
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card"><h4>議事録用</h4><p>「以下のメモから議事録を作成。決定事項と未決定を分けて…」</p></div>
+    <div class="card"><h4>メール用</h4><p>「○○にメールを書いて。状況は…。丁寧な敬語で…」</p></div>
+  </div>
+
+  <h2>方法3：自分専用のAIアシスタントを作る</h2>
+  <p>テクニックを最初から組み込んだ「自分専用のAI」を作れるサービスがあります。</p>
+  <ul>
+    <li><strong>ChatGPTのGPTs</strong>：自分用のAIを作成（「議事録作成くん」「メール下書きくん」等）</li>
+    <li><strong>GeminiのGems</strong>：同様の機能。Google連携も可能</li>
+    <li><strong>ClaudeのProjects</strong>：業務ごとにAIの設定をまとめて管理</li>
+  </ul>
+  <p>一度作っておけば、「議事録をまとめて」と一言言うだけで、テクニック1〜5が自動的に適用された回答が返ってきます。</p>
+
+  <div class="highlight-box success">
+    <p style="margin:0"><strong>まとめ：</strong>テクニックは「知っている」段階から「仕組みにしている」段階へ進むと、毎日の業務で本当に使えるようになります。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== PAGE 10: 振り返り＆次回予告 (10min) ========== -->
+<div class="part-page" data-part="9" data-notes="クイズ→セルフチェック→チャレンジ。次回は「メール・議事録・報告書」を実際に作る回。">
 <div class="inner">
   <div class="section-header">
     <div class="tag">振り返り＆次回予告 ― 10分</div>
@@ -559,7 +634,8 @@ const PARTS=[
   {name:'テクニック4〜5',minutes:10,type:'handson'},
   {name:'やりとり戦略',minutes:10,type:'lecture'},
   {name:'AIの種類とプラン',minutes:10,type:'lecture'},
-  {name:'総合演習',minutes:15,type:'handson'},
+  {name:'総合演習',minutes:10,type:'handson'},
+  {name:'発展: 仕組み化する方法',minutes:5,type:'lecture'},
   {name:'振り返り＆次回予告',minutes:10,type:'review'}
 ];
 
