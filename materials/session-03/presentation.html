@@ -137,6 +137,28 @@ td{padding:10px 16px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
 .next-card h3{color:#2563eb;margin:0 0 8px;font-size:24px}
 .next-card p{margin:0;font-size:20px;color:#1e40af;line-height:1.6}
 
+/* ===== TASK CARD ===== */
+.task-card{background:#fff;border:2px solid #e2e8f0;border-radius:16px;padding:28px 32px;margin:24px 0;box-shadow:0 2px 8px rgba(0,0,0,.06)}
+.task-badge{display:inline-block;background:#eff6ff;color:#2563eb;font-size:15px;font-weight:600;padding:4px 14px;border-radius:20px;margin-bottom:16px;letter-spacing:.5px}
+.task-scenario{font-size:22px;color:#1e293b;line-height:1.85;margin-bottom:20px}
+.task-materials{font-size:19px;color:#475569;background:#f8fafc;border-radius:10px;padding:16px 20px;line-height:1.7}
+.task-materials strong{color:#1e293b;display:block;margin-bottom:8px;font-size:18px}
+.task-materials ul{margin:0;padding-left:20px}
+.task-materials li{margin-bottom:5px}
+
+/* ===== STEP BLOCKS ===== */
+.step-blocks{display:flex;flex-direction:column;gap:14px;margin:32px 0 28px}
+.step-block{display:flex;gap:20px;align-items:flex-start;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:22px 26px}
+.step-label{min-width:56px;text-align:center;flex-shrink:0;padding-top:2px}
+.step-label .s{font-size:12px;font-weight:700;color:#94a3b8;letter-spacing:1px;display:block}
+.step-label .n{font-size:30px;font-weight:700;color:#1e293b;display:block;line-height:1.1}
+.step-content{flex:1}
+.step-q{font-size:22px;font-weight:600;color:#1e293b;margin-bottom:8px}
+.step-sub{font-size:19px;color:#64748b;margin:0}
+
+.ref-label{font-size:16px;color:#94a3b8;text-align:center;margin:36px 0 12px;display:flex;align-items:center;gap:12px}
+.ref-label::before,.ref-label::after{content:'';flex:1;height:1px;background:#e2e8f0}
+
 /* ===== RESPONSIVE ===== */
 @media(max-width:768px){
   .part-page{padding:32px 24px 60px}
@@ -272,14 +294,14 @@ td{padding:10px 16px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
 </div>
 </div>
 
-<!-- ========== PAGE 3: 実践① メールの作り分け (20min) ========== -->
-<div class="part-page" data-part="2" data-notes="3種類のメール（お礼・依頼・お断り）を順番に作る。今日は「お断りメール」が目玉。言い回しを自分で考えなくていい体験が大きい。出力が出たら事実確認を実際にやってもらう。">
+<!-- ========== PAGE 3: 実践① シナリオからメールを作る (20min) ========== -->
+<div class="part-page" data-part="2" data-notes="プロンプトをコピペしない。シナリオを読んで「何が必要か」「何を伝えるか」を自分で考えてからAIに入力させる。参考プロンプトは答え合わせとして後から見る流れを促す。">
 <div class="inner">
   <div class="section-header">
     <span class="hero-icon">&#x2709;&#xFE0F;</span>
     <div class="tag">実践 01 ― 20分</div>
-    <h1>3種類のメールを<br>作り分ける</h1>
-    <p class="subtitle">お礼・依頼・お断り ― 同じ相手でもトーンが変わる</p>
+    <h1>シナリオから<br>メールを作る</h1>
+    <p class="subtitle">まず状況を読んで、何が必要かを自分で考えてから始めましょう</p>
   </div>
 
   <div class="industry-switcher">
@@ -288,68 +310,103 @@ td{padding:10px 16px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
     <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
   </div>
 
-  <h2>&#x1F4EC; メール1：お礼メール</h2>
+  <!-- お題 -->
   <div class="industry-content active" data-group="A">
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>先日の福祉講演会で講師を務めてくださった大学教授にお礼メールを書いてください。
-
-状況：参加者50名、満足度アンケート95%。次年度も依頼したい。
-条件：丁寧な敬語。具体的な数字を含めて感謝を伝える。次年度の依頼にも触れる。300文字程度。</div>
+    <div class="task-card">
+      <div class="task-badge">&#x1F4CB; 今日のお題</div>
+      <div class="task-scenario">
+        先週木曜日、地域包括支援センター主催の「終活セミナー」を開催しました。地元の行政書士・田中啓一先生（60代）に2時間、無償で講師をお願いしました。当日は参加者35名。終了後のアンケートでは「とても分かりやすかった」が32名、「また聞きたい」が28名でした。センターとしては来年度（3〜4月）も同テーマで田中先生にお願いしたいと考えています。<br><br><strong>今日、田中先生にメールを送ります。</strong>
+      </div>
+      <div class="task-materials">
+        <strong>&#x1F4CE; 手元にある素材</strong>
+        <ul>
+          <li>開催日：先週木曜日・会場：地域公民館・時間：2時間</li>
+          <li>参加者数：35名</li>
+          <li>アンケート：「分かりやすかった」32名、「また聞きたい」28名</li>
+          <li>田中先生：地元の行政書士・無償対応・60代</li>
+          <li>希望：来年度3〜4月に再度お願いしたい</li>
+        </ul>
+      </div>
+    </div>
   </div>
   <div class="industry-content" data-group="B">
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>施主に工事完了のお礼メールを書いてください。
-
-状況：予定通り工期内完了。品質検査合格。施主から「丁寧な仕事」とお褒めの言葉をいただいた。
-条件：丁寧な敬語で完了報告と感謝を伝える。アフターサービスにも触れる。300文字程度。</div>
+    <div class="task-card">
+      <div class="task-badge">&#x1F4CB; 今日のお題</div>
+      <div class="task-scenario">
+        担当している市発注の橋梁補修工事で、先週月〜水の3日間、強風（最大瞬間風速17m/s）のため高所作業を中止しました。当初の完工予定は来月10日でしたが、3日遅れて来月13日になる見込みです。施工品質・安全基準に問題はありません。<br><br><strong>今日、発注者の市道路管理課・鈴木博之さんに状況報告のメールを送ります。</strong>
+      </div>
+      <div class="task-materials">
+        <strong>&#x1F4CE; 手元にある素材</strong>
+        <ul>
+          <li>作業中止：先週月・火・水（3日間）</li>
+          <li>理由：強風（最大瞬間風速17m/s）による高所作業中止</li>
+          <li>当初完工：来月10日 → 変更後：来月13日（3日延長）</li>
+          <li>品質・安全：問題なし・基準内</li>
+          <li>報告先：市道路管理課　鈴木博之さん</li>
+        </ul>
+      </div>
+    </div>
   </div>
   <div class="industry-content" data-group="C">
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>10名の忘年会でご利用いただいた法人のお客様にお礼メールを書いてください。
-
-状況：幹事から「料理が美味しかった」と好評。次回利用時の10%割引クーポンも案内したい。
-条件：丁寧だが温かみのあるトーンで。クーポン情報も含める。300文字程度。</div>
+    <div class="task-card">
+      <div class="task-badge">&#x1F4CB; 今日のお題</div>
+      <div class="task-scenario">
+        先週土曜日の夜、近くのIT企業「株式会社テックウェーブ」の歓迎会で個室に20名の予約がありました（1人4,500円のコース）。翌日、幹事の佐藤裕子さんから「料理も接客もとてもよかったです。来月の送別会でも利用したいのですが」とメールが届きました。来月の土曜夜はまだ空席があります。<br><br><strong>今日、佐藤さんへの返信メールを送ります。</strong>
+      </div>
+      <div class="task-materials">
+        <strong>&#x1F4CE; 手元にある素材</strong>
+        <ul>
+          <li>先週の利用：株式会社テックウェーブ・20名・歓迎会・1人4,500円コース</li>
+          <li>幹事：佐藤裕子さん</li>
+          <li>メッセージ：「料理も接客もとてもよかった。来月の送別会でも使いたい」</li>
+          <li>空き状況：来月の土曜夜に空席あり</li>
+        </ul>
+      </div>
+    </div>
   </div>
 
-  <h2>&#x1F4E8; メール2：依頼メール</h2>
-  <div class="industry-content active" data-group="A">
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>地域のボランティア団体に、来月の福祉イベントへの協力を依頼するメールを書いてください。
+  <!-- ステップ（共通） -->
+  <div class="step-blocks">
+    <div class="step-block">
+      <div class="step-label"><span class="s">STEP</span><span class="n">1</span></div>
+      <div class="step-content">
+        <div class="step-q">このメール、何を伝えたいですか？</div>
+        <p class="step-sub">一言でまとめてみてください。（お礼だけ？依頼も？報告と謝罪？）</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-label"><span class="s">STEP</span><span class="n">2</span></div>
+      <div class="step-content">
+        <div class="step-q">AIに何を伝えればよいですか？　自分でプロンプトを書いて試してみましょう。</div>
+        <p class="step-sub">ヒント：誰に・何のために・どんな背景で・どんな形式で</p>
+      </div>
+    </div>
+  </div>
 
-状況：毎年お世話になっている団体。受付と会場設営をお願いしたい。日時は来月の第2土曜日。
-条件：感謝を伝えつつ依頼。作業内容・日時・返信期限を明記。300文字程度。</div>
+  <!-- 参考プロンプト -->
+  <div class="ref-label">参考プロンプト</div>
+  <div class="industry-content active" data-group="A">
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>地域包括支援センターの担当者として、セミナー講師をお願いした行政書士の田中先生へのお礼メールを書いてください。
+
+状況：先週木曜日に「終活セミナー」を開催。2時間ご登壇いただき、参加者35名中32名が「分かりやすかった」、28名が「また聞きたい」と回答。無償でご対応いただいた。
+希望：感謝をお伝えした上で、来年度3〜4月に再度お願いしたい旨も自然な形で添えたい。
+条件：丁寧な敬語で。数字を具体的に盛り込む。来年度の依頼は押しつけにならない柔らかい表現で。300文字程度。</div>
   </div>
   <div class="industry-content" data-group="B">
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>協力会社に、内装工事の見積もりを依頼するメールを書いてください。
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>工事の現場監督として、発注者の市道路管理課・鈴木さんへ工期変更の状況報告メールを書いてください。
 
-状況：過去に一緒に仕事をした会社。事務所ビルの内装改修。図面は来週送付予定。見積期限2週間後。
-条件：ビジネスライクに工事概要・図面送付予定・期限を明記。300文字程度。</div>
+状況：橋梁補修工事で先週3日間（月〜水）、強風（最大瞬間風速17m/s）による高所作業中止が発生。完工が来月10日→13日に3日延長となる見込み。施工品質・安全基準に問題はない。
+条件：事実を正確に報告。謝罪は丁寧に。品質・安全に問題ない旨も明記。300文字程度。</div>
   </div>
   <div class="industry-content" data-group="C">
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>取引先の卸業者に、来月の発注数量を20%増やしたいと依頼するメールを書いてください。
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>飲食店のスタッフとして、団体利用のお客様・佐藤裕子さんへの返信メールを書いてください。
 
-状況：季節商品の売れ行きが好調。在庫切れを避けたい。納期への影響も確認したい。
-条件：変更理由を丁寧に説明。納期確認も依頼。300文字程度。</div>
+状況：先週土曜日に株式会社テックウェーブの歓迎会で20名ご利用（1人4,500円コース）。翌日「料理も接客もよかった、来月の送別会でも使いたい」とメールをいただいた。来月土曜夜に空席あり。
+条件：感謝の気持ちを温かく伝える。来月の予約に自然につながる形で。押しつけがましくならないように。300文字程度。</div>
   </div>
 
-  <h2>&#x1F6AB; メール3：お断りメール ← 今日のメイン</h2>
-  <div class="industry-content active" data-group="A">
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>他団体から依頼された講師派遣を、人員不足を理由にお断りするメールを書いてください。
-
-状況：依頼は魅力的だが、同時期に自団体のイベントが重なる。今後の関係は維持したい。別の時期なら検討したい。
-条件：丁重にお断りしつつ今後の協力姿勢を示す。代替案（別日程）も提示。300文字程度。</div>
-  </div>
-  <div class="industry-content" data-group="B">
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>新規の施主から依頼された工事を、スケジュール上の理由でお断りするメールを書いてください。
-
-状況：受けたいが年末まで工事が続き余裕がない。来年以降なら対応可能。紹介者への配慮も必要。
-条件：丁重にお断りし来年以降の可能性を示す。他業者紹介の提案も添える。300文字程度。</div>
-  </div>
-  <div class="industry-content" data-group="C">
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>取引先からの値下げ要請をお断りするメールを書いてください。
-
-状況：原材料費高騰でギリギリ。値下げすると赤字。長年の取引先なので関係は維持したい。まとめ買い割引を代替案として提案したい。
-条件：理由を丁寧に説明。代替案を提示して前向きに締める。300文字程度。</div>
-  </div>
-
-  <div class="highlight-box success" style="margin-top:40px">
-    <p><strong>出てきたら確認：</strong>事実は合ってる？<br>お断りメールは「言い回しを考えなくていい」のがAIの一番の価値。直した部分があれば教えてください。</p>
+  <div class="highlight-box success" style="margin-top:32px">
+    <p>出力が出たら確認：<strong>事実は合っていますか？</strong>　直した部分があれば教えてください。</p>
   </div>
 </div>
 </div>
@@ -398,16 +455,14 @@ td{padding:10px 16px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
 </div>
 
 <!-- ========== PAGE 5: 実践② 音声→議事録（メイン） (10min) ========== -->
-<div class="part-page" data-part="4" data-notes="第2回でGoogleドライブ字幕DLを一度体験済み。今日は「専門用語が誤変換されたときの対処」を加える。サンプルテキストを使って実際に動かしてもらう。">
+<div class="part-page" data-part="4" data-notes="シナリオを読んで「そのまま渡せるか？何を準備するか？」を自分で考えさせてから試させる。参考プロンプトで専門用語補足や条件指定の書き方を確認。">
 <div class="inner">
   <div class="section-header">
-    <span class="hero-icon">&#x1F4DD;</span>
+    <span class="hero-icon">&#x1F3A4;</span>
     <div class="tag">実践 02 ― 10分</div>
-    <h1>音声の文字起こしから<br>議事録を作る</h1>
-    <p class="subtitle">誤変換への対処も含めて実践</p>
+    <h1>文字起こしから<br>議事録を作る</h1>
+    <p class="subtitle">渡し方を工夫するだけで、出力の質が大きく変わります</p>
   </div>
-
-  <p>音声を文字起こしたサンプルです（誤変換や言いよどみ入り）。これをAIに渡して議事録にしてみましょう。</p>
 
   <div class="industry-switcher">
     <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
@@ -415,6 +470,75 @@ td{padding:10px 16px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
     <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
   </div>
 
+  <!-- お題 -->
+  <div class="industry-content active" data-group="A">
+    <div class="task-card">
+      <div class="task-badge">&#x1F4CB; 今日のお題</div>
+      <div class="task-scenario">
+        昨日14時から「4月定例理事会」を開催しました（約40分）。参加者の許可を取った上でiPhoneのボイスメモで録音しており、今朝文字起こしが完成しました。今日中に出席者5名へメールで議事録を共有する必要があります。<br><br><strong>下の文字起こしテキストを使って議事録を作りましょう。</strong>
+      </div>
+      <div class="task-materials">
+        <strong>&#x1F4CE; 手元にある素材</strong>
+        <ul>
+          <li>文字起こしテキスト（下に記載・誤変換や言いよどみあり）</li>
+          <li>出席者：山田会長・佐藤副会長・田中理事・渡辺理事・鈴木理事</li>
+          <li>略語：「ボラ保険」＝ボランティア保険、「社協」＝社会福祉協議会</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="industry-content" data-group="B">
+    <div class="task-card">
+      <div class="task-badge">&#x1F4CB; 今日のお題</div>
+      <div class="task-scenario">
+        昨日10時から現場定例会議を開催しました（約30分）。スマートフォンで録音しており、今朝文字起こしが完成しました。今日中に出席者と発注者へ議事録を共有する必要があります。<br><br><strong>下の文字起こしテキストを使って議事録を作りましょう。</strong>
+      </div>
+      <div class="task-materials">
+        <strong>&#x1F4CE; 手元にある素材</strong>
+        <ul>
+          <li>文字起こしテキスト（下に記載・誤変換や言いよどみあり）</li>
+          <li>出席者：佐藤所長・高橋・渡辺・田中主任</li>
+          <li>専門用語：「打設」＝コンクリートを型枠に流し込む工程、「建方」＝鉄骨を組み立てる工程</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+  <div class="industry-content" data-group="C">
+    <div class="task-card">
+      <div class="task-badge">&#x1F4CB; 今日のお題</div>
+      <div class="task-scenario">
+        昨日15時から月次の店長会議を開催しました（約35分）。録音しており、今朝文字起こしが完成しました。今日中に各店長と本部へ議事録を共有する必要があります。<br><br><strong>下の文字起こしテキストを使って議事録を作りましょう。</strong>
+      </div>
+      <div class="task-materials">
+        <strong>&#x1F4CE; 手元にある素材</strong>
+        <ul>
+          <li>文字起こしテキスト（下に記載・誤変換や言いよどみあり）</li>
+          <li>出席者：山田マネージャー・佐藤A店長・田中B店長・高橋C店長・渡辺D店長</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <!-- ステップ（共通） -->
+  <div class="step-blocks">
+    <div class="step-block">
+      <div class="step-label"><span class="s">STEP</span><span class="n">1</span></div>
+      <div class="step-content">
+        <div class="step-q">この文字起こし、そのままAIに渡せますか？</div>
+        <p class="step-sub">渡す前に何か準備・説明しておくべきことはありますか？</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-label"><span class="s">STEP</span><span class="n">2</span></div>
+      <div class="step-content">
+        <div class="step-q">AIに何を伝えると、より良い議事録になりますか？　自分でプロンプトを書いて試してみましょう。</div>
+        <p class="step-sub">ヒント：専門用語の補足・議事録の形式・含めてほしい項目</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- 参考プロンプト＋文字起こし素材 -->
+  <div class="ref-label">参考プロンプト＋文字起こし素材</div>
   <div class="industry-content active" data-group="A">
     <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下は会議の音声を文字起こしした結果です。誤変換や言いよどみが含まれていますが、文脈から判断して正しい議事録を作成してください。
 
@@ -469,8 +593,8 @@ td{padding:10px 16px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
 渡辺D店長：空調の件ですが業者に見積もり依頼中です。次回は5月1日木曜15時でお願いします。</div>
   </div>
 
-  <div class="highlight-box warning" style="margin-top:32px">
-    <p><strong>専門用語が誤変換されていたら：</strong><br>「○○は正しくは△△です。修正してください」と追加で伝えるだけでOKです。</p>
+  <div class="highlight-box warning" style="margin-top:24px">
+    <p>専門用語が誤変換されていたら：「○○は正しくは△△です。修正してください」と追加で伝えるだけでOKです。</p>
   </div>
 </div>
 </div>
@@ -530,47 +654,56 @@ td{padding:10px 16px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
 </div>
 
 <!-- ========== PAGE 8: 実践③ 自分の業務で実践 (15min) ========== -->
-<div class="part-page" data-part="7" data-notes="自分の実際の業務で試してもらう。メールでも議事録でも案内文でも何でもOK。smzさんの場合、マラソンイベント運営の業務（参加者向け案内文・会議メモの整理等）が使えるかも。完成させることよりも「自分の仕事でAIが動いた」という成功体験が最重要。">
+<div class="part-page" data-part="7" data-notes="自分の業務からお題を決めて、プロンプトをゼロから考えさせる。smzさんの場合、マラソンイベント運営の業務（参加者向け案内文・会議メモの整理等）が使えるかも。完成させることよりも「自分の仕事でAIが動いた」という成功体験が最重要。">
 <div class="inner">
   <div class="section-header">
     <span class="hero-icon">&#x1F4BC;</span>
     <div class="tag">実践 03 ― 15分</div>
-    <h1>自分の業務で<br>やってみよう</h1>
-    <p class="subtitle">1つ選んで試してみてください</p>
+    <h1>自分のお題で<br>やってみよう</h1>
+    <p class="subtitle">自分の業務から1つ選んで、プロンプトをゼロから考えましょう</p>
   </div>
 
-  <h2>&#x1F6AB; 選択A：断りにくいメールを書く</h2>
-  <p style="margin-bottom:12px">後回しにしているメールがあれば、AIに下書きを任せてみましょう。</p>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の状況で、丁重にお断りするメールを書いてください。
-今後の関係は維持したいので、前向きなトーンで締めてください。
+  <div class="task-card">
+    <div class="task-badge">&#x1F4CB; 自分のお題を決めてください</div>
+    <div class="task-scenario">
+      今日学んだこと（メール・議事録・案内文など）の中から、<strong>自分の業務で実際に役立ちそうなタスクを1つ</strong>選んでください。
+    </div>
+    <div class="task-materials">
+      <strong>&#x1F4CE; お題の例</strong>
+      <ul>
+        <li>後回しにしている、書きにくいメールがある</li>
+        <li>先週の会議のメモや録音が手元にある</li>
+        <li>近々、参加者や関係者に送る案内文が必要</li>
+        <li>定期的に書いている報告書や連絡文がある</li>
+      </ul>
+    </div>
+  </div>
 
-状況：
-（ここに自分の状況を書く。個人名や機密情報は伏せて）</div>
+  <div class="step-blocks">
+    <div class="step-block">
+      <div class="step-label"><span class="s">STEP</span><span class="n">1</span></div>
+      <div class="step-content">
+        <div class="step-q">どんなタスクで試しますか？</div>
+        <p class="step-sub">一言で説明してみてください。（例：「○○さんへのお断りメール」「先週の打ち合わせの議事録」）</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-label"><span class="s">STEP</span><span class="n">2</span></div>
+      <div class="step-content">
+        <div class="step-q">AIに何を伝えれば動いてくれますか？　プロンプトを書いて試してみましょう。</div>
+        <p class="step-sub">ヒント：誰に・何のために・どんな素材があるか・どんな形式で出してほしいか</p>
+      </div>
+    </div>
+    <div class="step-block">
+      <div class="step-label"><span class="s">STEP</span><span class="n">3</span></div>
+      <div class="step-content">
+        <div class="step-q">出力を見て、どこを直しましたか？</div>
+        <p class="step-sub">直した部分・足りなかった情報・追加した指示があれば教えてください。そこが次回からの改善ポイントになります。</p>
+      </div>
+    </div>
+  </div>
 
-  <h2>&#x1F3A4; 選択B：自分の会議録や録音から議事録を作る</h2>
-  <p style="margin-bottom:12px">Google Meetの字幕・ボイスメモの文字起こしがあれば使ってみましょう。</p>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下は会議の文字起こし結果です。議事録を作成してください。
-
-専門用語の補足：（使っている略語や専門用語があれば書く）
-
-条件：
-- 決定事項と未決定事項を分けてください
-- 担当者と期限があるものは明記してください
-- 事実のみ記載してください
-
-【文字起こし】
-（ここに文字起こしテキストを貼る）</div>
-
-  <h2>&#x1F4E2; 選択C：案内文や連絡文を作る</h2>
-  <p style="margin-bottom:12px">参加者・関係者へのお知らせなど、書く必要があるものがあれば。</p>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の内容で案内文を書いてください。
-
-宛先：（例：イベント参加者）
-内容：（例：日時・場所・持ち物・注意事項）
-トーン：（例：丁寧だが読みやすく）
-文字数：300文字程度</div>
-
-  <div class="highlight-box warning" style="margin-top:32px">
+  <div class="highlight-box warning">
     <p><strong>注意：</strong>個人名は伏せるか仮名にしてください。第1回の 安全 / 注意 / 禁止 を守りましょう。</p>
   </div>
 </div>
@@ -641,12 +774,12 @@ td{padding:10px 16px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
 const PARTS=[
   {name:'オープニング＆前回振り返り',minutes:8,type:'lecture'},
   {name:'ミニ講義: 確認は1つだけ',minutes:7,type:'lecture'},
-  {name:'実践①: メール3種作り分け',minutes:20,type:'handson'},
+  {name:'実践①: シナリオからメールを作る',minutes:20,type:'handson'},
   {name:'ミニ講義: 議事録は音声→がメイン',minutes:10,type:'lecture'},
   {name:'実践②: 音声→議事録',minutes:10,type:'handson'},
   {name:'参考: メモから作る場合のTips',minutes:7,type:'handson'},
   {name:'休憩',minutes:5,type:'break'},
-  {name:'実践③: 自分の業務で実践',minutes:15,type:'handson'},
+  {name:'実践③: 自分のお題で実践',minutes:15,type:'handson'},
   {name:'共有＆振り返り＋次回予告',minutes:8,type:'review'}
 ];
 
