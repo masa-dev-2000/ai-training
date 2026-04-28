@@ -52,12 +52,20 @@ li strong{color:#1e293b}
 .point-body{font-size:15px;color:#475569;line-height:1.6}
 .point-body strong{color:#1e293b}
 
-.four-set{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin:16px 0}
-.four-set-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f1f5f9}
-.four-set-row:last-child{border-bottom:none}
-.four-set-num{min-width:28px;height:28px;border-radius:50%;background:#eff6ff;color:#2563eb;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
-.four-set-body{font-size:15px;color:#475569;line-height:1.6}
-.four-set-body strong{color:#1e293b}
+/* 5テクニック一覧 */
+.tech-list{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin:16px 0}
+.tech-row{display:flex;gap:14px;align-items:flex-start;padding:12px 0;border-bottom:1px solid #f1f5f9}
+.tech-row:last-child{border-bottom:none}
+.tech-num{min-width:32px;height:32px;border-radius:50%;background:#eff6ff;color:#2563eb;font-size:14px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.tech-body{font-size:15px;color:#475569;line-height:1.6}
+.tech-body strong{color:#1e293b;display:block;margin-bottom:2px}
+
+/* うまくいかないとき */
+.steps{display:flex;flex-direction:column;gap:10px;margin:16px 0}
+.step{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px}
+.step-num{min-width:28px;height:28px;border-radius:50%;background:#fef3c7;color:#b45309;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0}
+.step-body{font-size:15px;color:#475569;line-height:1.6}
+.step-body strong{color:#1e293b}
 
 .quiz{margin:16px 0}
 .quiz-item{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:14px 18px;margin:8px 0;cursor:pointer;transition:all .2s}
@@ -86,7 +94,7 @@ footer{text-align:center;padding:40px 0 20px;color:#94a3b8;font-size:13px;border
 <header>
   <div class="tag">AI研修 初級編</div>
   <h1>第2回 振り返り</h1>
-  <p class="subtitle">伝え方で結果が変わる ― 指示の4点セットと構造化</p>
+  <p class="subtitle">伝え方で結果が変わる ― 5つの応用テクニック</p>
   <p style="font-size:14px;color:#94a3b8;margin-top:8px">2026年4月 実施</p>
 </header>
 
@@ -95,43 +103,87 @@ footer{text-align:center;padding:40px 0 20px;color:#94a3b8;font-size:13px;border
 
 <div class="goal-card">
   <div class="goal-num done">&#x2713;</div>
-  <div class="goal-text"><strong>メール作成の4点セットを使って実際にメールを作った</strong><br>役割・指示・背景・形式の4つを伝えるだけで、自分では書けなかったような丁寧なメールが出てきた。「書き方で悩む時間」がなくなる体験。</div>
+  <div class="goal-text"><strong>手順を分けて指示することで、精度が上がることを体感した</strong><br>「まず○○して、次に××して、最後に△△してください」と段階を明示すると、一気に指示するより格段に質が上がる。</div>
 </div>
 <div class="goal-card">
   <div class="goal-num done">&#x2713;</div>
-  <div class="goal-text"><strong>GeminiとGoogleツールの連携を試した</strong><br>GeminiからGmailの未読メールを確認したり、Googleカレンダーの予定を聞いたりできることを確認。アット（@）マークを使ってツールを呼び出す方法を学んだ。</div>
+  <div class="goal-text"><strong>見本（テンプレート）を渡して同じ形式で出力させた</strong><br>既存の書類や過去に作ったフォーマットを貼り付け、「この形式で作ってください」と指示するだけで、ゼロから書式設計する手間がなくなる。</div>
 </div>
 <div class="goal-card">
   <div class="goal-num done">&#x2713;</div>
-  <div class="goal-text"><strong>長い文章を表形式・箇条書きに整理する方法を学んだ</strong><br>「表形式にして」「マークダウンで」「プレーンテキストで」と形式を指定するだけで、読みやすい形に変換してくれることを確認。</div>
+  <div class="goal-text"><strong>AIに「足りない情報を質問させる」テクニックを試した</strong><br>「私に足りない情報を質問してください」と先に投げると、AIが必要な情報をヒアリングしてくれる。答えるだけで精度の高い出力が得られる。</div>
 </div>
 <div class="goal-card">
   <div class="goal-num done">&#x2713;</div>
-  <div class="goal-text"><strong>音声から議事録を作る流れを学んだ</strong><br>Google Meetの録画をGoogleドライブから開き、字幕ファイルをダウンロード。そのテキストをGeminiに渡すと議事録が作れる。</div>
+  <div class="goal-text"><strong>「してほしいこと」と「してほしくないこと」を両方伝えた</strong><br>条件と制約を明示することで、出力がコントロールしやすくなる。例：「横文字を使わないで」「300文字以内で」「箇条書きにしないで」。</div>
+</div>
+<div class="goal-card">
+  <div class="goal-num done">&#x2713;</div>
+  <div class="goal-text"><strong>AIに自分の出力を自己評価させ、修正させた</strong><br>一度出力させた後、「論理の飛躍はないか、抜け漏れはないか確認して修正版を出して」と続けることで、品質チェックもAIに任せられる。</div>
 </div>
 
 <hr class="divider">
 
-<!-- ===== 4点セットのおさらい ===== -->
-<h2>4点セット ― おさらい</h2>
-<p>AIへの指示に以下の4つを含めると、回答の質が大きく変わります。</p>
+<!-- ===== 5つの応用テクニック ===== -->
+<h2>5つの応用テクニック ― おさらい</h2>
+<p>今回の5つは「第1回で学んだ4点セット」の次のステップです。指示の出し方を工夫するだけで、AIの回答の質がさらに引き上げられます。</p>
 
-<div class="four-set">
-  <div class="four-set-row">
-    <div class="four-set-num">1</div>
-    <div class="four-set-body"><strong>役割</strong>　― 例：「優秀な営業アシスタントとして」「メールのプロとして」<br>AIに立場を与えると文体やトーンが安定する</div>
+<div class="tech-list">
+  <div class="tech-row">
+    <div class="tech-num">1</div>
+    <div class="tech-body">
+      <strong>手順を分けて指示する</strong>
+      「まず○○、次に××、最後に△△」と段階を明示する。一気に指示すると雑な出力になりやすい。
+    </div>
   </div>
-  <div class="four-set-row">
-    <div class="four-set-num">2</div>
-    <div class="four-set-body"><strong>指示</strong>　― 例：「日程変更のメールを作成してください」<br>何をしてほしいかを明確に</div>
+  <div class="tech-row">
+    <div class="tech-num">2</div>
+    <div class="tech-body">
+      <strong>見本を渡す（フォーマット指定）</strong>
+      既存のテンプレートや手書き書類を貼り付けて「この形式で」と伝える。書式設計ゼロで使いやすい形が出てくる。
+    </div>
   </div>
-  <div class="four-set-row">
-    <div class="four-set-num">3</div>
-    <div class="four-set-body"><strong>背景</strong>　― 例：「資料が間に合わず、来週に変更したい」<br>理由・状況を伝えるとAIが文脈を理解して精度が上がる</div>
+  <div class="tech-row">
+    <div class="tech-num">3</div>
+    <div class="tech-body">
+      <strong>AIに質問させる</strong>
+      「私に足りない情報を質問してください」と先に投げる。AIのヒアリングに答えるだけで、必要な情報が自然に揃う。
+    </div>
   </div>
-  <div class="four-set-row">
-    <div class="four-set-num">4</div>
-    <div class="four-set-body"><strong>形式</strong>　― 例：「誠実なトーンで、件名付きで、300文字程度」<br>出力の形を指定すると使いやすい形で出てくる</div>
+  <div class="tech-row">
+    <div class="tech-num">4</div>
+    <div class="tech-body">
+      <strong>条件と制約を伝える</strong>
+      「○○してほしい」だけでなく「××はしないで」も伝える。例：「横文字を使わない」「300文字以内」「敬体で」。
+    </div>
+  </div>
+  <div class="tech-row">
+    <div class="tech-num">5</div>
+    <div class="tech-body">
+      <strong>AIに自己評価させる</strong>
+      一度出力させた後、「論理の飛躍・抜け漏れ・読みにくい箇所がないか自分でチェックして修正版を出して」と続ける。
+    </div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== うまくいかないときの3ステップ ===== -->
+<h2>うまくいかないときの対処法</h2>
+<p>期待通りの出力が得られないときは、この順番で試してみてください。</p>
+
+<div class="steps">
+  <div class="step">
+    <div class="step-num">1</div>
+    <div class="step-body"><strong>大枠を先に決める</strong>　― まず「どんな形・構成にしたいか」を伝えてから、細かい内容を肉付けさせる</div>
+  </div>
+  <div class="step">
+    <div class="step-num">2</div>
+    <div class="step-body"><strong>数値で条件を指定し直す</strong>　― 「短く」より「200文字以内で」。「シンプルに」より「箇条書き3項目で」。数値で指定すると調整しやすい</div>
+  </div>
+  <div class="step">
+    <div class="step-num">3</div>
+    <div class="step-body"><strong>新しい会話でリセット</strong>　― 同じチャットで何度も修正を続けると前の指示が邪魔をする。新しい会話にまとめて貼り直す方が早い</div>
   </div>
 </div>
 
@@ -142,22 +194,22 @@ footer{text-align:center;padding:40px 0 20px;color:#94a3b8;font-size:13px;border
 
 <div class="insight-card">
   <div class="label">気づき</div>
-  <p><strong>「悩む時間がある時こそ使いどき」</strong><br>「どう書こうか」と迷っている時間こそ、AIに投げてしまえばいい。メール1通を考える時間がゼロになる。</p>
+  <p><strong>AIに質問させると「自分が何を伝え忘れていたか」が分かる</strong><br>ヒアリングが来ることで、自分の指示に何が欠けていたのかが一目で分かる。何度か使ううちに、最初から必要な情報を整理して伝える習慣がついてくる。</p>
 </div>
 
 <div class="insight-card">
   <div class="label">気づき</div>
-  <p><strong>プロンプトもAIに考えさせればいい</strong><br>「どう指示すればいいか分からない」という場合、「こういうものを作りたいのですが、どんな指示を出せばいいか教えてください」とAIに聞けばいい。指示の書き方自体をAIが教えてくれる。</p>
+  <p><strong>AIごとに個性がある ― 使い分けのヒント</strong><br>Claude（クロード）は淡々として忖度が少ない。ChatGPT（チャッピー）はアグレッシブで積極的。Geminiは検索と連携が強み。用途によって使い分けるのが効果的。</p>
 </div>
 
 <div class="insight-card">
   <div class="label">気づき</div>
-  <p><strong>GeminiはGoogleを使っている人に特に便利</strong><br>Gmail・カレンダー・ドライブなど普段のツールと繋がるため、アプリを切り替えずにGemini内で情報を確認・整理できる。</p>
+  <p><strong>AIに自己評価させるなら「別のAI」「別のチャット」に頼む方が効果的</strong><br>同じチャットでそのまま「チェックして」と頼むと、これまでの指示を読んで甘い評価になりやすい。最終出力だけを別のAIに貼り直してレビューさせると厳しいフィードバックが来る。</p>
 </div>
 
 <div class="insight-card">
   <div class="label">気づき</div>
-  <p><strong>音声→字幕→議事録の流れが実用的</strong><br>昨日の会議の録音をそのままGoogleドライブから取り出して議事録を作れることが分かった。「早速明日やってみたい」という感想があった。</p>
+  <p><strong>定型業務はプロンプトを保存しておくと毎回ゼロから書かなくて済む</strong><br>毎週同じような報告書やメールを作るなら、うまくいったプロンプトをメモ帳やGemのカスタムAIに保存しておく。次回からは貼り付けて業務内容を変えるだけでいい。</p>
 </div>
 
 <hr class="divider">
@@ -167,16 +219,16 @@ footer{text-align:center;padding:40px 0 20px;color:#94a3b8;font-size:13px;border
 
 <div class="three-points">
   <div class="point">
-    <div class="point-icon">&#x1F4DD;</div>
-    <div class="point-body"><strong>4点セットで指示の質が変わる</strong><br>役割・指示・背景・形式。この4つを意識するだけで、AIの回答が格段に使いやすくなる。</div>
+    <div class="point-icon">&#x1F4AC;</div>
+    <div class="point-body"><strong>「AIに質問させる」を使いこなす</strong><br>「足りない情報を質問してください」の一言で、AIがヒアリングを始める。これだけで出力の精度が大きく変わる。</div>
   </div>
   <div class="point">
-    <div class="point-icon">&#x1F517;</div>
-    <div class="point-body"><strong>GeminiはGoogleツールとつながる</strong><br>@Gmail・@カレンダー・@ドライブで、普段の業務ツールをGemini内から操作できる。</div>
+    <div class="point-icon">&#x1F50D;</div>
+    <div class="point-body"><strong>自己評価は別チャット・別AIで</strong><br>同じチャットで評価させると甘くなる。完成した文章を別のAIに渡してチェックさせると、見落としやすい問題を発見しやすい。</div>
   </div>
   <div class="point">
-    <div class="point-icon">&#x1F3A4;</div>
-    <div class="point-body"><strong>会議の音声→字幕→議事録が今の主流</strong><br>メモを取る前に録音してしまう方が精度が高い。Googleドライブの字幕ダウンロード機能を使えばすぐに試せる。</div>
+    <div class="point-icon">&#x1F4BE;</div>
+    <div class="point-body"><strong>うまくいったプロンプトは保存する</strong><br>良い出力が得られたときのプロンプトをそのまま残しておく。次回は業務の中身を入れ替えるだけで使い回せる。</div>
   </div>
 </div>
 
@@ -187,20 +239,20 @@ footer{text-align:center;padding:40px 0 20px;color:#94a3b8;font-size:13px;border
 
 <div class="quiz">
   <div class="quiz-item" onclick="this.classList.toggle('open')">
-    <div class="q">Q1. AIへの指示に「背景」を入れる必要はある？</div>
-    <div class="a">&#x2B55; <strong>あります。</strong>「なぜそうしたいのか」という背景を伝えることで、AIが文脈を理解して精度が大きく上がります。</div>
+    <div class="q">Q1. 複雑な作業をAIに頼むとき、精度を上げるコツは？</div>
+    <div class="a">&#x2B55; <strong>手順を分けて指示する。</strong>「まず○○、次に××、最後に△△」と段階を明示すると、一気に指示するより出力の質が上がります。</div>
   </div>
   <div class="quiz-item" onclick="this.classList.toggle('open')">
-    <div class="q">Q2. Geminiで未読メールを確認するには？</div>
-    <div class="a">&#x2B55; Geminiのチャット欄に <strong>@Gmail</strong>（半角@）と入力してから指示を出すと、GmailをGemini内から参照できます。</div>
+    <div class="q">Q2. AIが出した文章が長すぎた。どうする？</div>
+    <div class="a">&#x2B55; <strong>数値で指定し直す。</strong>「短く」では曖昧なので「200文字以内で」と数値を使います。それでも改善しなければ、新しいチャットで最初からやり直す方が早いです。</div>
   </div>
   <div class="quiz-item" onclick="this.classList.toggle('open')">
-    <div class="q">Q3. 議事録を作るとき、手書きメモとAIに渡すのとどちらが精度が高い？</div>
-    <div class="a">&#x2B55; <strong>音声→文字起こし</strong>の方が精度が高いです。手書きメモは文脈が抜け落ちるため、そのまま渡すと精度が下がりやすい。</div>
+    <div class="q">Q3. AIに自己評価をさせるとき、なぜ「同じチャット」ではなく「別のAI」が良い？</div>
+    <div class="a">&#x2B55; <strong>同じチャットでは甘い評価になりやすいため。</strong>AIはこれまでの会話の流れを読んで評価するため、自分が出した回答を批判しにくくなります。別のAIに最終出力だけ貼り付けると、より客観的なフィードバックが得られます。</div>
   </div>
   <div class="quiz-item" onclick="this.classList.toggle('open')">
-    <div class="q">Q4. AIが出力した表の項目が足りなかった。どう対処する？</div>
-    <div class="a">&#x2B55; <strong>追加で指示を出すだけ。</strong>「○○の列を追加してください」「△△は不要なので外してください」と会話を続けることで修正できます。</div>
+    <div class="q">Q4. AIが指示通りの形式で出力してくれない。どうする？</div>
+    <div class="a">&#x2B55; <strong>見本を渡す（テクニック2）が一番確実。</strong>言葉で説明するより、過去に作った書類や理想の形式のサンプルをそのまま貼り付けて「この形式で」と伝えると、AIが形式を正確に読み取ってくれます。</div>
   </div>
 </div>
 
@@ -208,30 +260,32 @@ footer{text-align:center;padding:40px 0 20px;color:#94a3b8;font-size:13px;border
 
 <!-- ===== 今週のチャレンジ ===== -->
 <h2>今週のチャレンジ</h2>
-<p>次回までに、4点セットを使って実際の業務で1つ試してみてください。</p>
+<p>次回までに、5つのテクニックのうち1つ以上を実際の業務で試してみてください。</p>
 
 <div class="challenge-card">
-  <h3>お題1: 4点セットでメールを書く</h3>
+  <h3>お題1: AIに質問させて業務メールを作る</h3>
   <div class="prompt">
-    <span>以下の条件でメールを作成してください。
-
-役割：丁寧なビジネスメールのプロとして
-指示：（例：打ち合わせ日程の変更をお願いするメール）
-背景：（例：急用が入り、来週水曜から木曜に変更したい）
-形式：誠実なトーンで、件名付きで、300文字程度</span>
+    <span>私はこれから業務メールを作りたいです。
+まず私に足りない情報を質問してください。
+すべて答え終わったら、ビジネスメールとして完成させてください。</span>
     <span class="copy-btn" onclick="copyText(this)">コピー</span>
   </div>
 </div>
 
 <div class="challenge-card">
-  <h3>お題2: 最近の会議メモを議事録にする</h3>
+  <h3>お題2: 作った文章をAIに自己評価させる</h3>
   <div class="prompt">
-    <span>以下の会議の走り書きメモから議事録を作成してください。
+    <span>以下の文章をレビューしてください。
 
-条件：決定事項と未決定事項を分けてください。担当者と期限があれば明記してください。事実のみ記載し、意見は含めないでください。
+確認してほしいこと：
+- 論理の飛躍や矛盾がないか
+- 読み手に分かりにくい箇所がないか
+- 抜け漏れている情報がないか
 
-【会議メモ】
-（ここに自分のメモを貼る）</span>
+問題があれば修正版も出してください。
+
+【文章】
+（ここにAIが作った文章、または自分で書いた文章を貼る）</span>
     <span class="copy-btn" onclick="copyText(this)">コピー</span>
   </div>
 </div>
@@ -245,13 +299,12 @@ footer{text-align:center;padding:40px 0 20px;color:#94a3b8;font-size:13px;border
 
 <div class="next-card">
   <h3>第3回: 業務文書を素早く作る</h3>
-  <p>メール・議事録・報告書など、日常の業務文書をAIで一気に作る方法を実践します。今回学んだ4点セットを使いながら、<strong>お礼・依頼・お断りの3種類のメール</strong>を実際に作り分けます。</p>
+  <p>今回学んだテクニックを使いながら、<strong>お礼・依頼・お断りの3種類のメールを実際に作り分け</strong>ます。さらに音声から議事録を作る実践に進みます。</p>
 </div>
 
 <!-- ===== 参考リンク ===== -->
 <h2>参考リンク</h2>
 <ul>
-  <li><a href="https://gemini.google.com" target="_blank" style="color:#3b82f6">Gemini（Google AI）</a> ― 今回使ったAI</li>
   <li><a href="https://masa-dev-2000.github.io/ai-training/materials/session-02/presentation.html" target="_blank" style="color:#3b82f6">第2回 講義資料</a> ― もう一度見返したい方はこちら</li>
   <li><a href="https://masa-dev-2000.github.io/ai-training/knowledge-base.html" target="_blank" style="color:#3b82f6">よくある質問集</a> ― 困ったときはこちら</li>
 </ul>
