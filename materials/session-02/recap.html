@@ -1,0 +1,276 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第2回 振り返り | AI研修 初級編</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;background:#f8f9fb;color:#1e293b;line-height:1.8}
+.container{max-width:720px;margin:0 auto;padding:32px 20px 80px}
+header{text-align:center;padding:40px 0 32px;border-bottom:1px solid #e2e8f0;margin-bottom:32px}
+header .tag{font-size:13px;color:#64748b;letter-spacing:2px;margin-bottom:8px}
+header h1{font-size:28px;font-weight:700;color:#1e293b;margin-bottom:4px}
+header .subtitle{font-size:16px;color:#64748b}
+
+h2{font-size:22px;font-weight:700;margin:40px 0 16px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
+h3{font-size:18px;font-weight:600;margin:24px 0 8px;color:#334155}
+p{font-size:16px;color:#475569;margin-bottom:12px}
+ul{font-size:16px;padding-left:24px;color:#475569;margin-bottom:12px}
+li{margin-bottom:8px}
+li strong{color:#1e293b}
+
+.goal-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:16px 20px;margin:10px 0;display:flex;align-items:flex-start;gap:14px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.goal-num{min-width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:15px;font-weight:700;flex-shrink:0}
+.goal-num.done{background:#dcfce7;color:#16a34a}
+.goal-text{font-size:16px;color:#1e293b;line-height:1.6}
+
+.insight-card{background:#fff;border:1px solid #e2e8f0;border-left:4px solid #3b82f6;border-radius:8px;padding:16px 20px;margin:12px 0;box-shadow:0 1px 3px rgba(0,0,0,.04)}
+.insight-card .label{font-size:12px;font-weight:600;color:#3b82f6;margin-bottom:4px;text-transform:uppercase;letter-spacing:1px}
+.insight-card p{margin:0;font-size:15px;color:#475569}
+
+.tip-card{background:#fffbeb;border:1px solid #fbbf24;border-radius:8px;padding:16px 20px;margin:12px 0}
+.tip-card .label{font-size:12px;font-weight:600;color:#d97706;margin-bottom:4px}
+.tip-card p{margin:0;font-size:15px;color:#92400e}
+
+.challenge-card{background:#f0fdf4;border:1px solid #86efac;border-radius:12px;padding:20px 24px;margin:16px 0}
+.challenge-card h3{color:#16a34a;margin:0 0 12px}
+.challenge-card .prompt{background:#fff;border:1px solid #d1fae5;border-radius:8px;padding:12px 16px;margin:8px 0;font-size:15px;color:#1e293b;display:flex;flex-direction:column;gap:8px;line-height:1.6}
+.challenge-card .prompt .copy-btn{align-self:flex-end;padding:4px 10px;border:1px solid #cbd5e1;border-radius:5px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:11px;transition:all .2s}
+.challenge-card .prompt .copy-btn:hover{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.challenge-card .prompt .copy-btn.copied{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+
+.next-card{background:#eff6ff;border:1px solid #93c5fd;border-radius:12px;padding:20px 24px;margin:16px 0}
+.next-card h3{color:#2563eb;margin:0 0 8px}
+.next-card p{margin:0;font-size:15px;color:#1e40af}
+
+.divider{border:none;border-top:1px solid #e2e8f0;margin:32px 0}
+
+.three-points{display:flex;flex-direction:column;gap:14px;margin:16px 0}
+.point{display:flex;gap:14px;align-items:flex-start;background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px}
+.point-icon{font-size:24px;min-width:32px;text-align:center;line-height:1.4}
+.point-body{font-size:15px;color:#475569;line-height:1.6}
+.point-body strong{color:#1e293b}
+
+.four-set{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin:16px 0}
+.four-set-row{display:flex;gap:12px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #f1f5f9}
+.four-set-row:last-child{border-bottom:none}
+.four-set-num{min-width:28px;height:28px;border-radius:50%;background:#eff6ff;color:#2563eb;font-size:13px;font-weight:700;display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:2px}
+.four-set-body{font-size:15px;color:#475569;line-height:1.6}
+.four-set-body strong{color:#1e293b}
+
+.quiz{margin:16px 0}
+.quiz-item{background:#fff;border:1px solid #e2e8f0;border-radius:8px;padding:14px 18px;margin:8px 0;cursor:pointer;transition:all .2s}
+.quiz-item:hover{border-color:#3b82f6}
+.quiz-item .q{font-size:15px;font-weight:600;color:#1e293b;margin-bottom:4px}
+.quiz-item .a{font-size:14px;color:#16a34a;display:none;margin-top:8px;padding-top:8px;border-top:1px solid #e2e8f0}
+.quiz-item.open .a{display:block}
+
+footer{text-align:center;padding:40px 0 20px;color:#94a3b8;font-size:13px;border-top:1px solid #e2e8f0;margin-top:40px}
+.breadcrumb{font-size:14px;color:#94a3b8;margin-bottom:8px}
+.breadcrumb a{color:#3b82f6;text-decoration:none}
+.breadcrumb a:hover{text-decoration:underline}
+
+@media(max-width:600px){
+  .container{padding:20px 16px 60px}
+  header h1{font-size:24px}
+  h2{font-size:20px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<div class="breadcrumb"><a href="../../index.html">ホーム</a> &gt; 第2回 &gt; 振り返り</div>
+
+<header>
+  <div class="tag">AI研修 初級編</div>
+  <h1>第2回 振り返り</h1>
+  <p class="subtitle">伝え方で結果が変わる ― 指示の4点セットと構造化</p>
+  <p style="font-size:14px;color:#94a3b8;margin-top:8px">2026年4月 実施</p>
+</header>
+
+<!-- ===== 今日やったこと ===== -->
+<h2>今日やったこと</h2>
+
+<div class="goal-card">
+  <div class="goal-num done">&#x2713;</div>
+  <div class="goal-text"><strong>メール作成の4点セットを使って実際にメールを作った</strong><br>役割・指示・背景・形式の4つを伝えるだけで、自分では書けなかったような丁寧なメールが出てきた。「書き方で悩む時間」がなくなる体験。</div>
+</div>
+<div class="goal-card">
+  <div class="goal-num done">&#x2713;</div>
+  <div class="goal-text"><strong>GeminiとGoogleツールの連携を試した</strong><br>GeminiからGmailの未読メールを確認したり、Googleカレンダーの予定を聞いたりできることを確認。アット（@）マークを使ってツールを呼び出す方法を学んだ。</div>
+</div>
+<div class="goal-card">
+  <div class="goal-num done">&#x2713;</div>
+  <div class="goal-text"><strong>長い文章を表形式・箇条書きに整理する方法を学んだ</strong><br>「表形式にして」「マークダウンで」「プレーンテキストで」と形式を指定するだけで、読みやすい形に変換してくれることを確認。</div>
+</div>
+<div class="goal-card">
+  <div class="goal-num done">&#x2713;</div>
+  <div class="goal-text"><strong>音声から議事録を作る流れを学んだ</strong><br>Google Meetの録画をGoogleドライブから開き、字幕ファイルをダウンロード。そのテキストをGeminiに渡すと議事録が作れる。</div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 4点セットのおさらい ===== -->
+<h2>4点セット ― おさらい</h2>
+<p>AIへの指示に以下の4つを含めると、回答の質が大きく変わります。</p>
+
+<div class="four-set">
+  <div class="four-set-row">
+    <div class="four-set-num">1</div>
+    <div class="four-set-body"><strong>役割</strong>　― 例：「優秀な営業アシスタントとして」「メールのプロとして」<br>AIに立場を与えると文体やトーンが安定する</div>
+  </div>
+  <div class="four-set-row">
+    <div class="four-set-num">2</div>
+    <div class="four-set-body"><strong>指示</strong>　― 例：「日程変更のメールを作成してください」<br>何をしてほしいかを明確に</div>
+  </div>
+  <div class="four-set-row">
+    <div class="four-set-num">3</div>
+    <div class="four-set-body"><strong>背景</strong>　― 例：「資料が間に合わず、来週に変更したい」<br>理由・状況を伝えるとAIが文脈を理解して精度が上がる</div>
+  </div>
+  <div class="four-set-row">
+    <div class="four-set-num">4</div>
+    <div class="four-set-body"><strong>形式</strong>　― 例：「誠実なトーンで、件名付きで、300文字程度」<br>出力の形を指定すると使いやすい形で出てくる</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 受講者の気づき ===== -->
+<h2>受講者の皆さんから出た気づき</h2>
+
+<div class="insight-card">
+  <div class="label">気づき</div>
+  <p><strong>「悩む時間がある時こそ使いどき」</strong><br>「どう書こうか」と迷っている時間こそ、AIに投げてしまえばいい。メール1通を考える時間がゼロになる。</p>
+</div>
+
+<div class="insight-card">
+  <div class="label">気づき</div>
+  <p><strong>プロンプトもAIに考えさせればいい</strong><br>「どう指示すればいいか分からない」という場合、「こういうものを作りたいのですが、どんな指示を出せばいいか教えてください」とAIに聞けばいい。指示の書き方自体をAIが教えてくれる。</p>
+</div>
+
+<div class="insight-card">
+  <div class="label">気づき</div>
+  <p><strong>GeminiはGoogleを使っている人に特に便利</strong><br>Gmail・カレンダー・ドライブなど普段のツールと繋がるため、アプリを切り替えずにGemini内で情報を確認・整理できる。</p>
+</div>
+
+<div class="insight-card">
+  <div class="label">気づき</div>
+  <p><strong>音声→字幕→議事録の流れが実用的</strong><br>昨日の会議の録音をそのままGoogleドライブから取り出して議事録を作れることが分かった。「早速明日やってみたい」という感想があった。</p>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 覚えておきたい3つのポイント ===== -->
+<h2>覚えておきたい3つのポイント</h2>
+
+<div class="three-points">
+  <div class="point">
+    <div class="point-icon">&#x1F4DD;</div>
+    <div class="point-body"><strong>4点セットで指示の質が変わる</strong><br>役割・指示・背景・形式。この4つを意識するだけで、AIの回答が格段に使いやすくなる。</div>
+  </div>
+  <div class="point">
+    <div class="point-icon">&#x1F517;</div>
+    <div class="point-body"><strong>GeminiはGoogleツールとつながる</strong><br>@Gmail・@カレンダー・@ドライブで、普段の業務ツールをGemini内から操作できる。</div>
+  </div>
+  <div class="point">
+    <div class="point-icon">&#x1F3A4;</div>
+    <div class="point-body"><strong>会議の音声→字幕→議事録が今の主流</strong><br>メモを取る前に録音してしまう方が精度が高い。Googleドライブの字幕ダウンロード機能を使えばすぐに試せる。</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 振り返りクイズ ===== -->
+<h2>振り返りクイズ（タップで答え）</h2>
+
+<div class="quiz">
+  <div class="quiz-item" onclick="this.classList.toggle('open')">
+    <div class="q">Q1. AIへの指示に「背景」を入れる必要はある？</div>
+    <div class="a">&#x2B55; <strong>あります。</strong>「なぜそうしたいのか」という背景を伝えることで、AIが文脈を理解して精度が大きく上がります。</div>
+  </div>
+  <div class="quiz-item" onclick="this.classList.toggle('open')">
+    <div class="q">Q2. Geminiで未読メールを確認するには？</div>
+    <div class="a">&#x2B55; Geminiのチャット欄に <strong>@Gmail</strong>（半角@）と入力してから指示を出すと、GmailをGemini内から参照できます。</div>
+  </div>
+  <div class="quiz-item" onclick="this.classList.toggle('open')">
+    <div class="q">Q3. 議事録を作るとき、手書きメモとAIに渡すのとどちらが精度が高い？</div>
+    <div class="a">&#x2B55; <strong>音声→文字起こし</strong>の方が精度が高いです。手書きメモは文脈が抜け落ちるため、そのまま渡すと精度が下がりやすい。</div>
+  </div>
+  <div class="quiz-item" onclick="this.classList.toggle('open')">
+    <div class="q">Q4. AIが出力した表の項目が足りなかった。どう対処する？</div>
+    <div class="a">&#x2B55; <strong>追加で指示を出すだけ。</strong>「○○の列を追加してください」「△△は不要なので外してください」と会話を続けることで修正できます。</div>
+  </div>
+</div>
+
+<hr class="divider">
+
+<!-- ===== 今週のチャレンジ ===== -->
+<h2>今週のチャレンジ</h2>
+<p>次回までに、4点セットを使って実際の業務で1つ試してみてください。</p>
+
+<div class="challenge-card">
+  <h3>お題1: 4点セットでメールを書く</h3>
+  <div class="prompt">
+    <span>以下の条件でメールを作成してください。
+
+役割：丁寧なビジネスメールのプロとして
+指示：（例：打ち合わせ日程の変更をお願いするメール）
+背景：（例：急用が入り、来週水曜から木曜に変更したい）
+形式：誠実なトーンで、件名付きで、300文字程度</span>
+    <span class="copy-btn" onclick="copyText(this)">コピー</span>
+  </div>
+</div>
+
+<div class="challenge-card">
+  <h3>お題2: 最近の会議メモを議事録にする</h3>
+  <div class="prompt">
+    <span>以下の会議の走り書きメモから議事録を作成してください。
+
+条件：決定事項と未決定事項を分けてください。担当者と期限があれば明記してください。事実のみ記載し、意見は含めないでください。
+
+【会議メモ】
+（ここに自分のメモを貼る）</span>
+    <span class="copy-btn" onclick="copyText(this)">コピー</span>
+  </div>
+</div>
+
+<p style="color:#64748b;font-size:14px;margin-top:16px">うまくいかなかった場合も、「何をやってどうなったか」を次回に教えてください。一緒に改善します。</p>
+
+<hr class="divider">
+
+<!-- ===== 次回予告 ===== -->
+<h2>次回予告</h2>
+
+<div class="next-card">
+  <h3>第3回: 業務文書を素早く作る</h3>
+  <p>メール・議事録・報告書など、日常の業務文書をAIで一気に作る方法を実践します。今回学んだ4点セットを使いながら、<strong>お礼・依頼・お断りの3種類のメール</strong>を実際に作り分けます。</p>
+</div>
+
+<!-- ===== 参考リンク ===== -->
+<h2>参考リンク</h2>
+<ul>
+  <li><a href="https://gemini.google.com" target="_blank" style="color:#3b82f6">Gemini（Google AI）</a> ― 今回使ったAI</li>
+  <li><a href="https://masa-dev-2000.github.io/ai-training/materials/session-02/presentation.html" target="_blank" style="color:#3b82f6">第2回 講義資料</a> ― もう一度見返したい方はこちら</li>
+  <li><a href="https://masa-dev-2000.github.io/ai-training/knowledge-base.html" target="_blank" style="color:#3b82f6">よくある質問集</a> ― 困ったときはこちら</li>
+</ul>
+
+<footer>
+  <p>AI研修 初級編 | 全8回</p>
+  <p>質問があればいつでもLINEでどうぞ</p>
+</footer>
+
+</div>
+
+<script>
+function copyText(btn){
+  const text = btn.parentElement.querySelector('span:first-child').textContent.trim();
+  navigator.clipboard.writeText(text).then(()=>{
+    btn.textContent='コピー済み ✓';btn.classList.add('copied');
+    setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('copied')},1500);
+  });
+}
+</script>
+</body>
+</html>
