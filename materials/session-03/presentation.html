@@ -8,6 +8,8 @@
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
 body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;background:#f8f9fb;color:#1e293b;line-height:1.7}
+
+/* ===== TOP BAR ===== */
 .top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:6px 20px;background:rgba(255,255,255,.95);border-bottom:1px solid #e2e8f0;font-size:13px;backdrop-filter:blur(8px);height:44px}
 .timer-section{display:flex;align-items:center;gap:16px}
 .timer-label{color:#64748b;font-size:11px}.timer-value{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:#1e293b}
@@ -25,69 +27,124 @@ body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',
 .slide-counter{color:#64748b;font-size:12px}
 .progress-bar{position:fixed;bottom:0;left:0;right:0;height:3px;background:#e2e8f0;z-index:100}
 .progress-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);transition:width .3s ease}
+
+/* ===== LAYOUT ===== */
 .parts-wrapper{position:fixed;top:44px;bottom:3px;left:0;right:0;overflow:hidden}
-.part-page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;padding:60px 72px 80px;opacity:0;transform:translateX(50px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;scroll-behavior:smooth}
+.part-page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;padding:56px 72px 80px;opacity:0;transform:translateX(50px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;scroll-behavior:smooth}
 .part-page.active{opacity:1;transform:translateX(0);pointer-events:auto}.part-page.prev{transform:translateX(-50px)}
-.part-page .inner{max-width:960px;margin:0 auto}
-h1{font-size:56px;font-weight:700;margin-bottom:20px;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.25}
-h2{font-size:40px;font-weight:700;margin:72px 0 20px;color:#1e293b}
-h3{font-size:30px;font-weight:600;margin:40px 0 14px;color:#334155}
-p{font-size:26px;color:#475569;margin-bottom:16px}
-ul,ol{font-size:24px;padding-left:36px;color:#475569}li{margin-bottom:10px}li strong{color:#1e293b}
-.section-header{text-align:center;padding:80px 0 60px}
-.section-header .tag{font-size:20px;color:#64748b;letter-spacing:4px;text-transform:uppercase;margin-bottom:12px}
-.section-header .subtitle{font-size:26px;color:#64748b;margin-bottom:0}
-table{width:100%;border-collapse:collapse;margin:20px 0;font-size:22px}
-th{background:#f1f5f9;padding:14px 20px;text-align:left;font-weight:600;color:#475569;border-bottom:3px solid #e2e8f0}
-td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{background:#f8fafc}
+.part-page .inner{max-width:920px;margin:0 auto}
+
+/* ===== TYPOGRAPHY ===== */
+h1{font-size:52px;font-weight:700;margin-bottom:16px;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.25}
+h2{font-size:34px;font-weight:700;margin:64px 0 20px;color:#1e293b}
+h3{font-size:26px;font-weight:600;margin:40px 0 14px;color:#334155}
+p{font-size:24px;color:#475569;margin-bottom:14px}
+ul,ol{font-size:22px;padding-left:32px;color:#475569}
+li{margin-bottom:10px}li strong{color:#1e293b}
+
+/* ===== HERO / SECTION HEADER ===== */
+.section-header{text-align:center;padding:64px 0 48px}
+.section-header .tag{font-size:18px;color:#64748b;letter-spacing:4px;margin-bottom:16px}
+.section-header .hero-icon{font-size:72px;margin-bottom:20px;display:block}
+.section-header .subtitle{font-size:24px;color:#64748b;margin-bottom:0}
+
+/* ===== CARDS ===== */
 .card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px;margin:20px 0}
-.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px;box-shadow:0 1px 3px rgba(0,0,0,.04)}
-.card h4{font-size:24px;margin-bottom:8px;color:#1e293b}.card p{font-size:20px;color:#64748b;margin-bottom:0}
-.prompt-block{background:#fff;border:1px solid #e2e8f0;border-left:6px solid #22c55e;border-radius:12px;padding:20px 20px 16px;margin:18px 0;font-size:22px;color:#1e293b;line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:10px;white-space:pre-wrap}
-.prompt-block .copy-btn{align-self:flex-end;padding:6px 14px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:13px;flex-shrink:0}
+.card{background:#fff;border:1px solid #e2e8f0;border-radius:16px;padding:28px 28px 24px;box-shadow:0 1px 4px rgba(0,0,0,.05)}
+.card .card-icon{font-size:36px;margin-bottom:12px}
+.card h4{font-size:22px;margin-bottom:10px;color:#1e293b}.card p{font-size:19px;color:#64748b;margin-bottom:0;line-height:1.6}
+
+/* ===== SELF-CHECK ===== */
+.selfcheck{display:flex;flex-direction:column;gap:12px;margin:20px 0}
+.selfcheck-item{display:flex;align-items:center;gap:18px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:18px 24px;font-size:22px;line-height:1.5}
+.selfcheck-num{min-width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;flex-shrink:0}
+
+/* ===== FLOW ===== */
+.flow-steps{display:flex;flex-direction:column;gap:0;margin:24px 0}
+.flow-item{display:flex;align-items:center;gap:18px;padding:18px 24px;background:#fff;border-radius:14px;border:1px solid #e2e8f0;font-size:22px;line-height:1.5}
+.flow-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;background:#eff6ff;color:#2563eb;flex-shrink:0}
+.flow-arrow{text-align:left;font-size:20px;color:#cbd5e1;padding:4px 0 4px 33px;line-height:1}
+
+/* ===== HIGHLIGHT BOXES ===== */
+.highlight-box{border-radius:14px;padding:24px 28px;margin:24px 0;border:1px solid #e2e8f0;background:#f8fafc;font-size:22px;line-height:1.6}
+.highlight-box p{font-size:22px;margin:0}
+.highlight-box.warning{border-color:#fbbf24;background:#fffbeb}
+.highlight-box.success{border-color:#86efac;background:#f0fdf4}
+.highlight-box.info{border-color:#93c5fd;background:#eff6ff}
+
+/* ===== COMPARE ===== */
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:24px 0}
+.compare-col{background:#fff;border-radius:14px;padding:24px 28px}
+.compare-col.good{border:2px solid #86efac}
+.compare-col.bad{border:2px solid #fca5a5}
+.compare-col .compare-icon{font-size:36px;margin-bottom:12px}
+.compare-col h4{font-size:21px;margin-bottom:10px}
+.compare-col.good h4{color:#16a34a}
+.compare-col.bad h4{color:#dc2626}
+.compare-col p{font-size:19px;color:#475569;margin-bottom:8px;line-height:1.6}
+.compare-col p:last-child{margin-bottom:0}
+
+/* ===== PROMPT BLOCKS ===== */
+.prompt-block{background:#fff;border:1px solid #e2e8f0;border-left:5px solid #22c55e;border-radius:12px;padding:20px 20px 14px;margin:16px 0;font-size:21px;color:#1e293b;line-height:1.7;display:flex;flex-direction:column;gap:10px;white-space:pre-wrap}
+.prompt-block .copy-btn{align-self:flex-end;padding:6px 14px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:13px;white-space:nowrap}
 .prompt-block .copy-btn:hover{background:#dcfce7;border-color:#22c55e;color:#16a34a}
 .prompt-block .copy-btn.copied{background:#dcfce7;border-color:#22c55e;color:#16a34a}
-.highlight-box{background:#f8fafc;border-radius:14px;padding:24px 28px;margin:20px 0;border:1px solid #e2e8f0;font-size:24px}
-.highlight-box.warning{border-color:#fbbf24;background:#fffbeb}.highlight-box.success{border-color:#86efac;background:#f0fdf4}.highlight-box.info{border-color:#93c5fd;background:#eff6ff}
-.highlight-box p{font-size:24px}
-.compare{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin:20px 0}
-.compare-col{background:#fff;border-radius:14px;padding:24px}
-.compare-col.bad{border:3px solid #fca5a5}.compare-col.bad h4{color:#dc2626}
-.compare-col.good{border:3px solid #86efac}.compare-col.good h4{color:#16a34a}
-.compare-col p{font-size:22px}
-.selfcheck{display:flex;flex-direction:column;gap:14px;margin:20px 0}
-.selfcheck-item{display:flex;align-items:center;gap:18px;background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:20px 24px;font-size:24px}
-.selfcheck-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;flex-shrink:0}
-.quiz-answer{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:22px 26px;margin:14px 0;cursor:pointer;transition:all .2s;font-size:24px}
+
+/* ===== INDUSTRY SWITCHER ===== */
+.industry-switcher{display:flex;gap:8px;margin:20px 0 8px;flex-wrap:wrap}
+.industry-btn{padding:10px 20px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;color:#64748b;cursor:pointer;font-size:16px;font-weight:600;transition:all .2s}
+.industry-btn:hover{border-color:#3b82f6;color:#2563eb}
+.industry-btn.active{background:#2563eb;color:#fff;border-color:#2563eb}
+.industry-content{display:none}.industry-content.active{display:block}
+
+/* ===== CITATION ===== */
+.cite-cards{display:flex;flex-direction:column;gap:14px;margin:24px 0}
+.cite-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;display:flex;gap:16px;align-items:flex-start}
+.cite-logo{font-size:28px;flex-shrink:0;margin-top:2px}
+.cite-body{flex:1}
+.cite-body .cite-msg{font-size:21px;color:#1e293b;font-weight:500;margin-bottom:6px}
+.cite-body .cite-src{font-size:14px;color:#94a3b8;line-height:1.5}
+.cite-body .cite-src a{color:#94a3b8}
+
+/* ===== QUIZ ===== */
+.quiz-answer{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:22px 26px;margin:12px 0;cursor:pointer;transition:all .2s;font-size:22px;line-height:1.6}
 .quiz-answer:hover{border-color:#3b82f6;background:#f8fafc}
 .quiz-answer.revealed{border-color:#16a34a;background:#f0fdf4}
-.quiz-answer .answer-mark{display:none;color:#16a34a;font-weight:700;margin-top:12px;font-size:22px}
-.quiz-answer.revealed .answer-mark{display:block}
-.divider{border:none;border-top:2px solid #e2e8f0;margin:80px 0}
+.quiz-answer .q{font-weight:600;color:#1e293b;margin-bottom:0}
+.quiz-answer .a{display:none;margin-top:12px;padding-top:12px;border-top:1px solid #e2e8f0;color:#16a34a;font-size:20px}
+.quiz-answer.revealed .a{display:block}
+
+/* ===== TABLE ===== */
+table{width:100%;border-collapse:collapse;margin:20px 0;font-size:19px}
+th{background:#f1f5f9;padding:12px 16px;text-align:left;font-weight:600;color:#475569;border-bottom:2px solid #e2e8f0}
+td{padding:10px 16px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{background:#f8fafc}
+
+/* ===== NAV ===== */
 .nav-arrow{position:fixed;top:50%;z-index:50;width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:28px;display:flex;align-items:center;justify-content:center;transition:all .2s;transform:translateY(-50%);box-shadow:0 2px 6px rgba(0,0,0,.06)}
 .nav-arrow:hover{background:#f1f5f9;color:#1e293b}.nav-arrow.left{left:20px}.nav-arrow.right{right:20px}.nav-arrow:disabled{opacity:.2;cursor:default}
+
+/* ===== INSTRUCTOR NOTES ===== */
 .instructor-notes{position:fixed;bottom:6px;left:20px;right:20px;z-index:90;background:rgba(255,255,255,.97);border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;font-size:16px;color:#475569;line-height:1.5;backdrop-filter:blur(8px);transform:translateY(calc(100% + 12px));transition:transform .3s ease;max-height:140px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.08)}
 .instructor-notes.visible{transform:translateY(0)}.instructor-notes strong{color:#d97706}
 .notes-toggle{position:fixed;bottom:12px;right:20px;z-index:91;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.06)}
 .notes-toggle:hover{background:#f1f5f9;color:#1e293b}.notes-toggle.active{background:#fffbeb;border-color:#f59e0b;color:#d97706}
 .keyboard-hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:80;color:#94a3b8;font-size:14px}
-.industry-switcher{display:flex;gap:8px;margin:20px 0;flex-wrap:wrap}
-.industry-btn{padding:10px 20px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;color:#64748b;cursor:pointer;font-size:16px;font-weight:600;transition:all .2s}
-.industry-btn:hover{border-color:#3b82f6;color:#2563eb}
-.industry-btn.active{background:#2563eb;color:#fff;border-color:#2563eb}
-.industry-content{display:none}.industry-content.active{display:block}
-.flow-steps{display:flex;flex-direction:column;gap:10px;margin:20px 0}
-.flow-item{display:flex;align-items:center;gap:18px;padding:18px 22px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;font-size:24px}
-.flow-num{min-width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:22px;font-weight:700;background:#eff6ff;color:#2563eb;flex-shrink:0}
-.flow-arrow{text-align:center;font-size:22px;color:#94a3b8;margin:3px 0 3px 18px}
-.checklist{list-style:none;padding:0;margin:16px 0}
-.checklist li{display:flex;align-items:flex-start;gap:12px;padding:12px 0;border-bottom:1px solid #f1f5f9;font-size:22px}
-.checklist li::before{content:'☐';font-size:20px;color:#94a3b8;flex-shrink:0;margin-top:2px}
-.cite-note{font-size:16px;color:#94a3b8;margin-top:12px;padding-top:10px;border-top:1px solid #e2e8f0;line-height:1.6}
-.cite-note a{color:#94a3b8;text-decoration:underline}
-.cite-block{background:#f8fafc;border-left:4px solid #cbd5e1;border-radius:0 10px 10px 0;padding:16px 20px;margin:16px 0;font-size:20px;color:#475569;line-height:1.7}
-.cite-block .source{font-size:15px;color:#94a3b8;margin-top:8px;margin-bottom:0}
-@media(max-width:768px){.part-page{padding:32px 28px 60px}h1{font-size:36px}h2{font-size:28px}h3{font-size:24px}p,.highlight-box p,.selfcheck-item,.quiz-answer,.prompt-block,td,th,ul,ol,.card h4,.card p,.compare-col p,.flow-item,.checklist li{font-size:18px}.compare{grid-template-columns:1fr}}
+.divider{border:none;border-top:2px solid #e2e8f0;margin:64px 0}
+
+/* ===== NEXT PREVIEW ===== */
+.next-card{background:#eff6ff;border:1px solid #93c5fd;border-radius:14px;padding:28px 32px;margin:20px 0}
+.next-card .next-icon{font-size:40px;margin-bottom:12px}
+.next-card h3{color:#2563eb;margin:0 0 8px;font-size:24px}
+.next-card p{margin:0;font-size:20px;color:#1e40af;line-height:1.6}
+
+/* ===== RESPONSIVE ===== */
+@media(max-width:768px){
+  .part-page{padding:32px 24px 60px}
+  h1{font-size:34px}h2{font-size:26px}h3{font-size:22px}
+  p,.highlight-box p,.selfcheck-item,.quiz-answer,.prompt-block,td,th,ul,ol,.flow-item{font-size:18px}
+  .compare{grid-template-columns:1fr}
+  .section-header .hero-icon{font-size:52px}
+}
 </style>
 </head>
 <body>
@@ -114,83 +171,112 @@ td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
 <div class="parts-wrapper">
 
 <!-- ========== PAGE 1: オープニング＆前回振り返り (8min) ========== -->
-<div class="part-page" data-part="0" data-notes="第1・2回を振り返ってから今日に入る。smzさんは第2回で音声→議事録を一度体験済み。今日はそれをさらに深掘りするのがメインだと伝える。<strong>大事:</strong> 「コピペで終わり」にならないように、「AIの下書きを自分の言葉で仕上げること」が今日の核心だと最初に宣言する。">
+<div class="part-page" data-part="0" data-notes="第1・2回を振り返ってから今日に入る。smzさんは第2回で音声→議事録を一度体験済み。今日はそれをさらに深掘りするのがメインだと伝える。">
 <div class="inner">
   <div class="section-header">
     <div class="tag">AI研修 初級編 第3回</div>
-    <h1>業務文書を素早く作る</h1>
-    <p class="subtitle">メール・議事録・報告書を<br>AIの下書き＋自分の確認で仕上げる</p>
+    <h1>業務文書を<br>素早く作る</h1>
+    <p class="subtitle">メール・議事録 ― AIに下書きを任せて、自分で仕上げる</p>
   </div>
 
   <h2>前回までのおさらい</h2>
   <div class="card-grid" style="grid-template-columns:1fr 1fr">
     <div class="card">
-      <h4>第1回でやったこと</h4>
-      <p>Geminiの基本操作・モード切替<br>メール作成の最初の体験<br>Google連携（Gmail・カレンダー）</p>
+      <div class="card-icon">&#x1F4AC;</div>
+      <h4>第1回</h4>
+      <p>Gemini 基本操作<br>メール体験<br>Gmail・カレンダー連携</p>
     </div>
     <div class="card">
-      <h4>第2回でやったこと</h4>
-      <p>指示の4点セット（誰が・何を・なぜ・どんな形で）<br>表形式での整理・要約<br>音声ファイル→議事録の流れ</p>
+      <div class="card-icon">&#x1F4DD;</div>
+      <h4>第2回</h4>
+      <p>指示の4点セット<br>5つの応用テクニック<br>音声→議事録の流れ</p>
     </div>
   </div>
 
   <h2>今日のゴール</h2>
   <div class="selfcheck">
-    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">1</div>3種類のメール（お礼・依頼・お断り）をAIで作り分け、自分の言葉で仕上げられる</div>
-    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">2</div>音声から議事録を作る流れ（第2回の続き）をさらに深掘りして実践できる</div>
-    <div class="selfcheck-item"><div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">3</div>録音できない環境でのメモ→議事録の工夫を知っている</div>
+    <div class="selfcheck-item">
+      <div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">1</div>
+      &#x2709;&#xFE0F;&nbsp;お礼・依頼・お断りの3種のメールを作り分けられる
+    </div>
+    <div class="selfcheck-item">
+      <div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">2</div>
+      &#x1F3A4;&nbsp;音声の文字起こしから議事録を作れる（精度を上げる工夫も）
+    </div>
+    <div class="selfcheck-item">
+      <div class="selfcheck-num" style="background:#eff6ff;color:#2563eb">3</div>
+      &#x1F4CB;&nbsp;録音できない場面でのメモ→議事録の工夫を知っている
+    </div>
   </div>
 
-  <div class="highlight-box warning" style="margin-top:32px">
-    <p style="margin:0">AIが出してきた文章、<strong>一度自分で読んでみてください。</strong>「これ、自分が書いたら違う言い方するな」と思ったら、そこだけ直す。それだけで、ぐっと自分らしい文章になります。</p>
+  <div class="highlight-box warning" style="margin-top:40px">
+    <p>AIが出してきた文章、<strong>一度自分で読んでみてください。</strong><br>「ここ、自分ならこう言うな」と思ったら、そこだけ直す。それだけで自分らしい文章になります。</p>
   </div>
 </div>
 </div>
 
-<!-- ========== PAGE 2: ミニ講義① AIの下書きを使う上での2つの心がけ (7min) ========== -->
-<div class="part-page" data-part="1" data-notes="チェックリストを覚えさせるのではなく「心がけ2つ」としてシンプルに伝える。最終確認は「事実」と「自分の言葉か」だけ意識すれば十分。<strong>補足として話せるなら：</strong>入力時（何を入れていいか）と出力時（送る前の確認）の2段階チェックという考え方もある、くらいで留める。">
+<!-- ========== PAGE 2: ミニ講義① 確認は1つだけ（事実確認） (7min) ========== -->
+<div class="part-page" data-part="1" data-notes="「チェックリストを覚えさせる」のではなく、確認のポイントを1つ伝えるだけ。引用ブロックはソースの説得力を見せるための補足。詳しく解説しなくていい。「公式がそう言ってる」と一言でOK。">
 <div class="inner">
   <div class="section-header">
+    <span class="hero-icon">&#x1F50D;</span>
     <div class="tag">ミニ講義 01 ― 7分</div>
-    <h1>AI＝下書き係<br>自分＝最終確認者</h1>
+    <h1>確認は<br>1つだけ</h1>
+    <p class="subtitle">「事実は合ってる？」― これだけ意識すれば十分</p>
   </div>
 
   <h2>文書作成の流れ</h2>
   <div class="flow-steps">
-    <div class="flow-item"><div class="flow-num">1</div><strong>AIに下書きを作らせる</strong> ― 第2回の4点セットで指示する</div>
+    <div class="flow-item"><div class="flow-num">1</div><strong>AIに下書きを作らせる</strong>　― 4点セットで指示する</div>
     <div class="flow-arrow">↓</div>
-    <div class="flow-item"><div class="flow-num">2</div><strong>事実を確認する</strong></div>
+    <div class="flow-item"><div class="flow-num">2</div><strong>事実を確認する</strong>　― 数字・日付・名前・固有名詞</div>
     <div class="flow-arrow">↓</div>
     <div class="flow-item"><div class="flow-num">3</div><strong>必要なら直して完成</strong></div>
   </div>
 
-  <h2>確認は1つだけ</h2>
-  <div class="highlight-box success" style="margin-top:8px;text-align:center">
-    <p style="font-size:32px;font-weight:700;color:#1e293b;margin-bottom:8px">事実は合ってる？</p>
-    <p style="margin:0">数字・日付・名前・固有名詞。<br>AIは自信満々に間違えることがある。ここだけは自分の目で必ず確認する。</p>
+  <h2>なぜ確認するのか</h2>
+  <p style="margin-bottom:20px">AI の開発元自身が、公式ドキュメントでこう書いています。</p>
+
+  <div class="cite-cards">
+    <div class="cite-card">
+      <div class="cite-logo">&#x1F916;</div>
+      <div class="cite-body">
+        <div class="cite-msg">「出力が常に正確であるとは限りません。使用前に正確性を確認してください。」</div>
+        <div class="cite-src">OpenAI 利用規約 ／ openai.com/policies/row-terms-of-use/</div>
+      </div>
+    </div>
+    <div class="cite-card">
+      <div class="cite-logo">&#x1F4D7;</div>
+      <div class="cite-body">
+        <div class="cite-msg">「Gemini は不正確な情報を生成する場合があります。」</div>
+        <div class="cite-src">Google Gemini Apps プライバシーハブ ／ 2026年4月8日更新</div>
+      </div>
+    </div>
+    <div class="cite-card">
+      <div class="cite-logo">&#x1F7E3;</div>
+      <div class="cite-body">
+        <div class="cite-msg">「最先端モデルでも、事実と異なるテキストを生成することがあります。」</div>
+        <div class="cite-src">Anthropic 開発者向けドキュメント ／ docs.anthropic.com</div>
+      </div>
+    </div>
   </div>
 
-  <h3>なぜ確認が必要なのか ― 開発元が公式に認めていること</h3>
-  <div class="cite-block">原文："Output may not always be accurate. You must evaluate Output for accuracy and appropriateness for your use case, including using human review as appropriate, before using or sharing Output from the Services."<br>（訳）出力が常に正確であるとは限りません。使用・共有する前に、人間によるレビューを含む適切な方法で正確性を評価してください。<p class="source">OpenAI 利用規約 / openai.com/policies/row-terms-of-use/</p>
+  <div class="highlight-box success" style="text-align:center;margin-top:32px">
+    <p style="font-size:30px;font-weight:700;color:#1e293b;margin-bottom:8px">事実は合ってる？</p>
+    <p style="font-size:20px;color:#475569">数字・日付・名前・固有名詞。<br>自信満々に間違えることがある。ここだけ自分の目で確認する。</p>
   </div>
-  <div class="cite-block">原文："Gemini Apps are continuously evolving and may produce inaccurate or offensive information (including about people) that doesn't represent Google's views."<br>（訳）Geminiアプリは継続的に進化しており、Googleの見解を代表しない不正確または不快な情報（人物に関するものを含む）を生成する場合があります。<p class="source">Google Gemini Apps プライバシーハブ / support.google.com/gemini/answer/13594961（2026年4月8日更新）</p>
-  </div>
-  <div class="cite-block">原文："Even the most advanced language models, like Claude, can sometimes generate text that is factually incorrect or inconsistent with the given context. ... while these techniques significantly reduce hallucinations, they don't eliminate them entirely."<br>（訳）Claudeのような最先端の言語モデルでも、事実と異なるテキストを生成することがあります。……ハルシネーションを大幅に軽減しますが、完全には排除できません。<p class="source">Anthropic 開発者向け公式ドキュメント / docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations</p>
-  </div>
-
-  <p style="margin-top:16px">文体や言い回しはそのままで十分なことが多い。直したいと思ったら直す、くらいの気持ちでOK。</p>
 
   <div class="highlight-box warning">
-    <p style="margin:0"><strong>入力する前にも1つ確認：</strong>個人情報・機密情報は入れない。第1回で学んだ安全/注意/禁止の3段階を思い出して。</p>
-    <div class="cite-note">根拠：Google公式「レビュアーに見られたくない機密情報は入力しないでください」／総務省・経済産業省「AI事業者ガイドライン 第1.1版」（2025年3月）― 個人情報・機密情報の入力回避を明示</div>
+    <p><strong>入力前にも一確認：</strong>個人情報・機密情報は入れない。<br>第1回の 安全 / 注意 / 禁止 の3段階を思い出して。</p>
   </div>
 </div>
 </div>
 
 <!-- ========== PAGE 3: 実践① メールの作り分け (20min) ========== -->
-<div class="part-page" data-part="2" data-notes="3種類のメール（お礼・依頼・お断り）を順番に作る。第2回で依頼・調整系はやった経験があるので、今日は「お断りメール」が目玉。<strong>ポイント:</strong> お断りメールをAIに任せると「言い回しを自分で考えなくていい」という体験が大きい。出力が出たら「2つの確認」を実際にやってもらう。">
+<div class="part-page" data-part="2" data-notes="3種類のメール（お礼・依頼・お断り）を順番に作る。今日は「お断りメール」が目玉。言い回しを自分で考えなくていい体験が大きい。出力が出たら事実確認を実際にやってもらう。">
 <div class="inner">
   <div class="section-header">
+    <span class="hero-icon">&#x2709;&#xFE0F;</span>
     <div class="tag">実践 01 ― 20分</div>
     <h1>3種類のメールを<br>作り分ける</h1>
     <p class="subtitle">お礼・依頼・お断り ― 同じ相手でもトーンが変わる</p>
@@ -202,130 +288,126 @@ td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
     <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
   </div>
 
-  <h2>メール1：お礼メール</h2>
+  <h2>&#x1F4EC; メール1：お礼メール</h2>
   <div class="industry-content active" data-group="A">
     <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>先日の福祉講演会で講師を務めてくださった大学教授にお礼メールを書いてください。
 
-状況：参加者50名、アンケートの満足度が95%と非常に高かった。次年度も講師をお願いしたいと考えている。
-
-条件：丁寧な敬語で、具体的な数字を含めて感謝を伝える。次年度の依頼の可能性にも触れる。300文字程度。</div>
+状況：参加者50名、満足度アンケート95%。次年度も依頼したい。
+条件：丁寧な敬語。具体的な数字を含めて感謝を伝える。次年度の依頼にも触れる。300文字程度。</div>
   </div>
   <div class="industry-content" data-group="B">
     <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>施主に工事完了のお礼メールを書いてください。
 
-状況：予定通り工期内に完了。品質検査も合格。施主からは「丁寧な仕事だった」とお褒めの言葉をいただいた。今後のメンテナンス対応もお伝えしたい。
-
-条件：丁寧な敬語で、完了報告と感謝を伝える。アフターサービスにも触れる。300文字程度。</div>
+状況：予定通り工期内完了。品質検査合格。施主から「丁寧な仕事」とお褒めの言葉をいただいた。
+条件：丁寧な敬語で完了報告と感謝を伝える。アフターサービスにも触れる。300文字程度。</div>
   </div>
   <div class="industry-content" data-group="C">
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>先日10名の忘年会でご利用いただいた法人のお客様にお礼メールを書いてください。
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>10名の忘年会でご利用いただいた法人のお客様にお礼メールを書いてください。
 
-状況：幹事の方から「料理が美味しかった」と好評。次回利用時に使える10%割引クーポンも案内したい。
-
-条件：丁寧だが温かみのあるトーンで。具体的なお褒めの言葉に触れて感謝を伝える。クーポン情報も含める。300文字程度。</div>
+状況：幹事から「料理が美味しかった」と好評。次回利用時の10%割引クーポンも案内したい。
+条件：丁寧だが温かみのあるトーンで。クーポン情報も含める。300文字程度。</div>
   </div>
 
-  <h2>メール2：依頼メール</h2>
+  <h2>&#x1F4E8; メール2：依頼メール</h2>
   <div class="industry-content active" data-group="A">
     <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>地域のボランティア団体に、来月の福祉イベントへの協力を依頼するメールを書いてください。
 
-状況：毎年お世話になっている団体。今年は参加者が増える見込みで、受付と会場設営のお手伝いをお願いしたい。日時は来月の第2土曜日。
-
-条件：感謝を伝えつつお願いする形で。具体的な作業内容と日時を明記。返信期限も設ける。300文字程度。</div>
+状況：毎年お世話になっている団体。受付と会場設営をお願いしたい。日時は来月の第2土曜日。
+条件：感謝を伝えつつ依頼。作業内容・日時・返信期限を明記。300文字程度。</div>
   </div>
   <div class="industry-content" data-group="B">
-    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>協力会社に、来月からの内装工事の見積もりを依頼するメールを書いてください。
+    <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>協力会社に、内装工事の見積もりを依頼するメールを書いてください。
 
-状況：これまでも何度か一緒に仕事をしている会社。今回は事務所ビルの内装改修。図面は来週送付予定。見積もり期限は2週間後。
-
-条件：丁寧だがビジネスライクに。工事概要・図面送付予定・期限を明記。300文字程度。</div>
+状況：過去に一緒に仕事をした会社。事務所ビルの内装改修。図面は来週送付予定。見積期限2週間後。
+条件：ビジネスライクに工事概要・図面送付予定・期限を明記。300文字程度。</div>
   </div>
   <div class="industry-content" data-group="C">
     <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>取引先の卸業者に、来月の発注数量を20%増やしたいと依頼するメールを書いてください。
 
-状況：季節商品の売れ行きが好調。在庫切れを避けたい。納期への影響があるか確認もしたい。
-
-条件：変更理由を丁寧に説明。納期確認も依頼。返信をお願いする形で。300文字程度。</div>
+状況：季節商品の売れ行きが好調。在庫切れを避けたい。納期への影響も確認したい。
+条件：変更理由を丁寧に説明。納期確認も依頼。300文字程度。</div>
   </div>
 
-  <h2>メール3：お断りメール ← 今日のメイン</h2>
+  <h2>&#x1F6AB; メール3：お断りメール ← 今日のメイン</h2>
   <div class="industry-content active" data-group="A">
     <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>他団体から依頼された講師派遣を、人員不足を理由にお断りするメールを書いてください。
 
-状況：依頼内容は魅力的だが、同時期に自団体のイベントが重なり対応が難しい。今後の関係は維持したい。別の時期なら検討したい旨も伝えたい。
-
-条件：丁重にお断りしつつ、今後の協力姿勢は示す。代替案（別日程）も提示。300文字程度。</div>
+状況：依頼は魅力的だが、同時期に自団体のイベントが重なる。今後の関係は維持したい。別の時期なら検討したい。
+条件：丁重にお断りしつつ今後の協力姿勢を示す。代替案（別日程）も提示。300文字程度。</div>
   </div>
   <div class="industry-content" data-group="B">
     <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>新規の施主から依頼された工事を、スケジュール上の理由でお断りするメールを書いてください。
 
-状況：依頼内容は受けたいが、現在の工事が年末まで続き新規を受ける余裕がない。来年以降なら対応可能。紹介いただいた方への配慮も必要。
-
-条件：丁重にお断りしつつ、来年以降の可能性を示す。他の業者を紹介する提案も添える。300文字程度。</div>
+状況：受けたいが年末まで工事が続き余裕がない。来年以降なら対応可能。紹介者への配慮も必要。
+条件：丁重にお断りし来年以降の可能性を示す。他業者紹介の提案も添える。300文字程度。</div>
   </div>
   <div class="industry-content" data-group="C">
     <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>取引先からの値下げ要請をお断りするメールを書いてください。
 
-状況：原材料費の高騰で利幅がギリギリ。値下げに応じると赤字になる。ただし長年の取引先なので関係は維持したい。代わりにまとめ買い割引を提案したい。
-
-条件：申し訳なさを伝えつつ理由を説明。代替案を提示して前向きに締める。300文字程度。</div>
+状況：原材料費高騰でギリギリ。値下げすると赤字。長年の取引先なので関係は維持したい。まとめ買い割引を代替案として提案したい。
+条件：理由を丁寧に説明。代替案を提示して前向きに締める。300文字程度。</div>
   </div>
 
   <div class="highlight-box success" style="margin-top:40px">
-    <p style="margin:0"><strong>出てきたら確認：</strong>事実は合ってる？<br>お断りメールは「言い回しを考えなくていい」のがAIの一番の価値。直した部分があれば教えてください。</p>
+    <p><strong>出てきたら確認：</strong>事実は合ってる？<br>お断りメールは「言い回しを考えなくていい」のがAIの一番の価値。直した部分があれば教えてください。</p>
   </div>
 </div>
 </div>
 
 <!-- ========== PAGE 4: ミニ講義② 議事録の今（音声→がメイン） (10min) ========== -->
-<div class="part-page" data-part="3" data-notes="今の主流は「録音→文字起こし→AI処理」。手書きメモ→議事録はもうサブ。第2回でやったGoogleドライブの字幕DLを思い出してもらいながら深掘り。<strong>音声の特徴：</strong>文脈があるので精度高いが専門用語の誤変換に注意。<strong>メモの特徴：</strong>文脈が欠落しているので前処理が必要、精度が低くなりがち。">
+<div class="part-page" data-part="3" data-notes="今の主流は「録音→文字起こし→AI処理」。手書きメモ→議事録はもうサブ。音声は精度高いが専門用語の誤変換注意。メモは前処理が必要。">
 <div class="inner">
   <div class="section-header">
+    <span class="hero-icon">&#x1F3A4;</span>
     <div class="tag">ミニ講義 02 ― 10分</div>
-    <h1>議事録は今や<br>音声から作るのが主流</h1>
+    <h1>議事録は<br>音声から作るのが主流</h1>
+    <p class="subtitle">メモ取りの時代から、録音して後でAIに任せる時代へ</p>
   </div>
 
   <h2>今の標準的な流れ</h2>
   <div class="flow-steps">
-    <div class="flow-item"><div class="flow-num">1</div>会議を録音する（参加者の許可を取った上で）</div>
+    <div class="flow-item"><div class="flow-num">1</div>会議を<strong>録音する</strong>（参加者の許可を取った上で）</div>
     <div class="flow-arrow">↓</div>
-    <div class="flow-item"><div class="flow-num">2</div>文字起こしをする（Google Meet字幕・iPhoneボイスメモ・専用ツール）</div>
+    <div class="flow-item"><div class="flow-num">2</div><strong>文字起こし</strong>をする（Google Meet字幕・ボイスメモ・専用ツール）</div>
     <div class="flow-arrow">↓</div>
-    <div class="flow-item"><div class="flow-num">3</div>文字起こしテキストをAIに渡して議事録化</div>
+    <div class="flow-item"><div class="flow-num">3</div>文字起こしテキストを<strong>AIに渡して議事録化</strong></div>
     <div class="flow-arrow">↓</div>
-    <div class="flow-item"><div class="flow-num">4</div>「事実確認」「自分の言葉か」の2つで確認→完成</div>
+    <div class="flow-item"><div class="flow-num">4</div><strong>事実確認</strong>して完成</div>
   </div>
 
-  <h2>音声とメモ、それぞれの特徴</h2>
+  <h2>音声 vs メモ</h2>
   <div class="compare">
     <div class="compare-col good">
+      <div class="compare-icon">&#x1F7E2;</div>
       <h4>音声から作る（精度が高い）</h4>
-      <p>文脈がそのまま残っているのでAIが理解しやすく、議事録の精度が高い。</p>
-      <p><strong>注意点：</strong>文字起こし時に専門用語や固有名詞が誤変換されることがある。<br>→ 対策：専門用語を事前にAIに教えてから処理させる。</p>
+      <p>文脈がそのまま残っているのでAIが理解しやすい。</p>
+      <p><strong>注意：</strong>専門用語・固有名詞が誤変換されることがある。<br>→ 事前にAIに教えてから処理させれば解決。</p>
     </div>
     <div class="compare-col bad">
+      <div class="compare-icon">&#x1F534;</div>
       <h4>メモから作る（精度が不安定）</h4>
-      <p>文脈が欠落しているため、そのまま渡すと要約の精度が低くなりがち。</p>
-      <p><strong>対策：</strong>メモを渡す前に、会議の背景情報をAIに説明する「前処理」が必要。</p>
+      <p>文脈が欠落しているため、そのまま渡すと精度が下がりがち。</p>
+      <p><strong>対策：</strong>渡す前に背景情報を説明する「前処理」が必要。</p>
     </div>
   </div>
 
   <div class="highlight-box info">
-    <p style="margin:0"><strong>録音できない場面は？</strong><br>秘密性の高い会議・録音禁止の場など、どうしてもメモしか使えない場合は次のページのTipsを使う。それ以外は基本、録音から始めるのが正解。</p>
+    <p><strong>録音できない場面は？</strong><br>秘密性の高い会議・録音禁止の場など。その場合は次のページの工夫を使う。それ以外は<strong>録音から始めるのが正解。</strong></p>
   </div>
 </div>
 </div>
 
 <!-- ========== PAGE 5: 実践② 音声→議事録（メイン） (10min) ========== -->
-<div class="part-page" data-part="4" data-notes="第2回でGoogleドライブ字幕DLを一度体験済み。今日はさらに「専門用語が誤変換されたときの対処」を加える。サンプルの文字起こしテキストを使って実際に動かしてもらう。<strong>ポイント：</strong>誤変換を直すプロンプトの工夫を体感させる。">
+<div class="part-page" data-part="4" data-notes="第2回でGoogleドライブ字幕DLを一度体験済み。今日は「専門用語が誤変換されたときの対処」を加える。サンプルテキストを使って実際に動かしてもらう。">
 <div class="inner">
   <div class="section-header">
+    <span class="hero-icon">&#x1F4DD;</span>
     <div class="tag">実践 02 ― 10分</div>
     <h1>音声の文字起こしから<br>議事録を作る</h1>
-    <p class="subtitle">第2回の続き ― 精度を上げる工夫を加える</p>
+    <p class="subtitle">誤変換への対処も含めて実践</p>
   </div>
 
-  <p>以下は音声を文字起こしした結果のサンプルです（誤変換や言いよどみが入っています）。<br>これをAIに渡して議事録にしてもらいましょう。</p>
+  <p>音声を文字起こしたサンプルです（誤変換や言いよどみ入り）。これをAIに渡して議事録にしてみましょう。</p>
 
   <div class="industry-switcher">
     <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
@@ -383,89 +465,90 @@ td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
 佐藤A店長：SNSのほうも反応がよくてインスタのリール動画がバズりました。うちのスタッフの田中が作りました。
 田中B店長：バイトの採用ですが2名確定しました。
 高橋C店長：うちはまだ足りてないので求人サイトの追加掲載を今週中にやります。
-山田マネージャー：ポイントカードのリニューアルは来月からスタート予定です。デザインはほぼ完成しています。夏メニューの企画は各店から次回会議までに案を出してください。
+山田マネージャー：ポイントカードのリニューアルは来月からスタート予定です。夏メニューの企画は各店から次回会議までに案を出してください。
 渡辺D店長：空調の件ですが業者に見積もり依頼中です。次回は5月1日木曜15時でお願いします。</div>
   </div>
 
   <div class="highlight-box warning" style="margin-top:32px">
-    <p style="margin:0"><strong>専門用語が誤変換された場合：</strong><br>「○○は正しくは△△です。その前提で修正してください」と追加で伝えるだけでOK。<br>会話を続けながら直していくのが正しい使い方。</p>
+    <p><strong>専門用語が誤変換されていたら：</strong><br>「○○は正しくは△△です。修正してください」と追加で伝えるだけでOK。</p>
   </div>
 </div>
 </div>
 
-<!-- ========== PAGE 6: 参考 - メモから作る場合（制限環境向けTips） (7min) ========== -->
-<div class="part-page" data-part="5" data-notes="録音できない環境向けの補足。「メモをそのまま渡すと精度が落ちる理由」を体感させる。前処理（背景情報を先に説明する）の重要性。今日の時間が余れば実際にやってみる。時間がなければ「こういう方法がある」と伝えるだけでもOK。">
+<!-- ========== PAGE 6: 参考 - メモから作る場合の工夫 (7min) ========== -->
+<div class="part-page" data-part="5" data-notes="録音できない環境向けの補足。「前処理」の考え方を伝える。時間が余れば実際に試す。なければ「こういう方法がある」と伝えるだけでもOK。">
 <div class="inner">
   <div class="section-header">
+    <span class="hero-icon">&#x1F4CB;</span>
     <div class="tag">参考 ― 録音できない場合</div>
     <h1>メモから議事録を<br>作る場合の工夫</h1>
     <p class="subtitle">録音禁止・秘密性の高い会議 向けのTips</p>
   </div>
 
   <div class="highlight-box warning">
-    <p style="margin:0"><strong>なぜメモだと精度が落ちるのか？</strong><br>音声には「誰がどんな文脈でどんな流れで話したか」が全部入っている。メモはその文脈が抜け落ちている。AIはその欠けた情報を埋めようとして、推測が入り精度が下がる。</p>
+    <p><strong>なぜメモだと精度が落ちるのか？</strong><br>音声には「誰が・どんな流れで話したか」が全部入っている。メモはその文脈が抜け落ちているため、AIが推測で補完しようとして精度が下がる。</p>
   </div>
 
-  <h2>対策：前処理として背景情報を先に伝える</h2>
+  <h2>対策：背景情報を先に伝える（前処理）</h2>
   <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>会議の走り書きメモから議事録を作りたいです。
 
-まず背景情報をお伝えします：
+背景情報をお伝えします：
 - 会議名：（例：4月定例理事会）
 - 出席者と役割：（例：山田会長、佐藤副会長、田中理事）
-- 主な議題：（例：予算報告、イベント準備、ボランティア保険更新）
-- メモに出てくる略語・専門用語：（例：ボラ保険＝ボランティア保険）
+- 主な議題：（例：予算報告、イベント準備）
+- 略語・専門用語：（例：ボラ保険＝ボランティア保険）
 
-背景を理解した上で、以下のメモから議事録を作成してください。
+以上を踏まえて、以下のメモから議事録を作成してください。
 決定事項と未決定事項を分け、担当者と期限があれば明記してください。
 
 【メモ】
 （ここに走り書きメモを貼る）</div>
 
-  <h2>うまくいかない場合は「質問させる」</h2>
-  <p>前処理が難しい場合は、AIに不足情報を聞かせるのも手。</p>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下のメモから議事録を作りたいです。情報が不足していて分からない部分は、議事録を作る前に私に質問してください。
+  <h2>情報が整理できていなければ「AIに質問させる」</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下のメモから議事録を作りたいです。
+情報が不足している部分は、作成前に私に質問してください。
 
 【メモ】
 （ここに走り書きメモを貼る）</div>
 
   <div class="highlight-box success">
-    <p style="margin:0"><strong>まとめ：</strong>できる限り「録音→文字起こし→議事録」の流れを使う。録音できない場合は、メモを渡す前に背景情報を説明するひと手間で精度が上がる。</p>
+    <p><strong>まとめ：</strong>できる限り「録音→文字起こし→議事録」の流れを使う。<br>録音できない場合は、背景情報を先に説明するひと手間で精度が上がる。</p>
   </div>
 </div>
 </div>
 
 <!-- ========== PAGE 7: 休憩 (5min) ========== -->
-<div class="part-page" data-part="6" data-notes="議事録の演習が一段落したところで休憩。「音声から作るのが主流になってきている」というメッセージを残す。">
+<div class="part-page" data-part="6" data-notes="議事録の演習が一段落したところで休憩。">
 <div class="inner">
-  <div class="section-header" style="padding:100px 0">
-    <p style="font-size:72px;margin-bottom:20px">&#x2615;</p>
-    <h1>休憩タイム</h1>
-    <p class="subtitle">5分間</p>
-    <p style="margin-top:32px;color:#64748b">「会議中にメモを取る」から「録音して後でAIに整理させる」へ。<br>仕事のやり方が少しずつ変わっていく感覚、ありますか？</p>
+  <div class="section-header" style="padding:120px 0">
+    <span class="hero-icon">&#x2615;</span>
+    <h1 style="margin-bottom:8px">休憩タイム</h1>
+    <p class="subtitle" style="font-size:28px">5分間</p>
+    <p style="margin-top:40px;color:#94a3b8;font-size:20px">「会議中はメモを取る」から<br>「録音して後でAIに整理させる」へ。<br><br>仕事のやり方が少しずつ変わっていく感覚、ありますか？</p>
   </div>
 </div>
 </div>
 
 <!-- ========== PAGE 8: 実践③ 自分の業務で実践 (15min) ========== -->
-<div class="part-page" data-part="7" data-notes="ここが今日のメイン。自分の実際の業務で試してもらう。メールでも議事録でも報告書でも何でもOK。smzさんの場合、マラソンイベント運営の業務（参加者向け案内文・会議メモの整理等）が使えるかもしれない。<strong>大事:</strong> 完成させることよりも「自分の仕事でAIが動いた」という成功体験が最重要。個人情報はOK/NGルール厳守。">
+<div class="part-page" data-part="7" data-notes="自分の実際の業務で試してもらう。メールでも議事録でも案内文でも何でもOK。smzさんの場合、マラソンイベント運営の業務（参加者向け案内文・会議メモの整理等）が使えるかも。完成させることよりも「自分の仕事でAIが動いた」という成功体験が最重要。">
 <div class="inner">
   <div class="section-header">
+    <span class="hero-icon">&#x1F4BC;</span>
     <div class="tag">実践 03 ― 15分</div>
     <h1>自分の業務で<br>やってみよう</h1>
-    <p class="subtitle">今日学んだことを自分の仕事に当てはめてみる</p>
+    <p class="subtitle">1つ選んで試してみてください</p>
   </div>
 
-  <p>以下から1つ選んで取り組んでください。時間が余れば複数やってみましょう。</p>
-
-  <h2>選択A：断りにくいメールを書く</h2>
-  <p>実際に困っている・後回しにしているメールがあれば、AIに下書きを任せてみましょう。</p>
-  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の状況で、丁重にお断りするメールを書いてください。今後の関係は維持したいので、前向きなトーンで締めてください。
+  <h2>&#x1F6AB; 選択A：断りにくいメールを書く</h2>
+  <p style="margin-bottom:12px">後回しにしているメールがあれば、AIに下書きを任せてみましょう。</p>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の状況で、丁重にお断りするメールを書いてください。
+今後の関係は維持したいので、前向きなトーンで締めてください。
 
 状況：
 （ここに自分の状況を書く。個人名や機密情報は伏せて）</div>
 
-  <h2>選択B：自分の会議の文字起こしや録音から議事録を作る</h2>
-  <p>Google Meetの字幕・iPhoneボイスメモの文字起こしがあれば使ってみましょう。</p>
+  <h2>&#x1F3A4; 選択B：自分の会議録や録音から議事録を作る</h2>
+  <p style="margin-bottom:12px">Google Meetの字幕・ボイスメモの文字起こしがあれば使ってみましょう。</p>
   <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下は会議の文字起こし結果です。議事録を作成してください。
 
 専門用語の補足：（使っている略語や専門用語があれば書く）
@@ -478,8 +561,8 @@ td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
 【文字起こし】
 （ここに文字起こしテキストを貼る）</div>
 
-  <h2>選択C：案内文や連絡文を作る</h2>
-  <p>参加者・関係者への案内・お知らせ文など、何か書く必要があるものがあれば。</p>
+  <h2>&#x1F4E2; 選択C：案内文や連絡文を作る</h2>
+  <p style="margin-bottom:12px">参加者・関係者へのお知らせなど、書く必要があるものがあれば。</p>
   <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の内容で案内文を書いてください。
 
 宛先：（例：イベント参加者）
@@ -488,7 +571,7 @@ td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
 文字数：300文字程度</div>
 
   <div class="highlight-box warning" style="margin-top:32px">
-    <p style="margin:0"><strong>注意：</strong>自分の業務メモや録音を使う場合は、個人名は伏せるか仮名に。第1回の安全/注意/禁止の3段階を守って。</p>
+    <p><strong>注意：</strong>個人名は伏せるか仮名に。第1回の 安全 / 注意 / 禁止 を守って。</p>
   </div>
 </div>
 </div>
@@ -497,30 +580,26 @@ td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
 <div class="part-page" data-part="8" data-notes="「AIの下書きから何を直しましたか？」が最も大事な質問。直した部分こそが自分の仕上げ力。クイズはタップで答え確認。次回予告は第4回「情報を読み込ませて整理する」。">
 <div class="inner">
   <div class="section-header">
+    <span class="hero-icon">&#x1F4AA;</span>
     <div class="tag">共有＆振り返り ― 8分</div>
     <h1>今日できるようになったこと</h1>
   </div>
 
   <h2>振り返りクイズ（タップで答え）</h2>
   <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
-    <strong>Q1.</strong> AIが作った文書、送る前に何を確認する？
-    <div class="answer-mark">&#x2B55; <strong>事実（数字・名前・日付）</strong>と<strong>自分の言葉になっているか</strong>の2つ。この2点を意識するだけでOK。</div>
+    <div class="q">Q1. AIが作った文書、送る前に何を確認する？</div>
+    <div class="a">&#x2B55; <strong>事実（数字・名前・日付）</strong>。AIは自信満々に間違えることがある。ここだけ自分の目で確認する。</div>
   </div>
   <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
-    <strong>Q2.</strong> 音声から議事録を作る場合の注意点は？
-    <div class="answer-mark">&#x2B55; <strong>専門用語や固有名詞の誤変換</strong>に注意。誤変換があったら「○○は△△の誤りです」と追加で伝えれば直せる。</div>
+    <div class="q">Q2. 音声から議事録を作る場合の注意点は？</div>
+    <div class="a">&#x2B55; <strong>専門用語や固有名詞の誤変換</strong>に注意。「○○は△△の誤りです」と追加で伝えれば直せる。</div>
   </div>
   <div class="quiz-answer" onclick="this.classList.toggle('revealed')">
-    <strong>Q3.</strong> メモから議事録を作るとき、そのまま渡していい？
-    <div class="answer-mark">&#x274C; 精度が落ちやすい。渡す前に<strong>会議の背景情報（出席者・議題・専門用語）を先に説明する</strong>「前処理」をすると精度が上がる。</div>
+    <div class="q">Q3. メモから議事録を作るとき、そのまま渡していい？</div>
+    <div class="a">&#x274C; 精度が落ちやすい。<strong>会議の背景情報（出席者・議題・専門用語）を先に説明する</strong>「前処理」をすると精度が上がる。</div>
   </div>
 
   <hr class="divider">
-
-  <h2>次回予告：第4回「情報を読み込ませて整理する」</h2>
-  <div class="highlight-box" style="border-color:#c4b5fd">
-    <p style="margin:0">長い文書や複数の資料をAIに読ませて、<strong>要約・比較表・論点整理</strong>を一瞬で作る方法を学びます。<br>「読む時間」を劇的に短縮できます。</p>
-  </div>
 
   <h2>今週のチャレンジ</h2>
   <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の記事を300文字で要約してください。
@@ -530,30 +609,38 @@ td{padding:12px 20px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{b
 
   <hr class="divider">
 
+  <div class="next-card">
+    <div class="next-icon">&#x1F4C2;</div>
+    <h3>次回 第4回「情報を読み込ませて整理する」</h3>
+    <p>長い文書や複数の資料をAIに読ませて、<strong>要約・比較表・論点整理</strong>を一瞬で作る方法を学びます。</p>
+  </div>
+
+  <hr class="divider">
+
   <h2>参考資料</h2>
   <table>
     <tr><th>機関</th><th>文書名</th><th>発行日・URL</th></tr>
-    <tr><td>OpenAI</td><td>利用規約（Row Terms of Use）</td><td>openai.com/policies/row-terms-of-use/</td></tr>
-    <tr><td>Google</td><td>Gemini Apps プライバシーハブ</td><td>2026年4月8日更新　support.google.com/gemini/answer/13594961</td></tr>
-    <tr><td>Anthropic</td><td>Reduce hallucinations（開発者向けドキュメント）</td><td>docs.anthropic.com/en/docs/test-and-evaluate/strengthen-guardrails/reduce-hallucinations</td></tr>
-    <tr><td>総務省・経済産業省</td><td>AI事業者ガイドライン 第1.1版（本編）</td><td>2025年3月28日　meti.go.jp/shingikai/mono_info_service/ai_shakai_jisso/pdf/20250328_1.pdf</td></tr>
-    <tr><td>内閣府</td><td>人間中心のAI社会原則</td><td>2019年3月29日　cao.go.jp/cstp/aigensoku.pdf</td></tr>
-    <tr><td>NIST（米国）</td><td>AI Risk Management Framework 1.0（NIST AI 100-1）</td><td>2023年1月26日　nist.gov/publications/artificial-intelligence-risk-management-framework-ai-rmf-10</td></tr>
-    <tr><td>EU</td><td>AI Act 第14条：人間による監督</td><td>発効 2024年8月1日 / 第14条の適用開始 2026年8月2日　artificialintelligenceact.eu/article/14/</td></tr>
+    <tr><td>OpenAI</td><td>利用規約</td><td>openai.com/policies/row-terms-of-use/</td></tr>
+    <tr><td>Google</td><td>Gemini Apps プライバシーハブ</td><td>2026年4月8日更新</td></tr>
+    <tr><td>Anthropic</td><td>Reduce hallucinations</td><td>docs.anthropic.com/en/docs/test-and-evaluate/…</td></tr>
+    <tr><td>総務省・経産省</td><td>AI事業者ガイドライン 第1.1版</td><td>2025年3月28日</td></tr>
+    <tr><td>内閣府</td><td>人間中心のAI社会原則</td><td>2019年3月29日</td></tr>
+    <tr><td>NIST（米国）</td><td>AI RMF 1.0</td><td>2023年1月26日</td></tr>
+    <tr><td>EU</td><td>AI Act 第14条：人間による監督</td><td>発効 2024年8月1日</td></tr>
   </table>
 
-  <p style="text-align:center;margin-top:40px;font-size:32px">お疲れさまでした！</p>
+  <p style="text-align:center;margin-top:48px;font-size:36px">&#x1F44F; お疲れさまでした！</p>
 </div>
 </div>
 
-</div>
+</div><!-- /parts-wrapper -->
 
 <div class="keyboard-hint">← → パート移動 ／ N 講師メモ ／ Space タイマー ／ F 全画面</div>
 
 <script>
 const PARTS=[
   {name:'オープニング＆前回振り返り',minutes:8,type:'lecture'},
-  {name:'ミニ講義: AI下書きの2つの心がけ',minutes:7,type:'lecture'},
+  {name:'ミニ講義: 確認は1つだけ',minutes:7,type:'lecture'},
   {name:'実践①: メール3種作り分け',minutes:20,type:'handson'},
   {name:'ミニ講義: 議事録は音声→がメイン',minutes:10,type:'lecture'},
   {name:'実践②: 音声→議事録',minutes:10,type:'handson'},
@@ -562,26 +649,79 @@ const PARTS=[
   {name:'実践③: 自分の業務で実践',minutes:15,type:'handson'},
   {name:'共有＆振り返り＋次回予告',minutes:8,type:'review'}
 ];
-function switchIndustry(g,b){document.querySelectorAll('.industry-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');document.querySelectorAll('.industry-content').forEach(c=>{c.classList.toggle('active',c.dataset.group===g)})}
+
+function switchIndustry(g,b){
+  const page=b.closest('.part-page');
+  page.querySelectorAll('.industry-btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  page.querySelectorAll('.industry-content').forEach(c=>{c.classList.toggle('active',c.dataset.group===g)});
+}
+
 const pageLog=[];let pageEnterTime=Date.now();
 function logPageTransition(f,t){const n=Date.now();pageLog.push({from:f+1,to:t+1,elapsed:Math.round(totalSeconds),dwellMs:n-pageEnterTime,timestamp:new Date().toISOString()});pageEnterTime=n}
-function exportLog(){const s=PARTS.map((p,i)=>{const e=pageLog.filter(l=>l.from===i+1);const d=e.reduce((a,b)=>a+b.dwellMs,0);return{part:p.name,planned:p.minutes+'分',actual:Math.round(d/60000)+'分'}});const j=JSON.stringify({summary:s,detail:pageLog},null,2);const b=new Blob([j],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='session-03-log-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
+function exportLog(){const s=PARTS.map((p,i)=>{const e=pageLog.filter(l=>l.from===i+1);const d=e.reduce((a,b)=>a+b.dwellMs,0);return{part:p.name,planned:p.minutes+'分',actual:Math.round(d/60000)+'分'}});const j=JSON.stringify({summary:s,detail:pageLog},null,2);const blob=new Blob([j],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download='session-03-log-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
+
 let currentPage=0,timerRunning=false,totalSeconds=0,partSeconds=0,timerInterval=null,notesVisible=false;
-const pages=document.querySelectorAll('.part-page');const totalPages=pages.length;document.getElementById('pageTotal').textContent=totalPages;
-function showPage(i){if(i<0||i>=totalPages)return;logPageTransition(currentPage,i);pages.forEach((p,x)=>{p.classList.remove('active','prev');if(x===i)p.classList.add('active');else if(x<i)p.classList.add('prev')});pages[i].scrollTop=0;currentPage=i;document.getElementById('pageNum').textContent=i+1;document.getElementById('progressFill').style.width=((i+1)/totalPages*100)+'%';document.getElementById('navLeft').disabled=i===0;document.getElementById('navRight').disabled=i===totalPages-1;updatePartIndicator();updateNotes()}
-function nextPage(){showPage(currentPage+1)}function prevPage(){showPage(currentPage-1)}
-function updatePartIndicator(){const pi=parseInt(pages[currentPage].dataset.part)||0;const p=PARTS[pi];const ind=document.getElementById('partIndicator');const m={lecture:'part-lecture',handson:'part-handson',break:'part-break',review:'part-review'};ind.className='part-indicator '+m[p.type];document.getElementById('partName').textContent=p.name;resetPartTimer(p.minutes)}
-let cpm=5;function resetPartTimer(m){cpm=m;partSeconds=m*60;updatePartTimeDisplay()}
-function toggleTimer(){if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerToggle').textContent='Start';document.getElementById('timerToggle').classList.remove('active')}else{timerInterval=setInterval(tick,1000);timerRunning=true;document.getElementById('timerToggle').textContent='Pause';document.getElementById('timerToggle').classList.add('active')}}
+const pages=document.querySelectorAll('.part-page');const totalPages=pages.length;
+document.getElementById('pageTotal').textContent=totalPages;
+
+function showPage(i){
+  if(i<0||i>=totalPages)return;
+  logPageTransition(currentPage,i);
+  pages.forEach((p,x)=>{p.classList.remove('active','prev');if(x===i)p.classList.add('active');else if(x<i)p.classList.add('prev')});
+  pages[i].scrollTop=0;currentPage=i;
+  document.getElementById('pageNum').textContent=i+1;
+  document.getElementById('progressFill').style.width=((i+1)/totalPages*100)+'%';
+  document.getElementById('navLeft').disabled=i===0;
+  document.getElementById('navRight').disabled=i===totalPages-1;
+  updatePartIndicator();updateNotes();
+}
+
+function nextPage(){showPage(currentPage+1)}
+function prevPage(){showPage(currentPage-1)}
+
+function updatePartIndicator(){
+  const pi=parseInt(pages[currentPage].dataset.part)||0;
+  const p=PARTS[pi];
+  const ind=document.getElementById('partIndicator');
+  const m={lecture:'part-lecture',handson:'part-handson',break:'part-break',review:'part-review'};
+  ind.className='part-indicator '+m[p.type];
+  document.getElementById('partName').textContent=p.name;
+  resetPartTimer(p.minutes);
+}
+
+let cpm=5;
+function resetPartTimer(m){cpm=m;partSeconds=m*60;updatePartTimeDisplay()}
+function toggleTimer(){
+  if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerToggle').textContent='Start';document.getElementById('timerToggle').classList.remove('active')}
+  else{timerInterval=setInterval(tick,1000);timerRunning=true;document.getElementById('timerToggle').textContent='Pause';document.getElementById('timerToggle').classList.add('active')}
+}
 function tick(){totalSeconds++;partSeconds--;updateTotalTimeDisplay();updatePartTimeDisplay()}
 function updateTotalTimeDisplay(){const m=Math.floor(totalSeconds/60),s=totalSeconds%60;document.getElementById('totalTime').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
-function updatePartTimeDisplay(){const el=document.getElementById('partTime');if(partSeconds<=0){const o=Math.abs(partSeconds),m=Math.floor(o/60),s=o%60;el.textContent='-'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value overtime'}else if(partSeconds<=60){const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value warning'}else{const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value'}}
+function updatePartTimeDisplay(){
+  const el=document.getElementById('partTime');
+  if(partSeconds<=0){const o=Math.abs(partSeconds),m=Math.floor(o/60),s=o%60;el.textContent='-'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value overtime'}
+  else if(partSeconds<=60){const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value warning'}
+  else{const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value'}
+}
 function updateNotes(){document.getElementById('instructorNotes').innerHTML=pages[currentPage].dataset.notes||''}
 function toggleNotes(){notesVisible=!notesVisible;document.getElementById('instructorNotes').classList.toggle('visible',notesVisible);document.getElementById('notesToggle').classList.toggle('active',notesVisible)}
-function copyText(btn){const t=btn.parentElement.textContent.replace(/コピー(済み ✓)?/g,'').trim();navigator.clipboard.writeText(t).then(()=>{btn.textContent='コピー済み ✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('copied')},1500)})}
+function copyText(btn){
+  const t=btn.parentElement.textContent.replace(/コピー(済み ✓)?/g,'').trim();
+  navigator.clipboard.writeText(t).then(()=>{btn.textContent='コピー済み ✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('copied')},1500)});
+}
 function toggleFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
 document.addEventListener('fullscreenchange',()=>{document.getElementById('fsBtn').innerHTML=document.fullscreenElement?'&#x26F6; 終了':'&#x26F6; 全画面'});
-document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextPage()}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevPage()}else if(e.key==='n'||e.key==='N')toggleNotes();else if(e.key===' '){e.preventDefault();toggleTimer()}else if(e.key==='f'||e.key==='F')toggleFullscreen();else if(e.key==='Home'){e.preventDefault();showPage(0)}else if(e.key==='End'){e.preventDefault();showPage(totalPages-1)}else if(e.key==='l'||e.key==='L')exportLog()});
+document.addEventListener('keydown',e=>{
+  if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextPage()}
+  else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevPage()}
+  else if(e.key==='n'||e.key==='N')toggleNotes();
+  else if(e.key===' '){e.preventDefault();toggleTimer()}
+  else if(e.key==='f'||e.key==='F')toggleFullscreen();
+  else if(e.key==='Home'){e.preventDefault();showPage(0)}
+  else if(e.key==='End'){e.preventDefault();showPage(totalPages-1)}
+  else if(e.key==='l'||e.key==='L')exportLog();
+});
 showPage(0);
 </script>
 </body>
