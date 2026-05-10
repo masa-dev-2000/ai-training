@@ -73,25 +73,59 @@ table{width:100%;border-collapse:collapse;margin:18px 0;font-size:21px}th{backgr
 <div class="parts-wrapper">
 
 <!-- ========== #1 プロローグ・フック (1min) ========== -->
-<div class="part-page" data-part="0" data-act="pre" data-notes="<strong>1分。読み上げない。</strong>3秒画面を見せて『これ、何が問題か分かりますか？』とだけ言って次へ。答えは出さない。今日のゴールへの伏線。失敗例は『私もやらかしたことがある』として語ると参加者が安心する。">
+<div class="part-page" data-part="0" data-act="pre" data-notes="<strong>1分。読み上げない。</strong>業種スイッチャーで参加者の業種に合わせて切替（事前にどの業種が多いか把握しておく）。3秒画面を見せて『これ、何が問題か分かりますか？』とだけ言って次へ。答えは出さない。<strong>失敗例は『私もやらかしたことがある』として語ると参加者が安心する。</strong>">
 <div class="inner">
   <div class="section-header">
     <div class="tag">PROLOGUE</div>
     <h1>これ、何が<br>起きていると思いますか？</h1>
   </div>
 
-  <div class="highlight-box danger">
-    <p style="margin:0 0 12px;font-weight:600;color:#991b1b">講師の指示文：</p>
-    <p style="margin:0;font-size:22px">「この50ページの介護保険改定通知を要約して」</p>
+  <div class="industry-switcher">
+    <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
+    <button class="industry-btn" onclick="switchIndustry('B',this)">B. 技術・専門職系</button>
+    <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
   </div>
 
-  <div class="highlight-box" style="border-color:#cbd5e1;background:#fff">
-    <p style="margin:0 0 12px;font-weight:600;color:#475569">AIの回答：</p>
-    <p style="margin:0;font-size:22px">「介護保険制度が改定され、利用者負担が <strong style="color:#dc2626">1割から3割</strong> に変更されました…」</p>
+  <div class="industry-content active" data-group="A">
+    <div class="highlight-box danger">
+      <p style="margin:0 0 12px;font-weight:600;color:#991b1b">指示文：</p>
+      <p style="margin:0;font-size:22px">「この50ページの介護保険改定通知を要約して」</p>
+    </div>
+    <div class="highlight-box" style="border-color:#cbd5e1;background:#fff">
+      <p style="margin:0 0 12px;font-weight:600;color:#475569">AIの回答：</p>
+      <p style="margin:0;font-size:22px">「利用者負担が <strong style="color:#dc2626">1割から3割</strong> に変更されました…」</p>
+    </div>
+    <div class="highlight-box warning">
+      <p style="margin:0;font-size:21px">※ 原文：「<strong>一定所得以上の利用者の負担が2割から3割になる場合がある</strong>」</p>
+    </div>
   </div>
 
-  <div class="highlight-box warning">
-    <p style="margin:0;font-size:21px">※ 原文：「<strong>一定所得以上の利用者の負担が2割から3割になる場合がある</strong>」</p>
+  <div class="industry-content" data-group="B">
+    <div class="highlight-box danger">
+      <p style="margin:0 0 12px;font-weight:600;color:#991b1b">指示文：</p>
+      <p style="margin:0;font-size:22px">「この80ページの構造設計指針を要約して」</p>
+    </div>
+    <div class="highlight-box" style="border-color:#cbd5e1;background:#fff">
+      <p style="margin:0 0 12px;font-weight:600;color:#475569">AIの回答：</p>
+      <p style="margin:0;font-size:22px">「鉄筋の被り厚さは<strong style="color:#dc2626">最低40mm</strong>と定められています…」</p>
+    </div>
+    <div class="highlight-box warning">
+      <p style="margin:0;font-size:21px">※ 原文：「<strong>屋外では最低40mm、屋内では最低30mm（部位により異なる）</strong>」</p>
+    </div>
+  </div>
+
+  <div class="industry-content" data-group="C">
+    <div class="highlight-box danger">
+      <p style="margin:0 0 12px;font-weight:600;color:#991b1b">指示文：</p>
+      <p style="margin:0;font-size:22px">「この60ページの業界動向レポートを要約して」</p>
+    </div>
+    <div class="highlight-box" style="border-color:#cbd5e1;background:#fff">
+      <p style="margin:0 0 12px;font-weight:600;color:#475569">AIの回答：</p>
+      <p style="margin:0;font-size:22px">「来店客数が前年比<strong style="color:#dc2626">30%増加</strong>しました…」</p>
+    </div>
+    <div class="highlight-box warning">
+      <p style="margin:0;font-size:21px">※ 原文：「<strong>一部地域・一部業態に限り、来店客数が前年比3%増となった</strong>」</p>
+    </div>
   </div>
 </div>
 </div>
@@ -115,6 +149,7 @@ table{width:100%;border-collapse:collapse;margin:18px 0;font-size:21px}th{backgr
 
   <div class="highlight-box info" style="margin-top:30px">
     <p style="margin:0">投票してください。今日の演習で何度も使います。</p>
+    <p style="margin:10px 0 0;font-size:18px;color:#64748b">※ 第3回欠席の方は直感で選んでOK。正解発表のあと講師が補足します。</p>
   </div>
 </div>
 </div>
@@ -254,7 +289,7 @@ table{width:100%;border-collapse:collapse;margin:18px 0;font-size:21px}th{backgr
 </div>
 
 <!-- ========== #7 休憩前の引き (2min) ========== -->
-<div class="part-page" data-part="6" data-act="1" data-notes="<strong>2分。クリフハンガー。</strong>休憩のあと『3つの要約サンプルを並べる。どれが嘘ついてるか当てる』と予告。<strong>『1つだけです』と言うのが大事</strong>（実は3つ全部嘘がある、というのが種明かし）。">
+<div class="part-page" data-part="6" data-act="1" data-notes="<strong>2分。クリフハンガー。</strong>休憩のあと『3つの要約サンプルを並べる。どれが嘘ついてるか当てる』と予告。<strong>「1つだけ」と限定しない</strong>（種明かしで3つとも矛盾していると返すため、限定するとハメ感を生む）。">
 <div class="inner">
   <div class="cliffhanger">
     <h2><span class="pulse"></span>ちょっと待ってください</h2>
@@ -263,7 +298,7 @@ table{width:100%;border-collapse:collapse;margin:18px 0;font-size:21px}th{backgr
     <p style="font-size:24px">原文を1行も読まずに会議に持ち込んだら<br><strong style="color:#fff">事故るレベル</strong>の落とし穴です</p>
     <hr style="border:none;border-top:1px solid #475569;margin:36px 0">
     <p style="font-size:22px">休憩のあと、3つの要約サンプルを並べます。</p>
-    <p style="font-size:28px;color:#fff;margin-top:14px"><strong>どれが嘘ついてるか、当ててください</strong></p>
+    <p style="font-size:28px;color:#fff;margin-top:14px"><strong>どれが嘘をついているか、見抜いてください</strong></p>
   </div>
 </div>
 </div>
@@ -308,10 +343,10 @@ table{width:100%;border-collapse:collapse;margin:18px 0;font-size:21px}th{backgr
 
   <h2>進め方</h2>
   <div class="flow-steps">
-    <div class="flow-item"><div class="flow-num">1</div><strong>個人投票（1分）：</strong>どれが原文と矛盾していると思う？1つ選んで</div>
+    <div class="flow-item"><div class="flow-num">1</div><strong>個人投票（1分）：</strong>原文と矛盾していると思うものを<strong>すべて</strong>選んで（複数可）</div>
     <div class="flow-item"><div class="flow-num">2</div><strong>ペア議論（2分）：</strong>ブレイクアウトで根拠を共有</div>
     <div class="flow-item"><div class="flow-num">3</div><strong>再投票（1分）：</strong>もう一度選び直す</div>
-    <div class="flow-item"><div class="flow-num">4</div><strong>答え合わせ：</strong>正解を発表します</div>
+    <div class="flow-item"><div class="flow-num">4</div><strong>答え合わせ：</strong>正解を発表します（実は全部に違う種類の歪みが…）</div>
   </div>
 
   <div class="highlight-box warning" style="margin-top:30px">
@@ -322,12 +357,16 @@ table{width:100%;border-collapse:collapse;margin:18px 0;font-size:21px}th{backgr
 </div>
 
 <!-- ========== #9 比較表選手権 (15min) ========== -->
-<div class="part-page" data-part="9" data-act="2" data-notes="<strong>15分・最大の山場。</strong>4チームに分ける（5名×4 or 3名×4）。①ブレイクアウト4分で指示文1本完成 ②全体に戻す1分 ③講師が各チームの指示文をAIに投げて結果を全員で見る5分 ④AI出力の品質で投票5分。<strong>勝敗は『人vs人』ではない。AI出力の質で決まる。</strong>負けチームにも『この観点を足せばよかった』が見えるよう講評する。">
+<div class="part-page" data-part="9" data-act="2" data-notes="<strong>15分・最大の山場。チーム編成は業種別。</strong>同じ業種の参加者を同じチームに集める（A業種が多ければA1・A2のように分割）。お題は所属業種で固定。①ブレイクアウト4分で指示文1本完成 ②全体に戻す1分 ③各チームの指示文をAIに投げて結果を全員で見る5分 ④AI出力の品質で投票5分。<strong>勝敗は『人vs人』ではない。AI出力の質で決まる。</strong>負けチームにも『この観点を足せばよかった』が見えるよう講評する。">
 <div class="inner">
   <div class="section-header">
     <div class="tag">第2幕 ② 比較表選手権 ― 15分</div>
     <h1>チーム対抗：<br>最強の比較表指示文</h1>
     <p class="subtitle">勝敗はAI出力の質で決まる</p>
+  </div>
+
+  <div class="highlight-box info">
+    <p style="margin:0;font-size:21px"><strong>チーム編成：同じ業種ごとに集まります。</strong>お題は所属業種のものを使います。</p>
   </div>
 
   <h2>ルール</h2>
