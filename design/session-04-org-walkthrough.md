@@ -110,9 +110,11 @@
 | 3 | #7クリフハンガーから「1つだけ」を削除（#8設問も「複数可」に） | `presentation-org.html` #7・#8 | ✅ 適用済 |
 | 4 | #2欠席者向けフォロー文言を追加 | `presentation-org.html` #2 | ✅ 適用済 |
 | 4b | 自分の業務テーマ選定ルールを第1回運用に組み込む宣言 | `design/PROJECT-STATUS.md`・`design/session-04-org-design.md` | ✅ 適用済 |
-| 5 | #10・#12の違いを明示する文言追加 | `presentation-org.html` | 未着手 |
-| 6 | #14挙手をZoom投票/チャット一斉に置換 | `presentation-org.html` #14 | 未着手 |
-| 7 | 事前準備物追加（業種別記事URL／AI遅延スクショ／Warm Call依頼テンプレ） | `design/session-04-org-design.md` | 未着手 |
+| 5 | #10・#12の違いを明示する文言追加 | `presentation-org.html` | ✅ 適用済 |
+| 6 | #14挙手をチャット一斉投稿（○×）に置換 | `presentation-org.html` #14 | ✅ 適用済 |
+| 7 | 事前準備物追加（業種別記事URL／AI遅延スクショ／Warm Call依頼テンプレ／欠席者確認） | `design/session-04-org-design.md` | ✅ 適用済 |
+| 8 | #5呼び水を4つ→8つに増量 | `presentation-org.html` #5 | ✅ 適用済 |
+| 9 | #6「最低1パターン・余裕があれば3つ」と緩和 | `presentation-org.html` #6 | ✅ 適用済 |
 
 ## 残課題（次回以降）
 
