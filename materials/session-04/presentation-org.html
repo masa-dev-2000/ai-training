@@ -1,0 +1,637 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI研修 初級編 第4回（団体版）：情報を読み込ませて整理する</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;overflow:hidden}
+body{font-family:'Segoe UI','Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;background:#f8f9fb;color:#1e293b;line-height:1.7}
+.top-bar{position:fixed;top:0;left:0;right:0;z-index:100;display:flex;align-items:center;justify-content:space-between;padding:6px 20px;background:rgba(255,255,255,.95);border-bottom:1px solid #e2e8f0;font-size:13px;backdrop-filter:blur(8px);height:44px}
+.timer-section{display:flex;align-items:center;gap:14px}.timer-label{color:#64748b;font-size:11px}.timer-value{font-size:16px;font-weight:600;font-variant-numeric:tabular-nums;color:#1e293b}.timer-value.warning{color:#d97706}.timer-value.overtime{color:#dc2626;animation:pulse 1s infinite}@keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+.timer-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#1e293b;cursor:pointer;font-size:12px;transition:background .2s}.timer-btn:hover{background:#f1f5f9}.timer-btn.active{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.fs-btn{padding:3px 10px;border:1px solid #cbd5e1;border-radius:5px;background:transparent;color:#64748b;cursor:pointer;font-size:12px;transition:background .2s}.fs-btn:hover{background:#f1f5f9}
+.act-tag{display:inline-flex;align-items:center;gap:5px;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.act-1{background:#fef3c7;color:#92400e}.act-2{background:#fee2e2;color:#991b1b}.act-3{background:#dcfce7;color:#166534}.act-pre{background:#e0e7ff;color:#3730a3}
+.part-indicator{display:flex;align-items:center;gap:6px;padding:3px 10px;border-radius:5px;font-size:12px;font-weight:500}.part-indicator .dot{width:7px;height:7px;border-radius:50%}
+.part-lecture{background:#eff6ff;color:#2563eb}.part-lecture .dot{background:#3b82f6}.part-handson{background:#f0fdf4;color:#16a34a}.part-handson .dot{background:#22c55e}.part-break{background:#f8fafc;color:#64748b}.part-break .dot{background:#94a3b8}.part-review{background:#faf5ff;color:#7c3aed}.part-review .dot{background:#8b5cf6}.part-vote{background:#fff7ed;color:#c2410c}.part-vote .dot{background:#f97316}.part-team{background:#fdf2f8;color:#be185d}.part-team .dot{background:#ec4899}
+.slide-counter{color:#64748b;font-size:12px}
+.session-progress{display:flex;align-items:center;gap:3px;font-size:11px;color:#64748b}.session-dot{width:8px;height:8px;border-radius:50%;background:#e2e8f0}.session-dot.done{background:#94a3b8}.session-dot.current{background:#3b82f6;width:10px;height:10px}
+.progress-bar{position:fixed;bottom:0;left:0;right:0;height:3px;background:#e2e8f0;z-index:100}.progress-fill{height:100%;background:linear-gradient(90deg,#3b82f6,#8b5cf6);transition:width .3s ease}
+.parts-wrapper{position:fixed;top:44px;bottom:3px;left:0;right:0;overflow:hidden}
+.part-page{position:absolute;top:0;left:0;right:0;bottom:0;overflow-y:auto;overflow-x:hidden;padding:50px 72px 80px;opacity:0;transform:translateX(50px);transition:opacity .35s ease,transform .35s ease;pointer-events:none;scroll-behavior:smooth}.part-page.active{opacity:1;transform:translateX(0);pointer-events:auto}.part-page.prev{transform:translateX(-50px)}.part-page .inner{max-width:980px;margin:0 auto}
+h1{font-size:54px;font-weight:700;margin-bottom:18px;background:linear-gradient(135deg,#2563eb,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;line-height:1.25}
+h2{font-size:38px;font-weight:700;margin:60px 0 18px;color:#1e293b}h3{font-size:28px;font-weight:600;margin:36px 0 12px;color:#334155}
+p{font-size:24px;color:#475569;margin-bottom:14px}ul,ol{font-size:23px;padding-left:36px;color:#475569}li{margin-bottom:8px}li strong{color:#1e293b}
+.section-header{text-align:center;padding:50px 0 40px}.section-header .tag{font-size:18px;color:#64748b;letter-spacing:4px;text-transform:uppercase;margin-bottom:10px}.section-header .subtitle{font-size:24px;color:#64748b;margin-bottom:0}
+table{width:100%;border-collapse:collapse;margin:18px 0;font-size:21px}th{background:#f1f5f9;padding:12px 18px;text-align:left;font-weight:600;color:#475569;border-bottom:3px solid #e2e8f0}td{padding:10px 18px;border-bottom:1px solid #f1f5f9;color:#475569}tr:hover td{background:#f8fafc}
+.card-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:18px;margin:18px 0}.card{background:#fff;border:1px solid #e2e8f0;border-radius:14px;padding:22px;box-shadow:0 1px 3px rgba(0,0,0,.04)}.card h4{font-size:22px;margin-bottom:8px;color:#1e293b}.card p{font-size:18px;color:#64748b;margin-bottom:0}
+.prompt-block{background:#fff;border:1px solid #e2e8f0;border-left:6px solid #22c55e;border-radius:12px;padding:18px 20px;margin:16px 0;font-size:21px;color:#1e293b;line-height:1.7;box-shadow:0 1px 3px rgba(0,0,0,.04);display:flex;flex-direction:column;gap:8px;white-space:pre-wrap}.prompt-block .copy-btn{align-self:flex-end;padding:5px 12px;border:1px solid #cbd5e1;border-radius:6px;background:#f8fafc;color:#64748b;cursor:pointer;font-size:13px}.prompt-block .copy-btn:hover{background:#dcfce7;border-color:#22c55e;color:#16a34a}.prompt-block .copy-btn.copied{background:#dcfce7;border-color:#22c55e;color:#16a34a}
+.highlight-box{background:#f8fafc;border-radius:14px;padding:22px 26px;margin:18px 0;border:1px solid #e2e8f0;font-size:23px}.highlight-box.warning{border-color:#fbbf24;background:#fffbeb}.highlight-box.success{border-color:#86efac;background:#f0fdf4}.highlight-box.info{border-color:#93c5fd;background:#eff6ff}.highlight-box.danger{border-color:#fca5a5;background:#fef2f2}.highlight-box p{font-size:23px}
+.compare{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}.compare-col{background:#fff;border-radius:14px;padding:22px}.compare-col.bad{border:3px solid #fca5a5}.compare-col.bad h4{color:#dc2626}.compare-col.good{border:3px solid #86efac}.compare-col.good h4{color:#16a34a}.compare-col p{font-size:21px}
+.persona-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin:24px 0}.persona{background:#fff;border:2px solid #e2e8f0;border-radius:16px;padding:22px;text-align:center}.persona-name{font-size:24px;font-weight:700;color:#1e293b;margin-bottom:4px}.persona-role{font-size:16px;color:#64748b;margin-bottom:14px}.persona-task{font-size:18px;color:#475569;text-align:left;line-height:1.6}.persona.A{border-color:#a7f3d0}.persona.A .persona-name{color:#047857}.persona.B{border-color:#bfdbfe}.persona.B .persona-name{color:#1d4ed8}.persona.C{border-color:#fbcfe8}.persona.C .persona-name{color:#be185d}
+.divider{border:none;border-top:2px solid #e2e8f0;margin:60px 0}
+.nav-arrow{position:fixed;top:50%;z-index:50;width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.9);border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:26px;display:flex;align-items:center;justify-content:center;transition:all .2s;transform:translateY(-50%);box-shadow:0 2px 6px rgba(0,0,0,.06)}.nav-arrow:hover{background:#f1f5f9;color:#1e293b}.nav-arrow.left{left:18px}.nav-arrow.right{right:18px}.nav-arrow:disabled{opacity:.2;cursor:default}
+.instructor-notes{position:fixed;bottom:6px;left:20px;right:20px;z-index:90;background:rgba(255,255,255,.97);border:1px solid #e2e8f0;border-radius:10px;padding:14px 18px;font-size:15px;color:#475569;line-height:1.55;backdrop-filter:blur(8px);transform:translateY(calc(100% + 12px));transition:transform .3s ease;max-height:160px;overflow-y:auto;box-shadow:0 4px 12px rgba(0,0,0,.08)}.instructor-notes.visible{transform:translateY(0)}.instructor-notes strong{color:#d97706}
+.notes-toggle{position:fixed;bottom:12px;right:20px;z-index:91;width:38px;height:38px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;transition:all .2s;box-shadow:0 1px 3px rgba(0,0,0,.06)}.notes-toggle:hover{background:#f1f5f9;color:#1e293b}.notes-toggle.active{background:#fffbeb;border-color:#f59e0b;color:#d97706}
+.keyboard-hint{position:fixed;bottom:12px;left:50%;transform:translateX(-50%);z-index:80;color:#94a3b8;font-size:13px}
+.industry-switcher{display:flex;gap:8px;margin:16px 0;flex-wrap:wrap}.industry-btn{padding:9px 18px;border:2px solid #e2e8f0;border-radius:10px;background:#fff;color:#64748b;cursor:pointer;font-size:15px;font-weight:600;transition:all .2s}.industry-btn:hover{border-color:#3b82f6;color:#2563eb}.industry-btn.active{background:#2563eb;color:#fff;border-color:#2563eb}.industry-content{display:none}.industry-content.active{display:block}
+.cliffhanger{background:linear-gradient(135deg,#1e293b,#334155);color:#fff;padding:50px 50px;border-radius:18px;margin:30px 0;text-align:center}.cliffhanger h2{color:#fff;margin:0 0 18px;font-size:40px}.cliffhanger p{color:#cbd5e1;font-size:24px;margin:10px 0}.cliffhanger .pulse{display:inline-block;width:10px;height:10px;background:#f59e0b;border-radius:50%;animation:pulse 1s infinite;margin-right:10px}
+.vote-options{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px;margin:20px 0}.vote-opt{background:#fff;border:2px solid #e2e8f0;border-radius:14px;padding:20px;font-size:22px;cursor:pointer;transition:all .2s}.vote-opt:hover{border-color:#3b82f6}.vote-opt strong{display:block;color:#2563eb;font-size:28px;margin-bottom:6px}
+.summary-sample{background:#fff;border:2px solid #e2e8f0;border-radius:14px;padding:22px;margin:14px 0;font-size:20px;line-height:1.7;color:#475569;position:relative}.summary-sample .label{position:absolute;top:-12px;left:18px;background:#fff;padding:0 10px;font-size:18px;font-weight:700;color:#3b82f6}.summary-sample.A{border-color:#a7f3d0}.summary-sample.A .label{color:#047857}.summary-sample.B{border-color:#bfdbfe}.summary-sample.B .label{color:#1d4ed8}.summary-sample.C{border-color:#fbcfe8}.summary-sample.C .label{color:#be185d}
+.flow-steps{display:flex;flex-direction:column;gap:10px;margin:18px 0}.flow-item{display:flex;align-items:center;gap:18px;padding:16px 22px;background:#fff;border-radius:12px;border:1px solid #e2e8f0;font-size:22px}.flow-num{min-width:42px;height:42px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:21px;font-weight:700;background:#eff6ff;color:#2563eb;flex-shrink:0}
+.team-card{background:#fff;border:2px solid #e2e8f0;border-radius:14px;padding:22px;margin:14px 0}.team-card h4{font-size:24px;margin-bottom:10px;color:#1e293b}
+@media(max-width:768px){.part-page{padding:30px 26px 60px}h1{font-size:34px}h2{font-size:26px}h3{font-size:22px}p,.highlight-box p,.prompt-block,td,th,ul,ol,.card h4,.card p,.compare-col p,.flow-item,.vote-opt,.summary-sample{font-size:17px}.compare,.persona-grid{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+
+<div class="top-bar">
+  <div class="timer-section">
+    <a href="../../index.html" style="color:#64748b;text-decoration:none;font-size:14px;margin-right:6px">&#x1F3E0;</a>
+    <button class="timer-btn" id="timerToggle" onclick="toggleTimer()">Start</button>
+    <div><div class="timer-label">経過</div><div class="timer-value" id="totalTime">00:00</div></div>
+    <div><div class="timer-label">パート残</div><div class="timer-value" id="partTime">--:--</div></div>
+    <span class="act-tag act-pre" id="actTag">序</span>
+  </div>
+  <div id="partIndicator" class="part-indicator part-lecture"><span class="dot"></span><span id="partName">プロローグ</span></div>
+  <div style="display:flex;align-items:center;gap:10px">
+    <div class="session-progress" title="全8回中の現在地">
+      <span class="session-dot done"></span><span class="session-dot done"></span><span class="session-dot done"></span><span class="session-dot current"></span><span class="session-dot"></span><span class="session-dot"></span><span class="session-dot"></span><span class="session-dot"></span>
+    </div>
+    <button class="fs-btn" id="fsBtn" onclick="toggleFullscreen()">&#x26F6; 全画面</button>
+    <div class="slide-counter"><span id="pageNum">1</span>/<span id="pageTotal">14</span></div>
+  </div>
+</div>
+<div class="progress-bar"><div class="progress-fill" id="progressFill"></div></div>
+<button class="nav-arrow left" id="navLeft" onclick="prevPage()">&#8592;</button>
+<button class="nav-arrow right" id="navRight" onclick="nextPage()">&#8594;</button>
+<button class="notes-toggle" id="notesToggle" onclick="toggleNotes()">N</button>
+<div class="instructor-notes" id="instructorNotes"></div>
+
+<div class="parts-wrapper">
+
+<!-- ========== #1 プロローグ・フック (1min) ========== -->
+<div class="part-page" data-part="0" data-act="pre" data-notes="<strong>1分。読み上げない。</strong>業種スイッチャーで参加者の業種に合わせて切替（事前にどの業種が多いか把握しておく）。3秒画面を見せて『これ、何が問題か分かりますか？』とだけ言って次へ。答えは出さない。<strong>失敗例は『私もやらかしたことがある』として語ると参加者が安心する。</strong>">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">PROLOGUE</div>
+    <h1>これ、何が<br>起きていると思いますか？</h1>
+  </div>
+
+  <div class="industry-switcher">
+    <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
+    <button class="industry-btn" onclick="switchIndustry('B',this)">B. 技術・専門職系</button>
+    <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
+  </div>
+
+  <div class="industry-content active" data-group="A">
+    <div class="highlight-box danger">
+      <p style="margin:0 0 12px;font-weight:600;color:#991b1b">指示文：</p>
+      <p style="margin:0;font-size:22px">「この50ページの介護保険改定通知を要約して」</p>
+    </div>
+    <div class="highlight-box" style="border-color:#cbd5e1;background:#fff">
+      <p style="margin:0 0 12px;font-weight:600;color:#475569">AIの回答：</p>
+      <p style="margin:0;font-size:22px">「利用者負担が <strong style="color:#dc2626">1割から3割</strong> に変更されました…」</p>
+    </div>
+    <div class="highlight-box warning">
+      <p style="margin:0;font-size:21px">※ 原文：「<strong>一定所得以上の利用者の負担が2割から3割になる場合がある</strong>」</p>
+    </div>
+  </div>
+
+  <div class="industry-content" data-group="B">
+    <div class="highlight-box danger">
+      <p style="margin:0 0 12px;font-weight:600;color:#991b1b">指示文：</p>
+      <p style="margin:0;font-size:22px">「この80ページの構造設計指針を要約して」</p>
+    </div>
+    <div class="highlight-box" style="border-color:#cbd5e1;background:#fff">
+      <p style="margin:0 0 12px;font-weight:600;color:#475569">AIの回答：</p>
+      <p style="margin:0;font-size:22px">「鉄筋の被り厚さは<strong style="color:#dc2626">最低40mm</strong>と定められています…」</p>
+    </div>
+    <div class="highlight-box warning">
+      <p style="margin:0;font-size:21px">※ 原文：「<strong>屋外では最低40mm、屋内では最低30mm（部位により異なる）</strong>」</p>
+    </div>
+  </div>
+
+  <div class="industry-content" data-group="C">
+    <div class="highlight-box danger">
+      <p style="margin:0 0 12px;font-weight:600;color:#991b1b">指示文：</p>
+      <p style="margin:0;font-size:22px">「この60ページの業界動向レポートを要約して」</p>
+    </div>
+    <div class="highlight-box" style="border-color:#cbd5e1;background:#fff">
+      <p style="margin:0 0 12px;font-weight:600;color:#475569">AIの回答：</p>
+      <p style="margin:0;font-size:22px">「来店客数が前年比<strong style="color:#dc2626">30%増加</strong>しました…」</p>
+    </div>
+    <div class="highlight-box warning">
+      <p style="margin:0;font-size:21px">※ 原文：「<strong>一部地域・一部業態に限り、来店客数が前年比3%増となった</strong>」</p>
+    </div>
+  </div>
+</div>
+</div>
+
+<!-- ========== #2 前回想起クイズ (2min) ========== -->
+<div class="part-page" data-part="1" data-act="pre" data-notes="<strong>2分。Zoom投票またはMentimeterで全員参加。</strong>挙手ではなく投票で。前回欠席者がいれば結果開示後にチャットで補足。『3要素は手で覚えるレベルで定着させてください』と一言。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">前回の手応えを1問</div>
+    <h1>覚えていますか？</h1>
+    <p class="subtitle">第3回で学んだ「指示文の3要素」</p>
+  </div>
+
+  <h2 style="margin-top:30px">良い指示文に必ず入れる「3要素」とは？</h2>
+  <div class="vote-options">
+    <div class="vote-opt"><strong>A</strong>役割・背景・出力形式</div>
+    <div class="vote-opt"><strong>B</strong>質問・回答・確認</div>
+    <div class="vote-opt"><strong>C</strong>入力・処理・出力</div>
+    <div class="vote-opt"><strong>D</strong>主語・述語・目的語</div>
+  </div>
+
+  <div class="highlight-box info" style="margin-top:30px">
+    <p style="margin:0">投票してください。今日の演習で何度も使います。</p>
+    <p style="margin:10px 0 0;font-size:18px;color:#64748b">※ 第3回欠席の方は直感で選んでOK。正解発表のあと講師が補足します。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== #3 オープニング (3min) ========== -->
+<div class="part-page" data-part="2" data-act="pre" data-notes="<strong>3分。</strong>ペルソナを『今日の主人公』として軽く紹介。各自に『あなたの業種に近い人』を意識してもらう。<strong>『なぜ今日これが必要か』を必ず一言で言う。</strong>例：『読む時間を半分にするのが今日の主目的です』。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">第4回 / 全8回</div>
+    <h1>情報を読み込ませて<br>整理する</h1>
+    <p class="subtitle">「読む時間」を半分にする90分</p>
+  </div>
+
+  <h2>今日の主人公たち</h2>
+  <div class="persona-grid">
+    <div class="persona A">
+      <div class="persona-name">佐藤さん</div>
+      <div class="persona-role">A. 公共・福祉系<br>地域包括支援センター 3年目</div>
+      <div class="persona-task">月曜の地域ケア会議までに<strong>50ページの介護保険改定通知</strong>を要約。委託事業者3社の運営方式も比較したい。</div>
+    </div>
+    <div class="persona B">
+      <div class="persona-name">田中さん</div>
+      <div class="persona-role">B. 技術・専門職系<br>設計事務所 若手主任</div>
+      <div class="persona-task">競合3社の<strong>技術提案書（合計80ページ）</strong>を週末までに整理。外壁仕上げ材3種の比較表も必要。</div>
+    </div>
+    <div class="persona C">
+      <div class="persona-name">鈴木さん</div>
+      <div class="persona-role">C. 顧客対応系<br>小売チェーン本部 販促担当</div>
+      <div class="persona-task">業界動向レポート<strong>60ページ</strong>を来週の販促会議までに要約。集客施策3案を比較したい。</div>
+    </div>
+  </div>
+
+  <h2>今日のゴール</h2>
+  <ol>
+    <li>長い文書をAIに要約させ、目的に応じて<strong>粒度を使い分けられる</strong>（1行／箇条書き／構造化）</li>
+    <li>複数の選択肢を<strong>比較表</strong>にまとめ、判断材料を整理できる</li>
+    <li>要約結果を<strong>原文と照合</strong>し、数字・固有名詞・因果関係を確認できる</li>
+  </ol>
+</div>
+</div>
+
+<!-- ========== #4 手本 I do (8min) ========== -->
+<div class="part-page" data-part="3" data-act="1" data-notes="<strong>8分。画面共有でライブ実演。</strong>思考を声に出す（『いま私はこう思った／だからこう書く／結果はこうなる』）。<strong>大事：失敗例は『私が前にやらかした』として語る。</strong>参加者が『失敗してもいい空気』を作る。3段階の改善過程を必ず順番に見せること。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">第1幕 ① 手本 ― 8分</div>
+    <h1>講師がやってみせます</h1>
+    <p class="subtitle">「ダメ指示文」から「使える指示文」へ</p>
+  </div>
+
+  <div class="compare">
+    <div class="compare-col bad">
+      <h4>段階0：ダメ例</h4>
+      <p style="margin:0">「この記事を要約して」</p>
+      <p style="margin-top:10px;font-size:18px;color:#64748b">→ AIが勝手に長さと形式を決める。会議で使えない要約が出てくる。</p>
+    </div>
+    <div class="compare-col" style="border:3px solid #fbbf24">
+      <h4 style="color:#d97706">段階1：粒度を指定</h4>
+      <p style="margin:0">「箇条書き5項目で、各1行で」</p>
+      <p style="margin-top:10px;font-size:18px;color:#64748b">→ 形式は揃う。でもまだ足りない。</p>
+    </div>
+  </div>
+
+  <div class="compare-col good" style="margin-top:18px;border:3px solid #86efac;border-radius:14px;padding:22px">
+    <h4>段階2：粒度＋安全装置</h4>
+    <p style="margin:0;font-size:22px">「箇条書き5項目で、各1行で。<strong>最後に1文で結論</strong>を、そして<strong>数字は原文ママで残して</strong>」</p>
+    <p style="margin-top:12px;font-size:19px;color:#64748b">→ 形式・要点・正確性の3つが揃う。会議で使える要約になる。</p>
+  </div>
+
+  <div class="highlight-box info" style="margin-top:30px">
+    <p style="margin:0"><strong>覚えてほしい型：</strong><br>① 粒度を指定する（文字数・項目数・形式）<br>② 結論の置き場所を指定する（最初／最後）<br>③ 数字や固有名詞は「原文ママ」と命じる</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== #5 一緒にやる We do (5min) ========== -->
+<div class="part-page" data-part="4" data-act="1" data-notes="<strong>5分。チャット一斉投稿型。</strong>『他にどんな粒度の指定が考えられる？1単語でいいので一斉にチャットへ』と促す。出てきた言葉を講師が画面でリアルタイムに1本の指示文に組み立てて見せる。<strong>沈黙したら『例えば文字数とか』と1つ呼び水を出す。</strong>">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">第1幕 ② 一緒にやる ― 5分</div>
+    <h1>みんなでアイデア出し</h1>
+    <p class="subtitle">他にどんな指定が効きそう？</p>
+  </div>
+
+  <div class="highlight-box success">
+    <p style="margin:0;font-size:24px"><strong>チャットへ一斉投稿してください</strong></p>
+    <p style="margin:14px 0 0">「要約の指示文に入れたら良さそうな指定」を、<strong>1単語でOK</strong>。</p>
+  </div>
+
+  <h3 style="margin-top:30px">例（呼び水・8つ）</h3>
+  <div class="card-grid" style="grid-template-columns:repeat(4,1fr)">
+    <div class="card"><h4>文字数</h4><p>「200字以内」</p></div>
+    <div class="card"><h4>読み手</h4><p>「役員向け」</p></div>
+    <div class="card"><h4>セクション</h4><p>「章ごとに分けて」</p></div>
+    <div class="card"><h4>視点</h4><p>「自社への影響中心」</p></div>
+    <div class="card"><h4>結論の位置</h4><p>「最初／最後」</p></div>
+    <div class="card"><h4>専門用語</h4><p>「噛み砕いて」</p></div>
+    <div class="card"><h4>引用</h4><p>「原文ママを併記」</p></div>
+    <div class="card"><h4>訳語</h4><p>「カタカナを和訳」</p></div>
+  </div>
+
+  <div class="highlight-box info" style="margin-top:30px">
+    <p style="margin:0">皆さんから出た言葉で、いま画面で1本の指示文を組み立てます。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== #6 各自で挑む You do (6min) ========== -->
+<div class="part-page" data-part="5" data-act="1" data-notes="<strong>6分。個人ワーク。</strong>業種別に記事URLを案内（事前にチャット投稿しておく）。Geminiに貼り付けて3粒度試す。<strong>2分後に『次のライブ添削で○○さんお願いします』とWarm Call予告を打つ（事前依頼した協力者を指名）。</strong>巡回はZoomチャットで『うまくいった人スタンプ押して』を促す。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">第1幕 ③ 各自で挑む ― 6分</div>
+    <h1>3粒度で要約してみよう</h1>
+  </div>
+
+  <div class="industry-switcher">
+    <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
+    <button class="industry-btn" onclick="switchIndustry('B',this)">B. 技術・専門職系</button>
+    <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
+  </div>
+
+  <p>講師がチャットに投下した記事を開き、Geminiに本文を貼り付けてください。<br>以下の3パターンを試します。<strong>最低1パターン、余裕があれば3つ全部</strong>でOK。</p>
+
+  <h3>① 1行要約</h3>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の文書を1文で要約してください。「この文書は○○について書かれており、結論は○○です」の形で。数字は原文ママで残してください。</div>
+
+  <h3>② 箇条書き要約</h3>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>同じ文書を、要点を箇条書き5項目で要約してください。各項目は1行で。最も重要な項目を一番上に。最後に1文で全体の結論を添えてください。数字は原文ママで。</div>
+
+  <h3>③ 構造化要約</h3>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>同じ文書を、以下のセクションに分けて構造化してください。
+■ 概要（2行）
+■ 主なポイント（箇条書き）
+■ 具体的なデータや数字（原文ママで）
+■ 自分の業務に関係しそうな点</div>
+
+  <div class="highlight-box warning" style="margin-top:30px">
+    <p style="margin:0">この後、皆さんが作った要約を題材にした<strong>「罠当てクイズ」</strong>をやります。<br>うまくいった人は休憩時間にチャットで一言シェアしてください。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== #7 休憩前の引き (2min) ========== -->
+<div class="part-page" data-part="6" data-act="1" data-notes="<strong>2分。クリフハンガー。</strong>休憩のあと『3つの要約サンプルを並べる。どれが嘘ついてるか当てる』と予告。<strong>「1つだけ」と限定しない</strong>（種明かしで3つとも矛盾していると返すため、限定するとハメ感を生む）。">
+<div class="inner">
+  <div class="cliffhanger">
+    <h2><span class="pulse"></span>ちょっと待ってください</h2>
+    <p style="font-size:28px;margin-top:24px">いま皆さんが作った要約には</p>
+    <p style="font-size:36px;font-weight:700;color:#fbbf24;margin:18px 0">怖い罠が潜んでいます</p>
+    <p style="font-size:24px">原文を1行も読まずに会議に持ち込んだら<br><strong style="color:#fff">事故るレベル</strong>の落とし穴です</p>
+    <hr style="border:none;border-top:1px solid #475569;margin:36px 0">
+    <p style="font-size:22px">休憩のあと、3つの要約サンプルを並べます。</p>
+    <p style="font-size:28px;color:#fff;margin-top:14px"><strong>どれが嘘をついているか、見抜いてください</strong></p>
+  </div>
+</div>
+</div>
+
+<!-- ========== ⏸ 休憩 (5min) ========== -->
+<div class="part-page" data-part="7" data-act="pre" data-notes="<strong>5分休憩。</strong>戻ってくるタイミングで『罠当てクイズ』のサンプルをスライドに用意しておく。チャットでシェアしてくれた人に一言お礼を返す。">
+<div class="inner">
+  <div class="section-header" style="padding:80px 0">
+    <p style="font-size:64px;margin-bottom:18px">&#x2615;</p>
+    <h1>休憩タイム</h1>
+    <p class="subtitle">5分間</p>
+    <p style="margin-top:30px;color:#64748b;font-size:22px">うまくいった要約があれば<br>チャットで一言シェアしてください</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== #8 罠の正体・ピア投票 (10min) ========== -->
+<div class="part-page" data-part="8" data-act="2" data-notes="<strong>10分・4段階で進める。</strong> ①個人投票1分『どれが原文と矛盾？1つ選んで』 ②ペアで根拠共有2分（ブレイクアウト2人組） ③再投票1分 ④答え合わせ6分『実は3つとも矛盾している』が種明かし。<strong>『数字・固有名詞・因果関係』の3点照合を必ずまとめる。</strong>">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">第2幕 ① 罠の正体 ― 10分</div>
+    <h1>どれが嘘をついている？</h1>
+    <p class="subtitle">同じ原文に対する3つの要約サンプル</p>
+  </div>
+
+  <div class="highlight-box info">
+    <p style="margin:0;font-size:21px"><strong>原文の要旨：</strong>「介護保険制度の改定により、<strong>一定所得以上</strong>の利用者の自己負担割合が、これまで2割だった層のうち一部について<strong>3割</strong>に引き上げられる場合がある」</p>
+  </div>
+
+  <div class="summary-sample A">
+    <span class="label">要約A</span>
+    介護保険制度が改定され、利用者の負担が1割から3割に引き上げられました。すべての利用者が対象となります。
+  </div>
+  <div class="summary-sample B">
+    <span class="label">要約B</span>
+    介護保険制度の改定により、自己負担が変更されました。所得によって負担が変わる仕組みになります。
+  </div>
+  <div class="summary-sample C">
+    <span class="label">要約C</span>
+    介護保険の自己負担が3割に上がるため、利用者の所得が増えることになりました。経済的影響が懸念されます。
+  </div>
+
+  <h2>進め方</h2>
+  <div class="flow-steps">
+    <div class="flow-item"><div class="flow-num">1</div><strong>個人投票（1分）：</strong>原文と矛盾していると思うものを<strong>すべて</strong>選んで（複数可）</div>
+    <div class="flow-item"><div class="flow-num">2</div><strong>ペア議論（2分）：</strong>ブレイクアウトで根拠を共有</div>
+    <div class="flow-item"><div class="flow-num">3</div><strong>再投票（1分）：</strong>もう一度選び直す</div>
+    <div class="flow-item"><div class="flow-num">4</div><strong>答え合わせ：</strong>正解を発表します（実は全部に違う種類の歪みが…）</div>
+  </div>
+
+  <div class="highlight-box warning" style="margin-top:30px">
+    <p style="margin:0"><strong>必ず照合する3点：</strong> 数字 ／ 固有名詞 ／ 因果関係</p>
+    <p style="margin-top:10px;font-size:20px">AIは「それっぽくまとめる」のは得意だが、この3点を歪めることがある。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== #9 比較表選手権 (15min) ========== -->
+<div class="part-page" data-part="9" data-act="2" data-notes="<strong>15分・最大の山場。チーム編成は業種別。</strong>同じ業種の参加者を同じチームに集める（A業種が多ければA1・A2のように分割）。お題は所属業種で固定。①ブレイクアウト4分で指示文1本完成 ②全体に戻す1分 ③各チームの指示文をAIに投げて結果を全員で見る5分 ④AI出力の品質で投票5分。<strong>勝敗は『人vs人』ではない。AI出力の質で決まる。</strong>負けチームにも『この観点を足せばよかった』が見えるよう講評する。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">第2幕 ② 比較表選手権 ― 15分</div>
+    <h1>チーム対抗：<br>最強の比較表指示文</h1>
+    <p class="subtitle">勝敗はAI出力の質で決まる</p>
+  </div>
+
+  <div class="highlight-box info">
+    <p style="margin:0;font-size:21px"><strong>チーム編成：同じ業種ごとに集まります。</strong>お題は所属業種のものを使います。</p>
+  </div>
+
+  <h2>ルール</h2>
+  <div class="flow-steps">
+    <div class="flow-item"><div class="flow-num">1</div><strong>ブレイクアウト4分：</strong>チームで指示文を1本に絞る</div>
+    <div class="flow-item"><div class="flow-num">2</div><strong>全体に戻す（1分）</strong></div>
+    <div class="flow-item"><div class="flow-num">3</div><strong>講師がAIに投げる（5分）：</strong>各チームの指示文を順番にAIに投げ、結果を全員で見る</div>
+    <div class="flow-item"><div class="flow-num">4</div><strong>品質投票（5分）：</strong>AIの出した表が一番使えそうなチームへ投票</div>
+  </div>
+
+  <h2>お題（業種別）</h2>
+  <div class="industry-switcher">
+    <button class="industry-btn active" onclick="switchIndustry('A',this)">A. 公共・福祉系</button>
+    <button class="industry-btn" onclick="switchIndustry('B',this)">B. 技術・専門職系</button>
+    <button class="industry-btn" onclick="switchIndustry('C',this)">C. 顧客対応系</button>
+  </div>
+
+  <div class="industry-content active" data-group="A">
+    <div class="team-card">
+      <h4>佐藤さんの依頼</h4>
+      <p style="font-size:21px">地域サロンの運営方式3つを比較する表を作ってほしい。<br>選択肢：①直営 ②ボランティア委託 ③共同運営</p>
+    </div>
+  </div>
+  <div class="industry-content" data-group="B">
+    <div class="team-card">
+      <h4>田中さんの依頼</h4>
+      <p style="font-size:21px">外壁仕上げ材3種を比較する表を作ってほしい。<br>選択肢：①タイル ②吹き付け塗装 ③サイディング</p>
+    </div>
+  </div>
+  <div class="industry-content" data-group="C">
+    <div class="team-card">
+      <h4>鈴木さんの依頼</h4>
+      <p style="font-size:21px">集客施策3つを比較する表を作ってほしい。<br>選択肢：①SNS広告 ②チラシ配布 ③ポイント制度</p>
+    </div>
+  </div>
+
+  <h3>判定基準（AI出力の質）</h3>
+  <ul>
+    <li><strong>観点の網羅性</strong>：判断に必要な観点が揃っているか</li>
+    <li><strong>具体性</strong>：◎○△だけでなく数字や根拠があるか</li>
+    <li><strong>読みやすさ</strong>：意思決定者が一目で判断できるか</li>
+  </ul>
+</div>
+</div>
+
+<!-- ========== #10 ペアワーク・自分の業務に転用 (10min) ========== -->
+<div class="part-page" data-part="10" data-act="2" data-notes="<strong>10分。Think-Pair-Share。</strong>勝者チームの指示文の『型』を抽出して画面に残す。ペア（2名）に分かれて自分の業務に当てはめる。①4分自分で書く ②1分相手に説明 ③交代5分。<strong>ペアは固定（毎回同じペア）にすると摩擦が小さい。</strong>">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">第2幕 ③ 自分の業務に持ち込む ― 10分</div>
+    <h1>勝者の型を<br>自分の業務に</h1>
+    <p class="subtitle" style="margin-top:14px;color:#7c3aed">ここでは指示文を<strong>書くだけ</strong>。AIに投げるのは後ほど（#12）</p>
+  </div>
+
+  <div class="highlight-box success">
+    <p style="margin:0;font-size:22px"><strong>勝者チームの指示文から抽出した型：</strong></p>
+    <p style="margin-top:14px;font-size:21px">「<strong>○つの選択肢</strong>を、<strong>○つの観点</strong>で、<strong>表形式</strong>で、各セルに<strong>具体的な数字や根拠</strong>を入れて、最後に<strong>総合評価</strong>を添えて」</p>
+  </div>
+
+  <h2>ペアで進めます</h2>
+  <div class="flow-steps">
+    <div class="flow-item"><div class="flow-num">1</div><strong>4分：</strong>自分の業務テーマで型を当てはめて指示文を作る</div>
+    <div class="flow-item"><div class="flow-num">2</div><strong>1分：</strong>相手に「何の比較をどう書いたか」を説明</div>
+    <div class="flow-item"><div class="flow-num">3</div><strong>5分：</strong>役割を交代して同じ流れ</div>
+  </div>
+
+  <h3>テーマ例</h3>
+  <ul>
+    <li>業務システム3種の比較</li>
+    <li>外注先候補3社の比較</li>
+    <li>研修プランA/B/Cの比較</li>
+    <li>来期の販促施策3案の比較</li>
+  </ul>
+
+  <div class="highlight-box info" style="margin-top:30px">
+    <p style="margin:0">いま考えた指示文は、ブラウザに残しておいてください。<br>次のパートで誰かの指示文をライブで添削します。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== #11 ライブ添削・Warm Call (8min) ========== -->
+<div class="part-page" data-part="11" data-act="2" data-notes="<strong>8分。事前指名（#6で予告した人）の指示文を画面共有してもらう。</strong>『○○さん、全員代表でケーススタディに協力してくれていることを伝える』空気作りが講師の役目。①講師がAIに投げて結果を見る2分 ②改善点を口で出す3分 ③改善後にもう一度AIに投げて差分を見る3分。<strong>指名された人を絶対に小バカにしない。</strong>もし通信トラブルなら手元のサンプル指示文で代替。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">第2幕 ④ ライブ添削 ― 8分</div>
+    <h1>みんなで添削してみよう</h1>
+    <p class="subtitle">代表者の指示文を全員で磨く</p>
+  </div>
+
+  <div class="highlight-box info">
+    <p style="margin:0;font-size:22px">先ほど予告した<strong>○○さん</strong>の指示文を画面共有してもらいます。</p>
+    <p style="margin-top:14px;font-size:20px">これは「悪い指示文を晒す」ではなく、<strong>全員のためのケーススタディ</strong>です。<br>本人が代表で協力してくれることに感謝。</p>
+  </div>
+
+  <h2>進め方</h2>
+  <div class="flow-steps">
+    <div class="flow-item"><div class="flow-num">1</div><strong>2分：</strong>そのままAIに投げて結果を全員で見る</div>
+    <div class="flow-item"><div class="flow-num">2</div><strong>3分：</strong>講師が「ここを足すと変わる」を口で提案</div>
+    <div class="flow-item"><div class="flow-num">3</div><strong>3分：</strong>改善後にもう一度AIに投げて差分を見る</div>
+  </div>
+
+  <h3 style="margin-top:30px">添削の観点</h3>
+  <ul>
+    <li>粒度（文字数・項目数・形式）が指定されているか</li>
+    <li>結論の置き場所が指示されているか</li>
+    <li>「数字・固有名詞は原文ママ」が入っているか</li>
+    <li>誰向けか・何を判断したいかが伝わっているか</li>
+  </ul>
+</div>
+</div>
+
+<!-- ========== #12 自業務で実践 (8min) ========== -->
+<div class="part-page" data-part="12" data-act="3" data-notes="<strong>8分。個人ワーク。</strong>自分の業務資料で要約 or 比較表のどちらかを必ず実行する。<strong>第1回で学んだOK/NG3段階ルールを画面に再掲。個人情報・機密情報は伏せて入力。</strong>巡回はチャットで『使えそうな結果が出たら一言』と促す。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">第3幕 ① 自業務で実践 ― 8分</div>
+    <h1>自分の仕事で<br>使ってみよう</h1>
+    <p class="subtitle" style="margin-top:14px;color:#7c3aed">ここでは<strong>実際にAIに投げて結果を出す</strong>ところまで。#10で書いた指示文を使ってOK</p>
+  </div>
+
+  <p>以下のどちらか1つを必ず実行してください。</p>
+
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card" style="border-top:4px solid #22c55e">
+      <h4>選択肢A：要約</h4>
+      <p>最近受け取った長い文書（メール／通知／議事録）を、今日の3粒度のいずれかで要約する</p>
+    </div>
+    <div class="card" style="border-top:4px solid #3b82f6">
+      <h4>選択肢B：比較表</h4>
+      <p>判断に迷っている3つの選択肢（取引先／システム／施策）を、今日の型で比較表にする</p>
+    </div>
+  </div>
+
+  <h3>テンプレ（コピーして使える）</h3>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>以下の文書を要約してください。
+- まず1行で結論を述べてください
+- 次に要点を箇条書き3つでまとめてください
+- 数字や固有名詞は原文ママで残してください
+- 最後に「自分がやるべきこと」があれば教えてください
+
+（ここに文書を貼り付ける）</div>
+
+  <div class="highlight-box danger" style="margin-top:30px">
+    <p style="margin:0;font-weight:700;color:#991b1b">⚠ 第1回で学んだOK/NG3段階を必ず守ってください</p>
+    <p style="margin-top:10px;font-size:20px">個人情報・取引先名・契約金額などは<strong>伏せ字に置き換えてから</strong>AIに入力。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== #13 出口チケット (4min) ========== -->
+<div class="part-page" data-part="13" data-act="3" data-notes="<strong>4分。フォーム or チャット。</strong>3問に答えてもらう。<strong>『次回までに試したいテーマ』は次回冒頭で講師が回収する</strong>と告げる（クリフハンガーへの仕込み）。回答が集まったら2-3名分を画面に出して読み上げると当事者感が増す。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">第3幕 ② 出口チケット ― 4分</div>
+    <h1>今日を1分で<br>振り返ってください</h1>
+  </div>
+
+  <div class="highlight-box info">
+    <p style="margin:0;font-size:22px"><strong>講師がチャットに投下したフォームに回答してください。</strong><br>3問だけ。1分で書けます。</p>
+  </div>
+
+  <h2>3つの質問</h2>
+  <div class="flow-steps">
+    <div class="flow-item"><div class="flow-num">1</div><strong>今日いちばん「使える」と思った技</strong>を1つ</div>
+    <div class="flow-item"><div class="flow-num">2</div><strong>明日の自分の業務で試すこと</strong>を1つ</div>
+    <div class="flow-item"><div class="flow-num">3</div><strong>次回までに試したいテーマ</strong>を1つ</div>
+  </div>
+
+  <div class="highlight-box success" style="margin-top:30px">
+    <p style="margin:0">3問目に書いたテーマは、<strong>次回の冒頭で講師が回収します。</strong><br>本気で書いてくれた人ほど、次回が面白くなります。</p>
+  </div>
+</div>
+</div>
+
+<!-- ========== #14 次回への引き (3min) ========== -->
+<div class="part-page" data-part="14" data-act="3" data-notes="<strong>3分。クリフハンガーで終える。</strong>佐藤さん／田中さん／鈴木さんの『次の壁』を見せて、それが今日の方法では解けないことを示す。<strong>挙手ではなくチャット一斉投稿（○×）で全員を巻き込む</strong>（オンラインは挙手反応が薄いため）。『お疲れさまでした』だけで終わらせない。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">EPILOGUE ― 3分</div>
+    <h1>でも、まだ続きがあります</h1>
+  </div>
+
+  <div class="highlight-box" style="border-color:#cbd5e1;background:#fff">
+    <p style="margin:0;font-size:22px">今日の方法は<strong>「1つの文書を読ませる」</strong>ものでした。<br>でも──</p>
+  </div>
+
+  <div class="persona-grid" style="margin-top:30px">
+    <div class="persona A">
+      <div class="persona-name">佐藤さん</div>
+      <div class="persona-task">机にはまだ<strong>5冊の参考通知</strong>が積まれている</div>
+    </div>
+    <div class="persona B">
+      <div class="persona-name">田中さん</div>
+      <div class="persona-task"><strong>競合10社分</strong>を一気に比較したい</div>
+    </div>
+    <div class="persona C">
+      <div class="persona-name">鈴木さん</div>
+      <div class="persona-task"><strong>過去3年分の販促レポート</strong>を一気に読ませたい</div>
+    </div>
+  </div>
+
+  <div class="cliffhanger" style="margin-top:40px">
+    <p style="font-size:26px">同じ方法でいけると思いますか？</p>
+    <p style="font-size:32px;color:#fbbf24;font-weight:700;margin-top:18px">チャットに「○」か「×」を一斉投稿</p>
+    <p style="font-size:18px;color:#94a3b8;margin-top:8px">3秒後にせーので一斉に</p>
+    <hr style="border:none;border-top:1px solid #475569;margin:30px 0">
+    <p style="font-size:22px">実は、限界が来ます。</p>
+    <p style="font-size:28px;color:#fff;margin-top:14px">次回は<strong>NotebookLM</strong>という別の道具で、<br><strong style="color:#fbbf24">複数の資料をまとめて読ませて<br>出典付きで答えさせる技</strong>を学びます。</p>
+    <p style="font-size:20px;margin-top:24px">出口チケットに書いた「次回までに試したいテーマ」、<br><strong>3つ以上の資料</strong>を集めておいてください。</p>
+  </div>
+
+  <p style="text-align:center;margin-top:40px;font-size:30px">お疲れさまでした！</p>
+</div>
+</div>
+
+</div>
+
+<div class="keyboard-hint">← → パート移動 ／ N 講師メモ ／ Space タイマー ／ F 全画面</div>
+
+<script>
+const PARTS=[
+  {name:'プロローグ：フック',minutes:1,type:'lecture'},
+  {name:'前回想起クイズ',minutes:2,type:'vote'},
+  {name:'今日のゴール',minutes:3,type:'lecture'},
+  {name:'第1幕①：手本（I do）',minutes:8,type:'lecture'},
+  {name:'第1幕②：一緒に（We do）',minutes:5,type:'handson'},
+  {name:'第1幕③：各自で（You do）',minutes:6,type:'handson'},
+  {name:'休憩前の引き',minutes:2,type:'lecture'},
+  {name:'休憩',minutes:5,type:'break'},
+  {name:'第2幕①：罠の正体（ピア投票）',minutes:10,type:'vote'},
+  {name:'第2幕②：比較表選手権',minutes:15,type:'team'},
+  {name:'第2幕③：自分の業務に',minutes:10,type:'handson'},
+  {name:'第2幕④：ライブ添削',minutes:8,type:'handson'},
+  {name:'第3幕①：自業務で実践',minutes:8,type:'handson'},
+  {name:'第3幕②：出口チケット',minutes:4,type:'review'},
+  {name:'エピローグ：次回への引き',minutes:3,type:'review'}
+];
+const ACT_LABELS={pre:'序',1:'第1幕',2:'第2幕',3:'第3幕'};
+const ACT_CLASS={pre:'act-pre',1:'act-1',2:'act-2',3:'act-3'};
+function switchIndustry(g,b){const wrap=b.closest('.inner');wrap.querySelectorAll('.industry-btn').forEach(x=>x.classList.remove('active'));b.classList.add('active');wrap.querySelectorAll('.industry-content').forEach(c=>{c.classList.toggle('active',c.dataset.group===g)})}
+const pageLog=[];let pageEnterTime=Date.now();
+function logPageTransition(f,t){const n=Date.now();pageLog.push({from:f+1,to:t+1,elapsed:Math.round(totalSeconds),dwellMs:n-pageEnterTime,timestamp:new Date().toISOString()});pageEnterTime=n}
+function exportLog(){const s=PARTS.map((p,i)=>{const e=pageLog.filter(l=>l.from===i+1);const d=e.reduce((a,b)=>a+b.dwellMs,0);return{part:p.name,planned:p.minutes+'分',actual:Math.round(d/60000)+'分'}});const j=JSON.stringify({summary:s,detail:pageLog},null,2);const b=new Blob([j],{type:'application/json'});const a=document.createElement('a');a.href=URL.createObjectURL(b);a.download='session-04-org-log-'+new Date().toISOString().slice(0,10)+'.json';a.click()}
+let currentPage=0,timerRunning=false,totalSeconds=0,partSeconds=0,timerInterval=null,notesVisible=false;
+const pages=document.querySelectorAll('.part-page');const totalPages=pages.length;document.getElementById('pageTotal').textContent=totalPages;
+function showPage(i){if(i<0||i>=totalPages)return;logPageTransition(currentPage,i);pages.forEach((p,x)=>{p.classList.remove('active','prev');if(x===i)p.classList.add('active');else if(x<i)p.classList.add('prev')});pages[i].scrollTop=0;currentPage=i;document.getElementById('pageNum').textContent=i+1;document.getElementById('progressFill').style.width=((i+1)/totalPages*100)+'%';document.getElementById('navLeft').disabled=i===0;document.getElementById('navRight').disabled=i===totalPages-1;updatePartIndicator();updateActTag();updateNotes()}
+function nextPage(){showPage(currentPage+1)}function prevPage(){showPage(currentPage-1)}
+function updatePartIndicator(){const pi=parseInt(pages[currentPage].dataset.part)||0;const p=PARTS[pi];const ind=document.getElementById('partIndicator');const m={lecture:'part-lecture',handson:'part-handson',break:'part-break',review:'part-review',vote:'part-vote',team:'part-team'};ind.className='part-indicator '+m[p.type];document.getElementById('partName').textContent=p.name;resetPartTimer(p.minutes)}
+function updateActTag(){const a=pages[currentPage].dataset.act||'pre';const tag=document.getElementById('actTag');tag.className='act-tag '+(ACT_CLASS[a]||'act-pre');tag.textContent=ACT_LABELS[a]||'序'}
+let cpm=5;function resetPartTimer(m){cpm=m;partSeconds=m*60;updatePartTimeDisplay()}
+function toggleTimer(){if(timerRunning){clearInterval(timerInterval);timerRunning=false;document.getElementById('timerToggle').textContent='Start';document.getElementById('timerToggle').classList.remove('active')}else{timerInterval=setInterval(tick,1000);timerRunning=true;document.getElementById('timerToggle').textContent='Pause';document.getElementById('timerToggle').classList.add('active')}}
+function tick(){totalSeconds++;partSeconds--;updateTotalTimeDisplay();updatePartTimeDisplay()}
+function updateTotalTimeDisplay(){const m=Math.floor(totalSeconds/60),s=totalSeconds%60;document.getElementById('totalTime').textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0')}
+function updatePartTimeDisplay(){const el=document.getElementById('partTime');if(partSeconds<=0){const o=Math.abs(partSeconds),m=Math.floor(o/60),s=o%60;el.textContent='-'+String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value overtime'}else if(partSeconds<=60){const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value warning'}else{const m=Math.floor(partSeconds/60),s=partSeconds%60;el.textContent=String(m).padStart(2,'0')+':'+String(s).padStart(2,'0');el.className='timer-value'}}
+function updateNotes(){document.getElementById('instructorNotes').innerHTML=pages[currentPage].dataset.notes||''}
+function toggleNotes(){notesVisible=!notesVisible;document.getElementById('instructorNotes').classList.toggle('visible',notesVisible);document.getElementById('notesToggle').classList.toggle('active',notesVisible)}
+function copyText(btn){const t=btn.parentElement.textContent.replace(/コピー(済み ✓)?/g,'').trim();navigator.clipboard.writeText(t).then(()=>{btn.textContent='コピー済み ✓';btn.classList.add('copied');setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('copied')},1500)})}
+function toggleFullscreen(){if(!document.fullscreenElement)document.documentElement.requestFullscreen().catch(()=>{});else document.exitFullscreen()}
+document.addEventListener('fullscreenchange',()=>{document.getElementById('fsBtn').innerHTML=document.fullscreenElement?'&#x26F6; 終了':'&#x26F6; 全画面'});
+document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'||e.key==='PageDown'){e.preventDefault();nextPage()}else if(e.key==='ArrowLeft'||e.key==='PageUp'){e.preventDefault();prevPage()}else if(e.key==='n'||e.key==='N')toggleNotes();else if(e.key===' '){e.preventDefault();toggleTimer()}else if(e.key==='f'||e.key==='F')toggleFullscreen();else if(e.key==='Home'){e.preventDefault();showPage(0)}else if(e.key==='End'){e.preventDefault();showPage(totalPages-1)}else if(e.key==='l'||e.key==='L')exportLog()});
+showPage(0);
+</script>
+</body>
+</html>
