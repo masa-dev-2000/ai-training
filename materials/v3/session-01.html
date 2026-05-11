@@ -31,7 +31,9 @@ li strong,p strong{color:#1e293b}
 .box.warn{border-left:4px solid #fbbf24;background:#fffbeb}
 .box.danger{border-left:4px solid #f87171;background:#fef2f2}
 .box.calm{background:#f8fafc}
-.try{background:#fff;border:1px dashed #94a3b8;border-radius:10px;padding:18px 22px;margin:14px 0;font-size:17px;color:#1e293b;font-family:ui-monospace,'Hiragino Kaku Gothic ProN',monospace}
+.try{background:#fff;border:1px dashed #94a3b8;border-radius:10px;padding:18px 22px;margin:14px 0;font-size:17px;color:#1e293b;font-family:ui-monospace,'Hiragino Kaku Gothic ProN',monospace;position:relative;white-space:pre-wrap}
+.cp{position:absolute;top:8px;right:8px;padding:4px 10px;border:1px solid #cbd5e1;background:#f8fafc;color:#64748b;cursor:pointer;font-size:11px;border-radius:4px;font-family:inherit}
+.cp.done{background:#dcfce7;border-color:#22c55e;color:#16a34a}
 .note{font-size:14px;color:#94a3b8;margin-top:8px}
 .nav{position:fixed;top:50%;width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transform:translateY(-50%);z-index:5}
 .nav:hover{background:#f1f5f9;color:#1e293b}.nav.l{left:14px}.nav.r{right:14px}.nav:disabled{opacity:.2;cursor:default}
@@ -48,7 +50,7 @@ li strong,p strong{color:#1e293b}
 <div class="bar">
   <div><a href="index.html">←</a> <span class="session">第1回</span> AIとは何か・触ってみる</div>
   <div class="timer"><span id="elapsed">00:00</span><button id="tBtn">▶</button></div>
-  <div class="count"><span id="cur">1</span>/<span id="tot">7</span></div>
+  <div class="count"><span id="cur">1</span>/<span id="tot">8</span></div>
 </div>
 
 <div class="wrap">
@@ -77,22 +79,36 @@ li strong,p strong{color:#1e293b}
 <div class="slide">
 <div class="inner">
 <div class="tag">PHILOSOPHY</div>
-<h1>AIで2つの方向に伸びる</h1>
-<p>AIの使い方には大きく2方向あります。両方知っておくことで、自分の使い方を選べるようになります。</p>
+<h1>AIで2つの方向に動く</h1>
+<p>AIの使い方には大きく2方向あります。両方を意識すると、自分の使い方を選べるようになります。</p>
 
 <div class="box accent">
-<strong>マイナス → 0</strong><br>
-面倒な作業を減らす方向。書類の下書き、長文の要約、メールの確認など、人間でなくてもできる作業をAIに渡す。
+<strong>マイナスを減らす</strong><br>
+面倒なこと、時間ばかり食う作業を減らす方向。完全にゼロにはならないけれど、小さくなる。
 </div>
 
 <div class="box accent">
-<strong>0 → 100</strong><br>
-自分の持っている価値を伸ばす方向。判断を深める、考えを広げる、視点を増やす。AIは壁打ち相手や調査の伴走者になる。
+<strong>プラスを増やす</strong><br>
+すでに自分が持っている力を伸ばす方向。判断の解像度を上げたり、できなかったことができるようになったりする。
 </div>
 
-<h3>気をつけたいこと</h3>
-<p>創造的な仕事をAIに丸ごと投げて、出てきたものをそのまま使うのは「自分でなくてもいい」状態を作ること。これはAIに自分の価値を下げてもらう使い方になってしまう。</p>
-<p>AIを「自分の価値を高める」方向で使う。これがこのシリーズで一貫してお伝えしたいことです。</p>
+<h3>講師の例（マイナスを減らした側）</h3>
+<ul>
+  <li>調べものにかかっていた時間が減った</li>
+  <li>Excelの数式を書くときに、検索して悩む時間が消えた</li>
+  <li>メールや文章の下書きで止まる時間が短くなった</li>
+</ul>
+
+<h3>講師の例（プラスを増やした側）</h3>
+<ul>
+  <li>悩んだときに別の視点を出してもらえるので、判断しやすくなった</li>
+  <li>プログラミングの速度が上がり、ちょっとしたサービスが作れるようになった</li>
+  <li>画像生成が使えるようになり、資料の見せ方の幅が広がった</li>
+</ul>
+
+<div class="box warn">
+気をつけたいのは、創造的な仕事をAIに丸ごと投げてそのまま出すこと。これは「自分でなくてもいい」状態を自分で作ること。AIに自分の価値を下げてもらう使い方になってしまう。
+</div>
 </div>
 </div>
 
@@ -102,20 +118,15 @@ li strong,p strong{color:#1e293b}
 <h1>AIに自己紹介してもらう</h1>
 <p>まずは雑談から。AIに「あなたは何者ですか」と聞いてみます。返ってきた言葉から、AIがどんな存在として振る舞うかが見えます。</p>
 
-<h3>Geminiを開いて、こう聞いてみてください</h3>
-<div class="try">
-あなたは何ができますか。得意なことと、苦手なことを正直に教えてください。
-</div>
+<h3>Geminiを開いて、まずこれを送ってみてください</h3>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>あなたは何ができますか。得意なことと、苦手なことを正直に教えてください。</div>
 
-<h3>続けて聞いてもいいこと</h3>
-<ul>
-  <li>「あなたの答えは常に正しいですか」</li>
-  <li>「私が知らない情報を、あなたが知っていることはありますか」</li>
-  <li>「私の代わりに判断するべきではないことは何ですか」</li>
-</ul>
+<h3>続けて聞いてみてください</h3>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>あなたの答えは常に正しいですか。間違えるとしたら、どんな時ですか。</div>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>私の代わりに判断するべきではないことは、どんなことですか。</div>
 
 <div class="box calm">
-<strong>狙い</strong>：「AIは魔法の道具」でも「ただの検索エンジン」でもない、その中間の何かであることを肌で感じる。
+返ってきた答えを、隣の人や全体チャットに一言シェアしてください。「思ったより素直」「妙に丁寧」など、印象だけで構いません。
 </div>
 </div>
 </div>
@@ -123,27 +134,22 @@ li strong,p strong{color:#1e293b}
 <div class="slide">
 <div class="inner">
 <div class="tag">触ってみる ②</div>
-<h1>自分の質問を投げてみる</h1>
-<p>次は自分が気になっていることを聞いてみます。業務でも、私生活でも、なんでも構いません。</p>
+<h1>とりあえず1つ聞いてみる</h1>
+<p>何でも構いません。聞きたいことが思い浮かばないなら、下のテンプレから1つ選んで、自分の状況に置き換えて送ってみてください。</p>
 
-<h3>例えばこんな質問から</h3>
-<ul>
-  <li>最近気になっているニュースについて要点を教えて</li>
-  <li>ちょっとした悩みに対する意見が欲しい</li>
-  <li>知らない用語を分かりやすく説明してほしい</li>
-  <li>自分の知っていることが本当に正しいか確認したい</li>
-</ul>
+<h3>選べるテンプレ（コピーして◯◯を埋める）</h3>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>「◯◯」って最近よく聞くんですが、どういう意味ですか。素人にも分かるように説明してください。</div>
 
-<h3>感じてほしいこと</h3>
-<ul>
-  <li>思ったより返ってくる／思ったより的外れ、どちらでもOK</li>
-  <li>「もう少しこう聞けばよかった」の感覚</li>
-  <li>返ってきた答えを鵜呑みにするかどうかの自分の判断</li>
-</ul>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>今度◯◯することになりました。どんなことに気をつけたらいいですか。</div>
 
-<div class="box warn">
-ここで「特に質問が浮かばない」場合も、それは普通のことです。次回（第2回）で、AIに自分の状況を整理してもらう体験をします。
-</div>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>◯◯と◯◯で迷っています。それぞれのいいところと悪いところを教えてください。</div>
+
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>仕事で◯◯をやらないといけないんですが、どこから手をつければいいか分かりません。整理する手伝いをしてください。</div>
+
+<h3>送ったあとに、もう一手</h3>
+<p>返ってきた答えを読んで、こう続けてみます。</p>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>もう少し私の状況に合わせて教えてください。私は◯◯です。</div>
+<p>「同じことを聞き方を変えて尋ねると、答えがどう変わるか」を体感するのがこのパートの肝です。</p>
 </div>
 </div>
 
@@ -169,52 +175,71 @@ li strong,p strong{color:#1e293b}
 </div>
 
 <p>判断に迷ったら、自社のセキュリティ担当に確認してください。「入れていいか分からないものは入れない」が原則です。</p>
+
+<h3>講師の失敗事例（口頭で語る）</h3>
+<p style="font-size:15px;color:#94a3b8"><em>例：固有名詞を伏せたつもりで残っていた事例 / 学習設定を切り忘れた事例 / 同僚が機密入りで使っていたのを止めた話 ―― 後で実例をヒアリングして埋める</em></p>
 </div>
 </div>
 
 <div class="slide">
 <div class="inner">
-<div class="tag">講師の経験から</div>
-<h1>AIの得意なこと・苦手なこと</h1>
-<p>このパートは講師の現場経験から話します。教科書的な説明ではなく、「実際に使ってみてどうだったか」をお伝えします。</p>
+<div class="tag">体験</div>
+<h1>AIに嘘をつかせてみる</h1>
+<p>AIは「それっぽい嘘」を返すことがあります。狙って起こせるシーンで、一度体験しておきます。</p>
 
-<h3>得意（私の感覚で）</h3>
-<ul>
-  <li>長い文章の要約、構造化</li>
-  <li>たたき台を作ること（メール、報告書、企画）</li>
-  <li>視点を増やすこと（自分以外の立場からの意見）</li>
-  <li>知らない分野の概要を掴むこと</li>
-</ul>
+<h3>地元の固有情報を聞く</h3>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>◯◯市の◯◯町にある「△△」というお店について、教えてください。営業時間や評判も知りたいです。</div>
+<p style="font-size:15px;color:#64748b">（自分の地元のマイナーな店名や、本当は存在しない店名を入れて試してみる）</p>
 
-<h3>苦手・気をつけること</h3>
-<ul>
-  <li>具体的な数字・固有名詞は間違えることがある</li>
-  <li>「それっぽい」嘘を返すことがある（出典のない情報、存在しない引用）</li>
-  <li>最終的な判断・責任は人間に残る</li>
-</ul>
+<h3>具体的な数字を聞く</h3>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>2024年の◯◯業界の市場規模を、出典付きで教えてください。</div>
+<p style="font-size:15px;color:#64748b">（マイナーな業界・分野ほど、それっぽい数字を作って返してくることが多い）</p>
 
-<div class="box calm">
-講師の失敗事例：<em>（このスペースに実際の失敗談を入れる予定。今は空欄）</em>
+<div class="box warn">
+返ってきた回答を、必ず別の方法で確認してみてください。検索する、別のAIに聞く、出典を辿る。「AIが言ったから正しい」は通用しません。
 </div>
+</div>
+</div>
+
+<div class="slide">
+<div class="inner">
+<div class="tag">整理</div>
+<h1>AIの得意・苦手</h1>
+<p>得意・苦手には理由があります。AIは「大量の文章を学習して、次に来る言葉を確率で選ぶ」道具です。だから、確率が効く場面では強く、効かない場面では弱い。</p>
+
+<h3>得意</h3>
+<ul>
+  <li><strong>長い文章を整える</strong>（要約・構造化・言い換え）<br><span style="font-size:15px;color:#94a3b8">→ 文章のパターンが大量にあるから、近い形をすぐ出せる</span></li>
+  <li><strong>たたき台を作る</strong>（メール、報告書、企画案）<br><span style="font-size:15px;color:#94a3b8">→ 一般的な型は学習済み。0から書くより速い</span></li>
+  <li><strong>視点を増やす</strong>（別の立場からの意見、反対意見）<br><span style="font-size:15px;color:#94a3b8">→ いろんな立場の文章を見ているから、なりきりが上手い</span></li>
+</ul>
+
+<h3>苦手</h3>
+<ul>
+  <li><strong>具体的な数字・固有名詞</strong><br><span style="font-size:15px;color:#94a3b8">→ 確率で選ぶので、それっぽい間違いを返すことがある</span></li>
+  <li><strong>最新の出来事</strong><br><span style="font-size:15px;color:#94a3b8">→ 訓練データの時点までしか知らない</span></li>
+  <li><strong>あなたの状況に固有のこと</strong><br><span style="font-size:15px;color:#94a3b8">→ あなたの会社・あなたの家族のことは知らない。教えないと使えない</span></li>
+</ul>
 </div>
 </div>
 
 <div class="slide">
 <div class="inner">
 <div class="tag">振り返り</div>
-<h1>今日の気づきを1つだけ</h1>
-<p>今日90分でAIに触れて、感じたことを1つだけ言葉にしてください。完璧に言語化しようとしなくていいので、印象に残ったものを。</p>
+<h1>今日を1分で振り返る</h1>
+<p>チャット欄に、今日触ってみて感じたことを一言ずつ投稿してください。短くて構いません。指名はしません。</p>
 
-<h3>共有用の問い（チャットで一斉投稿）</h3>
-<ul>
-  <li>触ってみて、思ったより◯◯だった</li>
-  <li>もう一度使うとしたら、◯◯に使ってみたい</li>
-  <li>不安に感じたのは◯◯</li>
-</ul>
+<h3>投稿の型（コピーして埋める）</h3>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>触ってみて、思ったより◯◯だった。</div>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>明日もう一度使うとしたら、◯◯に使ってみたい。</div>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>不安に感じたのは◯◯。</div>
 
-<h2>次回への問い</h2>
-<p>第2回では「自分の状況を言葉にする」ことを中心にやります。AIに使われるのではなく、AIを使いこなすために必要な感覚です。</p>
-<p>次回までに、できれば1度、自分でAIに何か聞いてみてください。質問が浮かばなくても大丈夫です。「最近の自分について何か質問してください」とAIに頼んでみるのも面白いです。</p>
+<p style="font-size:15px;color:#64748b">うまく言葉にならない人は、AI自体に振り返りを手伝ってもらっても構いません：</p>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>今日初めてあなた（AI）に触れてみました。私の気づきや、感じたことを言葉にする手伝いをしてください。質問してくれて構いません。</div>
+
+<h2>質疑応答 ＆ 次回への問い</h2>
+<p>残り時間は質問タイムです。チャットでも音声でも構いません。</p>
+<p>第2回では「自分の状況を言葉にする」ことを中心にやります。今日触ってみて「もう少しこう聞けばよかった」と感じた瞬間があれば、それが次回の手がかりです。</p>
 
 <div class="box calm">お疲れさまでした。</div>
 </div>
@@ -236,6 +261,7 @@ document.getElementById('navL').onclick=()=>show(cur-1);
 document.getElementById('navR').onclick=()=>show(cur+1);
 document.getElementById('tBtn').onclick=()=>{if(running){clearInterval(it);running=false;document.getElementById('tBtn').textContent='▶'}else{it=setInterval(()=>{sec++;const m=String(Math.floor(sec/60)).padStart(2,'0'),s=String(sec%60).padStart(2,'0');document.getElementById('elapsed').textContent=m+':'+s},1000);running=true;document.getElementById('tBtn').textContent='■'}};
 document.getElementById('notesBtn').onclick=()=>{document.getElementById('notes').classList.toggle('on');document.getElementById('notesBtn').classList.toggle('on')};
+function cp(btn){const t=btn.parentElement.textContent.replace(/コピー|済み ✓/g,'').trim();navigator.clipboard.writeText(t).then(()=>{btn.textContent='済み ✓';btn.classList.add('done');setTimeout(()=>{btn.textContent='コピー';btn.classList.remove('done')},1500)})}
 document.addEventListener('keydown',e=>{if(e.key==='ArrowRight'){show(cur+1)}else if(e.key==='ArrowLeft'){show(cur-1)}else if(e.key===' '){e.preventDefault();document.getElementById('tBtn').click()}else if(e.key==='n'||e.key==='N'){document.getElementById('notesBtn').click()}});
 show(0);
 </script>
