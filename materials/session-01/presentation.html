@@ -343,6 +343,10 @@ tr:hover td{background:#f8fafc}
   <p>返ってきた回答に、さらに質問してみてください。会話が続きます。</p>
   <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>もう少し詳しく教えて</div>
   <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>別の案も3つ考えて</div>
+
+  <div class="highlight-box" style="border-color:#3b82f6;background:#eff6ff">
+    <p style="margin:0;font-size:22px">✋ 試し終わったら<strong>挙手</strong>で講師にお知らせください（Zoomの「手を挙げる」ボタン or 実挙手）</p>
+  </div>
 </div>
 </div>
 
@@ -427,6 +431,10 @@ tr:hover td{background:#f8fafc}
   <h2>チャットで共有しよう</h2>
   <p><strong>完成した自己紹介文</strong>をチャットに貼ってください。</p>
 
+  <div class="highlight-box" style="border-color:#3b82f6;background:#eff6ff">
+    <p style="margin:0;font-size:22px">✋ 完成して投稿したら<strong>挙手</strong>で講師にお知らせください</p>
+  </div>
+
   <hr class="divider">
   <h3 style="color:#7c3aed">発展トピック（中級者向け）：AIに「聞き出してもらう」</h3>
   <p style="font-size:22px;color:#64748b">自分の情報を打ち込むのが大変な時は、AIに質問してもらう方法があります。音声入力と組み合わせると、話すだけで情報を伝えられます。</p>
@@ -437,8 +445,117 @@ tr:hover td{background:#f8fafc}
 </div>
 </div>
 
+<!-- ========== PAGE 7.5: 発展A 自己紹介の楽な作り方 (任意・10min想定) ========== -->
+<div class="part-page" data-part="7" data-notes="<strong>10分・発展ワーク（任意）。</strong>Step方式で書いた後、もう1つの選択肢として『AIに聞いてもらう方式』を体験。1プロンプトで完了。<br>1) プロンプトをコピーしてGeminiに送信<br>2) AIの質問に答えるだけ（7問＋自由記述3問）<br>3) 完成した自己紹介文をチャットに送信<br>『書くより答える方が楽』を体感してもらう。時間がなければスキップ可。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">発展 A ― 10分</div>
+    <h1>もっと楽な作り方</h1>
+    <p class="subtitle">AIに質問してもらえば、書かなくていい</p>
+  </div>
+
+  <div class="highlight-box info">
+    <p style="margin:0">さっきは自分で書きました。でも、もう1つやり方があります。<br><strong>AIに自分のことを質問してもらって、答えるだけで自己紹介文ができる</strong>方式です。</p>
+  </div>
+
+  <h2>このプロンプトを1回送るだけ</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたの仕事は、私にインタビューして、私の自己紹介文を作ることです。
+
+これから自己紹介に使う150〜200字程度の文章が必要です。
+
+進め方のルール：
+- 質問は必ず1つずつ。私の答えを聞いてから次の質問へ進む
+- 全体で10問程度
+  - 選択肢から選ぶ質問を7問（選択肢は3〜5個、最後に「その他（自由記述）」も入れる）
+  - 自由記述の質問を3問
+- 私の答えが揃ったら、150〜200字程度の自己紹介文を1つにまとめる
+- 文章は堅すぎず、親しみやすいトーンで
+
+聞いてほしい観点（目安。流れを見て調整可）：
+1. お名前と所属（自由記述）
+2. 業種（IT・製造・金融・小売・公共/医療・サービス・その他から選択）
+3. 現在の役割（メンバー・リーダー・マネジメント・経営層・その他から選択）
+4. 仕事の経験年数（1〜3年・4〜10年・11〜20年・21年以上から選択）
+5. 普段の業務で多く扱うもの（文章・数字・人とのやりとり・モノ・その他から選択）
+6. AIの利用経験（ほぼ初めて・少し触ったことある・たまに使う・よく使うから選択）
+7. ご自身が「これは得意」と感じていること（自由記述）
+8. 最近の関心事・趣味（自由記述）
+9. このAI研修に期待していること（具体的に学びたい・とりあえず触れたい・周りが使っているから・会社の方針で・その他から選択）
+10. 自己紹介で「これだけは伝えたい」一言（自由記述）
+
+それでは1問目から始めてください。</div>
+
+  <h2>進め方</h2>
+  <ol>
+    <li>上のプロンプトをコピーしてGeminiに貼り付け、送信</li>
+    <li>AIの質問に答えていく（選択肢から選ぶ／自由記述）</li>
+    <li>完成した自己紹介文をチャットに投稿</li>
+  </ol>
+
+  <div class="highlight-box success">
+    <p style="margin:0"><strong>体験してほしいこと：</strong>書くより、聞かれて答える方が楽だと感じませんか？　自分の中の情報を引き出してもらう、というAIの使い方です。</p>
+  </div>
+
+  <div class="highlight-box" style="border-color:#3b82f6;background:#eff6ff">
+    <p style="margin:0;font-size:22px">✋ 完成したら<strong>挙手</strong>で講師にお知らせください（Zoomの「手を挙げる」ボタン or 実挙手）</p>
+  </div>
+
+  <hr class="divider">
+
+</div>
+</div>
+
+<!-- ========== PAGE 7.6: 発展B 他のAIに会ってみる (任意・5min想定) ========== -->
+<div class="part-page" data-part="8" data-notes="<strong>5分・発展ワーク（任意）。</strong>同じプロンプトをClaudeに投げて比較。『AIにも個性がある』を体感。Geminiが主軸の研修だが、選択肢を知っておく価値はある。<br>Claudeへのアクセスは事前に案内（claude.ai）。アカウント未作成なら無理せず講師の画面共有で見せるだけでもOK。<br>時間がなければスキップ可。">
+<div class="inner">
+  <div class="section-header">
+    <div class="tag">発展 B ― 5分</div>
+    <h1>他のAIにも<br>会ってみる</h1>
+    <p class="subtitle">同じ質問、違う答え</p>
+  </div>
+
+  <div class="highlight-box info">
+    <p style="margin:0">AIは1種類ではありません。代表的なものだけでも何個もあります。同じ質問を投げても、返ってくる答えの雰囲気は違います。</p>
+  </div>
+
+  <h2>このプロンプトを2つのAIに送ってみる</h2>
+  <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>あなたは何ができますか。得意なことと、苦手なことを正直に教えてください。</div>
+
+  <div class="card-grid" style="grid-template-columns:1fr 1fr">
+    <div class="card">
+      <h4>Gemini</h4>
+      <p style="font-size:20px">Google製。このシリーズで主に使うAI。</p>
+      <p style="font-size:18px;margin-top:8px"><a href="https://gemini.google.com" target="_blank" style="color:#3b82f6">gemini.google.com</a></p>
+    </div>
+    <div class="card">
+      <h4>Claude</h4>
+      <p style="font-size:20px">Anthropic製。文章の組み立て方の癖が違うAI。</p>
+      <p style="font-size:18px;margin-top:8px"><a href="https://claude.ai" target="_blank" style="color:#3b82f6">claude.ai</a></p>
+    </div>
+  </div>
+
+  <h2>感じてほしいこと</h2>
+  <ul>
+    <li>同じ質問でも、答えの長さや雰囲気が違う</li>
+    <li>「どっちが正しい」ではなく、<strong>場面によって使い分ける</strong>感覚</li>
+    <li>「AI＝ChatGPTだけ」ではないという認識</li>
+  </ul>
+
+  <div class="highlight-box success">
+    <p style="margin:0">家にChatGPTがある方は、同じ質問を投げて3つ比べてみてください。それぞれ「個性」があります。</p>
+  </div>
+
+  <div class="highlight-box" style="border-color:#3b82f6;background:#eff6ff">
+    <p style="margin:0;font-size:22px">✋ 両方試したら<strong>挙手</strong>で講師にお知らせください</p>
+  </div>
+
+  <hr class="divider">
+
+</div>
+</div>
+
 <!-- ========== PAGE 8: 実践③ 知ったかぶり体験 (13min) ========== -->
-<div class="part-page" data-part="7" data-notes="<strong>今日の一番大事なパート。</strong>クイズ形式のみ。お題Aを見せて「おかしいところ分かりますか？」→見破れる。お題Bで「これは？」→判断できない。「知らない分野では見破れない」を強調。答えをクリックで表示。">
+<div class="part-page" data-part="9" data-notes="<strong>今日の一番大事なパート。</strong>クイズ形式のみ。お題Aを見せて「おかしいところ分かりますか？」→見破れる。お題Bで「これは？」→判断できない。「知らない分野では見破れない」を強調。答えをクリックで表示。">
 <div class="inner">
   <div class="section-header">
     <div class="tag">実践 03 ― 13分</div>
@@ -482,11 +599,15 @@ tr:hover td{background:#f8fafc}
   <div class="highlight-box">
     <p style="margin:0"><strong>注意：</strong>AIに「本当？」と聞いても「はい、正しいです」と返すだけです。AIは自分の間違いに気づけません。必ず別の方法で確認しましょう。</p>
   </div>
+
+  <div class="highlight-box" style="border-color:#3b82f6;background:#eff6ff">
+    <p style="margin:0;font-size:22px">✋ クイズを解き終わったら<strong>挙手</strong>で講師にお知らせください</p>
+  </div>
 </div>
 </div>
 
 <!-- ========== PAGE 9: 共有タイム (5min) ========== -->
-<div class="part-page" data-part="8" data-notes="チャットに投稿してもらう。2-3個ピックアップしてコメント。「怖い」という感想には「だから正しい使い方を学ぶ」とフォロー。">
+<div class="part-page" data-part="10" data-notes="チャットに投稿してもらう。2-3個ピックアップしてコメント。「怖い」という感想には「だから正しい使い方を学ぶ」とフォロー。">
 <div class="inner">
   <div class="section-header">
     <div class="tag">共有タイム ― 5分</div>
@@ -501,7 +622,7 @@ tr:hover td{background:#f8fafc}
 </div>
 
 <!-- ========== PAGE 10: 振り返り＆次回予告 (7min) ========== -->
-<div class="part-page" data-part="9" data-notes="振り返りクイズ3問→セルフチェック（テンプレートをコピーしてチャット投稿）→チャレンジ→次回予告。">
+<div class="part-page" data-part="11" data-notes="振り返りクイズ3問→セルフチェック（テンプレートをコピーしてチャット投稿）→チャレンジ→次回予告。">
 <div class="inner">
   <div class="section-header">
     <div class="tag">振り返り＆次回予告 ― 7分</div>
@@ -535,6 +656,12 @@ tr:hover td{background:#f8fafc}
 
   <hr class="divider">
 
+  <h2>振り返りフォーム</h2>
+  <p>Googleフォームでも振り返りを記入してください。回数を重ねるごとに自分の変化が見えるようになります。</p>
+  <a href="https://docs.google.com/forms/d/e/1FAIpQLSfw9uJDnEJhohS-VZo-2qtQcehQdwBg9IvtIwe5cM2fd6KVYg/viewform?usp=dialog" target="_blank" style="display:inline-block;padding:20px 32px;background:linear-gradient(135deg,#3b82f6,#7c3aed);color:#fff;border-radius:14px;text-decoration:none;font-size:22px;font-weight:600;margin:14px 0;box-shadow:0 4px 12px rgba(59,130,246,.25)">振り返りフォームを開く</a>
+
+  <hr class="divider">
+
   <h2>今週のチャレンジ</h2>
   <p>次回の最初の演習で同じお題を使います。事前に試しておくと、次回の演習がもっと面白くなります。</p>
   <div class="prompt-block"><span class="copy-btn" onclick="copyText(this)">コピー</span>明日の朝礼で1分間話す原稿を考えてください。テーマは「最近の業務で工夫したこと」です。</div>
@@ -564,6 +691,8 @@ const PARTS=[
   {name:'休憩',minutes:5,type:'break'},
   {name:'ミニ講義③: 聞き方のコツ',minutes:5,type:'lecture'},
   {name:'実践②: 自己紹介文',minutes:15,type:'handson'},
+  {name:'発展A: AIに聞いてもらう',minutes:10,type:'handson'},
+  {name:'発展B: 他のAIに会う',minutes:5,type:'handson'},
   {name:'実践③: 知ったかぶり体験',minutes:13,type:'handson'},
   {name:'共有タイム',minutes:5,type:'review'},
   {name:'振り返り＆次回予告',minutes:7,type:'review'}
