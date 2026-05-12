@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>第1回 AIとは何か・触ってみる</title>
+<title>第1回 AIに触れてみる</title>
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 html,body{height:100%;overflow:hidden}
@@ -15,231 +15,336 @@ body{font-family:'Hiragino Kaku Gothic ProN','Noto Sans JP','Meiryo',sans-serif;
 .bar .timer button{margin-left:6px;padding:2px 8px;border:1px solid #cbd5e1;background:#fff;border-radius:4px;cursor:pointer;font-size:11px;color:#64748b}
 .bar .count{color:#94a3b8;font-size:12px}
 .wrap{position:fixed;top:40px;bottom:0;left:0;right:0;overflow:hidden}
-.slide{position:absolute;inset:0;padding:50px 80px;overflow-y:auto;opacity:0;transition:opacity .25s;pointer-events:none}
+.slide{position:absolute;inset:0;padding:46px 70px;overflow-y:auto;opacity:0;transition:opacity .25s;pointer-events:none}
 .slide.on{opacity:1;pointer-events:auto}
-.slide .inner{max-width:820px;margin:0 auto}
-.tag{font-size:13px;color:#94a3b8;letter-spacing:2px;text-transform:uppercase;margin-bottom:14px}
-h1{font-size:42px;font-weight:700;margin-bottom:16px;color:#1e293b;line-height:1.25}
-h2{font-size:28px;font-weight:700;margin:36px 0 14px;color:#1e293b}
-h3{font-size:20px;font-weight:600;margin:24px 0 10px;color:#334155}
-p{font-size:19px;color:#475569;margin-bottom:12px}
-ul,ol{font-size:18px;padding-left:28px;color:#475569;margin-bottom:14px}
+.slide .inner{max-width:840px;margin:0 auto}
+.tag{font-size:13px;color:#94a3b8;letter-spacing:2px;text-transform:uppercase;margin-bottom:12px}
+.dur{display:inline-block;margin-left:10px;padding:2px 8px;background:#f1f5f9;color:#64748b;border-radius:4px;font-size:12px;letter-spacing:0}
+h1{font-size:40px;font-weight:700;margin-bottom:14px;color:#1e293b;line-height:1.25}
+h2{font-size:26px;font-weight:700;margin:32px 0 12px;color:#1e293b}
+h3{font-size:19px;font-weight:600;margin:22px 0 10px;color:#334155}
+p{font-size:18px;color:#475569;margin-bottom:12px}
+ul,ol{font-size:17px;padding-left:26px;color:#475569;margin-bottom:14px}
 li{margin-bottom:6px}
 li strong,p strong{color:#1e293b}
-.box{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:18px 22px;margin:14px 0;font-size:18px;color:#475569}
+.box{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:16px 20px;margin:12px 0;font-size:17px;color:#475569}
 .box.accent{border-left:4px solid #3b82f6}
 .box.warn{border-left:4px solid #fbbf24;background:#fffbeb}
 .box.danger{border-left:4px solid #f87171;background:#fef2f2}
 .box.calm{background:#f8fafc}
-.try{background:#fff;border:1px dashed #94a3b8;border-radius:10px;padding:18px 22px;margin:14px 0;font-size:17px;color:#1e293b;font-family:ui-monospace,'Hiragino Kaku Gothic ProN',monospace;position:relative;white-space:pre-wrap}
+.box.success{border-left:4px solid #22c55e;background:#f0fdf4}
+.try{background:#fff;border:1px dashed #94a3b8;border-radius:10px;padding:16px 20px;margin:12px 0;font-size:16px;color:#1e293b;font-family:ui-monospace,'Hiragino Kaku Gothic ProN',monospace;position:relative;white-space:pre-wrap}
 .cp{position:absolute;top:8px;right:8px;padding:4px 10px;border:1px solid #cbd5e1;background:#f8fafc;color:#64748b;cursor:pointer;font-size:11px;border-radius:4px;font-family:inherit}
 .cp.done{background:#dcfce7;border-color:#22c55e;color:#16a34a}
-.note{font-size:14px;color:#94a3b8;margin-top:8px}
-.nav{position:fixed;top:50%;width:42px;height:42px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transform:translateY(-50%);z-index:5}
+.flow{display:flex;flex-direction:column;gap:8px;margin:14px 0}
+.flow-row{display:flex;align-items:flex-start;gap:14px;padding:12px 16px;background:#fff;border:1px solid #e2e8f0;border-radius:10px;font-size:17px}
+.flow-num{min-width:32px;height:32px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:14px;font-weight:700;background:#eff6ff;color:#2563eb;flex-shrink:0}
+.cases{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px;margin:14px 0}
+.case{background:#fff;border:1px solid #e2e8f0;border-radius:10px;padding:14px 16px;font-size:15px}
+.case h4{font-size:16px;margin-bottom:4px;color:#1e293b}
+.case p{font-size:14px;margin:0;color:#64748b}
+.case a{color:#3b82f6;font-size:13px}
+.nav{position:fixed;top:50%;width:40px;height:40px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#64748b;cursor:pointer;font-size:18px;display:flex;align-items:center;justify-content:center;transform:translateY(-50%);z-index:5}
 .nav:hover{background:#f1f5f9;color:#1e293b}.nav.l{left:14px}.nav.r{right:14px}.nav:disabled{opacity:.2;cursor:default}
-.notes{position:fixed;left:16px;right:16px;bottom:10px;background:rgba(255,255,255,.98);border:1px solid #e2e8f0;border-radius:8px;padding:12px 16px;font-size:13px;color:#475569;line-height:1.55;transform:translateY(140%);transition:transform .25s;max-height:140px;overflow-y:auto;z-index:9}
-.notes.on{transform:translateY(0)}
-.notes strong{color:#d97706}
+.notes{position:fixed;left:16px;right:16px;bottom:10px;background:rgba(255,255,255,.98);border:1px solid #e2e8f0;border-radius:8px;padding:12px 16px;font-size:13px;color:#475569;line-height:1.55;transform:translateY(140%);transition:transform .25s;max-height:160px;overflow-y:auto;z-index:9}
+.notes.on{transform:translateY(0)}.notes strong{color:#d97706}
 .notesBtn{position:fixed;right:14px;bottom:12px;width:32px;height:32px;border-radius:50%;background:#fff;border:1px solid #e2e8f0;color:#94a3b8;cursor:pointer;font-size:13px;z-index:10}
 .notesBtn.on{background:#fffbeb;color:#d97706;border-color:#fbbf24}
-.hint{position:fixed;bottom:14px;left:50%;transform:translateX(-50%);color:#cbd5e1;font-size:11px;z-index:1}
-@media(max-width:700px){.slide{padding:30px 24px}h1{font-size:28px}h2{font-size:22px}h3{font-size:18px}p,ul,ol,.box,.try{font-size:15px}}
+@media(max-width:700px){.slide{padding:28px 22px}h1{font-size:28px}h2{font-size:22px}h3{font-size:17px}p,ul,ol,.box,.try,.flow-row{font-size:15px}}
 </style>
 </head>
 <body>
 <div class="bar">
-  <div><a href="index.html">←</a> <span class="session">第1回</span> AIとは何か・触ってみる</div>
+  <div><a href="index.html">←</a> <span class="session">第1回</span> AIに触れてみる</div>
   <div class="timer"><span id="elapsed">00:00</span><button id="tBtn">▶</button></div>
-  <div class="count"><span id="cur">1</span>/<span id="tot">8</span></div>
+  <div class="count"><span id="cur">1</span>/<span id="tot">9</span></div>
 </div>
-
 <div class="wrap">
 
-<div class="slide on">
+<!-- ========== Slide 1: オープニング ========== -->
+<div class="slide on" data-notes="<strong>5分。講師の生の話。</strong>『なぜ自分がここに立っているか』『AIで自分の何が変わったか』を1〜2分。挙手で『すでに触ったことある人』を聞いて場の温度を見る。今日の流れだけ示して、すぐワークに入る。教科書的な始まりは避ける。">
 <div class="inner">
-<div class="tag">SESSION 1 / 8</div>
-<h1>AIと話してみる</h1>
-<p>今日の90分の目的は、AIを触ること。情報を覚えるよりも、まず手を動かす時間にします。</p>
+<div class="tag">SESSION 1 / 8<span class="dur">90分</span></div>
+<h1>AIに触れてみる</h1>
+<p>今日の90分は、説明を聞く時間より、実際に触る時間を多めに取ります。質問はいつでも投げてもらって構いません。</p>
 
-<h2>このシリーズで目指すこと</h2>
-<p>研修後、AIを日常生活でも業務でも自然に使えるようになることがゴールです。「特別なツール」ではなく、「困った時にすぐ相談する相手」になっている状態。</p>
-
-<h2>今日の流れ</h2>
+<h2>今日の進み方</h2>
 <ul>
-  <li>AIに自己紹介してもらう</li>
-  <li>AIに自分の質問を投げてみる</li>
-  <li>休憩</li>
-  <li>機密情報の境界線</li>
-  <li>AIの得意・不得意の話（講師の経験から）</li>
-  <li>振り返り</li>
+  <li>まず、自己紹介文をAIに作ってもらいます</li>
+  <li>そのあと、AIの2つの使い方の話を少し</li>
+  <li>休憩中に「10分でわかるAIの今」を流します</li>
+  <li>AIに自己紹介してもらいます。GeminiとClaudeを比べてみます</li>
+  <li>AIの得意・苦手を実際に試してみます</li>
+  <li>機密情報の境界線と、大企業の使い方</li>
+  <li>振り返りフォームを書いて終わり</li>
 </ul>
+
+<div class="box calm">
+今日のゴールは「AIに触ってみたら、思っていたより使えた／使えなかった、の手触りを持って帰る」こと。完璧に使いこなす必要はありません。
+</div>
 </div>
 </div>
 
-<div class="slide">
+<!-- ========== Slide 2: ワーク① 自己紹介文をAIに ========== -->
+<div class="slide" data-notes="<strong>20分。最初のワーク。</strong>受講者が初対面なら自然な題材。自分の経歴を入れるだけなので思考負荷ゼロ。<br>1) 5分：各自プロンプトをコピー＆経歴を埋めて投げる<br>2) 5分：返ってきた文を読んで、自分らしさを残しつつ整える<br>3) 10分：ペアで相手のAI生成自己紹介を読み合う＋実際に名乗ってもらう<br><strong>共有時はZoomチャットでも可。</strong>『AIに自分の言葉を整えてもらう』体験を作る。">
 <div class="inner">
-<div class="tag">PHILOSOPHY</div>
-<h1>AIで2つの方向に動く</h1>
-<p>AIの使い方には大きく2方向あります。両方を意識すると、自分の使い方を選べるようになります。</p>
+<div class="tag">ワーク ①<span class="dur">20分</span></div>
+<h1>自己紹介文を<br>AIに作ってもらう</h1>
+<p>今日この場に集まった皆さんも、お互い初対面の方が多いと思います。自己紹介文を、AIに作ってもらいましょう。</p>
+
+<h3>プロンプト（コピーして、自分の経歴に書き換える）</h3>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>ビジネス向けの自己紹介文を作ってください。
+
+私の経歴：
+- 所属：◯◯（会社名 / 部署）
+- 仕事内容：◯◯
+- 経験年数：◯年
+- 最近やっていること：◯◯
+
+場面：AI研修の初対面の場（10名前後）
+長さ：30秒で話せるくらい（150字目安）
+トーン：堅すぎず、親しみやすく</div>
+
+<h3>進め方</h3>
+<div class="flow">
+  <div class="flow-row"><div class="flow-num">1</div>各自Geminiを開いて、上のプロンプトに自分の経歴を入れて送信（5分）</div>
+  <div class="flow-row"><div class="flow-num">2</div>返ってきた文を読む。「自分らしい」と思うところは残し、違和感のあるところを書き換える（5分）</div>
+  <div class="flow-row"><div class="flow-num">3</div>ペアで、相手のAI生成自己紹介を読み合う。良ければ実際に名乗ってもらう（10分）</div>
+</div>
+
+<div class="box accent">
+今あなたがやったこと：自分の経歴という材料を渡して、AIに「整える」を任せました。これがAIの最も身近な使い方です。
+</div>
+</div>
+</div>
+
+<!-- ========== Slide 3: 2方向の使い方 ========== -->
+<div class="slide" data-notes="<strong>10分。</strong>受講者が今体験したことを言葉にする。<strong>『さっき皆さんがやったのは、マイナスを減らす側の使い方』</strong>と言うと腑に落ちる。<br>具体例は講師の経験から1つずつ拾う。完成度の高い文章にしない。話しながら膨らませる余地を残す。<br><strong>上から目線にしない。</strong>『私もまだ試行錯誤しています』のトーンで。">
+<div class="inner">
+<div class="tag">考え方<span class="dur">10分</span></div>
+<h1>AIの使い方は<br>大きく2方向</h1>
+<p>さっき皆さんがやったのは、AIに「整える」を任せた使い方でした。これはAIの使い方の2つの方向のうち、片方です。</p>
 
 <div class="box accent">
 <strong>マイナスを減らす</strong><br>
-面倒なこと、時間ばかり食う作業を減らす方向。完全にゼロにはならないけれど、小さくなる。
+時間ばかり食う作業を小さくする方向。完全にゼロにはならないけれど、小さくなる。<br>
+<span style="font-size:15px;color:#64748b">例：調べものの時間が減る／Excelの数式で悩まない／メールの下書きで止まらない</span>
 </div>
 
 <div class="box accent">
 <strong>プラスを増やす</strong><br>
-すでに自分が持っている力を伸ばす方向。判断の解像度を上げたり、できなかったことができるようになったりする。
+すでに自分が持っている力を伸ばす方向。判断の解像度を上げたり、できなかったことができるようになったりする。<br>
+<span style="font-size:15px;color:#64748b">例：悩んだときに別の視点が出てくる／プログラミングが書けるようになる／画像生成で資料の見せ方が広がる</span>
 </div>
 
-<h3>講師の例（マイナスを減らした側）</h3>
+<div class="box warn">
+気をつけたいのは、創造的な仕事をAIに丸ごと投げて、出てきたものをそのまま使うこと。それは「自分でなくてもいい」状態を自分で作ることになります。AIは、自分の価値を高める方向で使うのが基本。
+</div>
+
+<p>このあとの7回も、この2つの方向を意識しながら進めていきます。</p>
+</div>
+</div>
+
+<!-- ========== Slide 4: 休憩 + 動画 ========== -->
+<div class="slide" data-notes="<strong>10分休憩。</strong>10分動画を流して全体像を補完。動画は別途NotebookLM等で生成（『10分でわかるAIの今』）。動画URLが固まったら埋め込む。<br>休憩中は質問があれば随時受け付ける。完全に黙る時間にしない。">
+<div class="inner">
+<div class="tag">休憩 + 動画<span class="dur">10分</span></div>
+<h1>休憩 ＆<br>10分でわかるAIの今</h1>
+
+<div class="box calm">
+<p style="margin:0;font-size:20px">休憩しながら、AIの過去・現在・未来を10分にまとめた解説を流します。</p>
+<p style="margin-top:8px;font-size:15px;color:#94a3b8">※ 動画URLはここに埋め込み予定（NotebookLM等で生成中）</p>
+</div>
+
+<h3>動画で触れる内容</h3>
 <ul>
-  <li>調べものにかかっていた時間が減った</li>
-  <li>Excelの数式を書くときに、検索して悩む時間が消えた</li>
-  <li>メールや文章の下書きで止まる時間が短くなった</li>
+  <li>AIは70年前からある概念。ただしここ3年が異常な速さ</li>
+  <li>2022年11月のChatGPT登場が転換点</li>
+  <li>今は文章・画像・動画・コード・自律エージェントまで広がっている</li>
+  <li>日本の利用率は世界より遅れている（数字で対比）</li>
+  <li>楽観の未来と、その影</li>
 </ul>
 
-<h3>講師の例（プラスを増やした側）</h3>
+<div class="box accent">
+動画は補助です。質問があればいつでも声をかけてください。
+</div>
+</div>
+</div>
+
+<!-- ========== Slide 5: AIに自己紹介してもらう ========== -->
+<div class="slide" data-notes="<strong>10分。</strong>GeminiとClaudeに同じ質問を投げて比較する。Claudeへのアクセスは事前に案内（claude.ai）。<br>『AIにも個性がある』を実感してもらう。<br>講師も画面共有で並行して叩く。違いをその場で見せる。<br>『どれが正解』ではなく『どれが好み』の話にする。">
+<div class="inner">
+<div class="tag">ワーク ②<span class="dur">10分</span></div>
+<h1>AIに自己紹介を<br>してもらう</h1>
+<p>さっきは自分の経歴をAIに整えてもらいました。今度は逆に、AIにAI自身を紹介してもらいます。</p>
+
+<h3>プロンプト</h3>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>あなたは何ができますか。得意なことと、苦手なことを正直に教えてください。
+それから、私の代わりに判断するべきではないことは何ですか。</div>
+
+<h3>2つのAIで試す</h3>
+<div class="cases">
+  <div class="case">
+    <h4>Gemini</h4>
+    <p>Google製。今回のシリーズで主に使う</p>
+    <a href="https://gemini.google.com" target="_blank">gemini.google.com</a>
+  </div>
+  <div class="case">
+    <h4>Claude</h4>
+    <p>Anthropic製。文章の組み立て方が違う</p>
+    <a href="https://claude.ai" target="_blank">claude.ai</a>
+  </div>
+</div>
+
+<h3>感じてほしいこと</h3>
 <ul>
-  <li>悩んだときに別の視点を出してもらえるので、判断しやすくなった</li>
-  <li>プログラミングの速度が上がり、ちょっとしたサービスが作れるようになった</li>
-  <li>画像生成が使えるようになり、資料の見せ方の幅が広がった</li>
+  <li>同じことを聞いても、答えの雰囲気が違う</li>
+  <li>長さ・口調・例示の出し方に個性がある</li>
+  <li>「どっちが正しい」ではなく「どっちが好み」「どっちが場面に合う」の感覚</li>
+</ul>
+
+<div class="box calm">
+家でChatGPTを触ったことがある方は、後でChatGPTにも同じ質問を投げてみると比較が3つに増えます。
+</div>
+</div>
+</div>
+
+<!-- ========== Slide 6: 得意・苦手を試す ========== -->
+<div class="slide" data-notes="<strong>15分。</strong>得意と苦手の両方をその場で試す。<br>1) 5分：得意なお題（業務文書下書き or 文章要約）<br>2) 5分：苦手なお題（マイナーな固有情報 or 最新ニュース）<br>3) 5分：チャットで『どっちが手応えあった？』『苦手はどう外しに来た？』を共有<br><strong>苦手側で『嘘っぽい答え』が出たら拾って解説。</strong>受講者が自然にハルシネーションを体験する設計。">
+<div class="inner">
+<div class="tag">ワーク ③<span class="dur">15分</span></div>
+<h1>得意と苦手を<br>その場で試す</h1>
+<p>AIは「大量の文章を学習して、次に来そうな言葉を確率で選ぶ」道具です。だから、確率が効く場面では強く、効かない場面では弱い。理屈で説明されるより、実際に試したほうが早く分かります。</p>
+
+<h2>得意なお題（どちらか1つ）</h2>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>取引先への謝罪メールの下書きを作ってください。
+- 状況：納期が3日遅れる見込みになった
+- 相手：定期的に取引している会社
+- トーン：丁寧、でも卑屈にならない
+- 長さ：150字程度</div>
+
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>以下のニュース記事を、3つの箇条書きで要約してください。
+（最近のビジネス記事を1つ貼り付ける）</div>
+
+<h2>苦手なお題（どちらか1つ）</h2>
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>私の地元の◯◯市にある「△△」という小さなお店について教えてください。営業時間や評判を知りたいです。</div>
+
+<div class="try"><button class="cp" onclick="cp(this)">コピー</button>2024年の◯◯業界（マイナーな業界）の市場規模を、出典付きで教えてください。</div>
+
+<h3>試した後でチャットに一言ずつ</h3>
+<ul>
+  <li>得意なお題は、思っていたより◯◯だった</li>
+  <li>苦手なお題で、AIは◯◯と答えた</li>
+  <li>「これは嘘っぽい」と感じた瞬間があれば、どんな答えだったか</li>
 </ul>
 
 <div class="box warn">
-気をつけたいのは、創造的な仕事をAIに丸ごと投げてそのまま出すこと。これは「自分でなくてもいい」状態を自分で作ること。AIに自分の価値を下げてもらう使い方になってしまう。
+AIは「分からないこと」も「それっぽく」答えてしまうことがあります。これを<strong>ハルシネーション</strong>と呼びます。出典を確認する、別の方法で裏を取る、これが対処法です。
 </div>
 </div>
 </div>
 
-<div class="slide">
+<!-- ========== Slide 7: 機密情報の境界線 ========== -->
+<div class="slide" data-notes="<strong>5分。</strong>3段階ルールを軽く復習してから、サムスン事例で緊張感を作る。<br>『コード貼付・装置情報・会議録音』の3つが受講者の日常業務に直結することを強調。<br><strong>『自分の会社でも起こり得る』を本気で感じてもらう。</strong>">
 <div class="inner">
-<div class="tag">触ってみる ①</div>
-<h1>AIに自己紹介してもらう</h1>
-<p>まずは雑談から。AIに「あなたは何者ですか」と聞いてみます。返ってきた言葉から、AIがどんな存在として振る舞うかが見えます。</p>
+<div class="tag">機密情報<span class="dur">5分</span></div>
+<h1>入れていい情報、<br>いけない情報</h1>
 
-<h3>Geminiを開いて、まずこれを送ってみてください</h3>
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>あなたは何ができますか。得意なことと、苦手なことを正直に教えてください。</div>
-
-<h3>続けて聞いてみてください</h3>
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>あなたの答えは常に正しいですか。間違えるとしたら、どんな時ですか。</div>
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>私の代わりに判断するべきではないことは、どんなことですか。</div>
-
-<div class="box calm">
-返ってきた答えを、隣の人や全体チャットに一言シェアしてください。「思ったより素直」「妙に丁寧」など、印象だけで構いません。
-</div>
-</div>
-</div>
-
-<div class="slide">
-<div class="inner">
-<div class="tag">触ってみる ②</div>
-<h1>とりあえず1つ聞いてみる</h1>
-<p>何でも構いません。聞きたいことが思い浮かばないなら、下のテンプレから1つ選んで、自分の状況に置き換えて送ってみてください。</p>
-
-<h3>選べるテンプレ（コピーして◯◯を埋める）</h3>
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>「◯◯」って最近よく聞くんですが、どういう意味ですか。素人にも分かるように説明してください。</div>
-
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>今度◯◯することになりました。どんなことに気をつけたらいいですか。</div>
-
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>◯◯と◯◯で迷っています。それぞれのいいところと悪いところを教えてください。</div>
-
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>仕事で◯◯をやらないといけないんですが、どこから手をつければいいか分かりません。整理する手伝いをしてください。</div>
-
-<h3>送ったあとに、もう一手</h3>
-<p>返ってきた答えを読んで、こう続けてみます。</p>
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>もう少し私の状況に合わせて教えてください。私は◯◯です。</div>
-<p>「同じことを聞き方を変えて尋ねると、答えがどう変わるか」を体感するのがこのパートの肝です。</p>
-</div>
-</div>
-
-<div class="slide">
-<div class="inner">
-<div class="tag">境界線</div>
-<h1>入れていい情報、いけない情報</h1>
-<p>AIを業務で使う上で、最初に押さえておく必要があるのが情報の境界線です。</p>
-
-<div class="box">
+<div class="box success">
 <strong>安全に入れていいもの</strong><br>
-公開情報、自分個人の感覚や意見、社内では一般的に共有されている内容
+公開情報・自分個人の感覚や意見・社内で一般的に共有されている内容
 </div>
 
 <div class="box warn">
 <strong>注意して扱うもの</strong><br>
-社内固有のノウハウ、業務手順、固有名詞を変えれば共有できるもの → 抽象化してから入れる
+社内固有のノウハウ・業務手順・固有名詞を変えれば共有できるもの → 抽象化してから入れる
 </div>
 
 <div class="box danger">
 <strong>入れてはいけないもの</strong><br>
-個人情報、契約金額、顧客の固有情報、機密情報、未公開資料 → 伏せ字に置き換える、または別の方法を取る
+個人情報・契約金額・顧客の固有情報・機密情報・未公開資料 → 伏せ字に置き換えるか、別の方法を取る
 </div>
 
-<p>判断に迷ったら、自社のセキュリティ担当に確認してください。「入れていいか分からないものは入れない」が原則です。</p>
-
-<h3>講師の失敗事例（口頭で語る）</h3>
-<p style="font-size:15px;color:#94a3b8"><em>例：固有名詞を伏せたつもりで残っていた事例 / 学習設定を切り忘れた事例 / 同僚が機密入りで使っていたのを止めた話 ―― 後で実例をヒアリングして埋める</em></p>
+<h2>実際にあった漏洩事例：サムスン電子（2023年）</h2>
+<p>ChatGPTを社内で解禁してから3週間で、3件の漏洩が立て続けに起きました。</p>
+<ol>
+  <li>半導体のソースコードをデバッグ目的でペースト</li>
+  <li>不良装置のコードを修正依頼</li>
+  <li>会議の録音をアップロードして議事録化</li>
+</ol>
+<p>最終的にChatGPTの利用は全面禁止になりました。<strong>受講者の皆さんの日常業務でも起こり得る</strong>3つの場面です。</p>
 </div>
 </div>
 
-<div class="slide">
+<!-- ========== Slide 8: 大企業の運用事例 ========== -->
+<div class="slide" data-notes="<strong>5分。</strong>『禁止ではなく、ガードレールを作って使い倒している企業』の事例で希望を作る。<br>3社並べて、自社で考える時の2軸（学習されない設定の契約／伏せ字テク）を示す。<br>DeNA 100本ノックは『お土産』として配る。研修後の自走材料になる。">
 <div class="inner">
-<div class="tag">体験</div>
-<h1>AIに嘘をつかせてみる</h1>
-<p>AIは「それっぽい嘘」を返すことがあります。狙って起こせるシーンで、一度体験しておきます。</p>
+<div class="tag">運用事例<span class="dur">5分</span></div>
+<h1>使い倒している<br>企業もある</h1>
+<p>事故が起きたから禁止、ではなく、ルールを決めて使い倒している企業もたくさんあります。</p>
 
-<h3>地元の固有情報を聞く</h3>
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>◯◯市の◯◯町にある「△△」というお店について、教えてください。営業時間や評判も知りたいです。</div>
-<p style="font-size:15px;color:#64748b">（自分の地元のマイナーな店名や、本当は存在しない店名を入れて試してみる）</p>
-
-<h3>具体的な数字を聞く</h3>
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>2024年の◯◯業界の市場規模を、出典付きで教えてください。</div>
-<p style="font-size:15px;color:#64748b">（マイナーな業界・分野ほど、それっぽい数字を作って返してくることが多い）</p>
-
-<div class="box warn">
-返ってきた回答を、必ず別の方法で確認してみてください。検索する、別のAIに聞く、出典を辿る。「AIが言ったから正しい」は通用しません。
+<div class="cases">
+  <div class="case">
+    <h4>メルカリ</h4>
+    <p>「禁止せず明瞭に」を方針に、AI活用基本ポリシーを公開。社員95%がAIを業務利用。</p>
+    <a href="https://about.mercari.com/ai-policy/" target="_blank">about.mercari.com/ai-policy</a>
+  </div>
+  <div class="case">
+    <h4>パナソニック コネクト</h4>
+    <p>全社員に独自AIを配布。年44.8万時間削減、導入16カ月で漏洩・著作権事故ゼロ。</p>
+    <a href="https://news.panasonic.com/jp/press/jn250707-2" target="_blank">プレスリリース</a>
+  </div>
+  <div class="case">
+    <h4>LINEヤフー</h4>
+    <p>11,000人に「ゼロベースで資料を作らない」を義務化。社内RAG「SeekAI」を全員に配布。</p>
+    <a href="https://www.lycorp.co.jp/ja/news/release/018121/" target="_blank">義務化発表</a>
+  </div>
 </div>
-</div>
-</div>
 
-<div class="slide">
-<div class="inner">
-<div class="tag">整理</div>
-<h1>AIの得意・苦手</h1>
-<p>得意・苦手には理由があります。AIは「大量の文章を学習して、次に来る言葉を確率で選ぶ」道具です。だから、確率が効く場面では強く、効かない場面では弱い。</p>
-
-<h3>得意</h3>
+<h3>自分の会社で考えるときの2軸</h3>
 <ul>
-  <li><strong>長い文章を整える</strong>（要約・構造化・言い換え）<br><span style="font-size:15px;color:#94a3b8">→ 文章のパターンが大量にあるから、近い形をすぐ出せる</span></li>
-  <li><strong>たたき台を作る</strong>（メール、報告書、企画案）<br><span style="font-size:15px;color:#94a3b8">→ 一般的な型は学習済み。0から書くより速い</span></li>
-  <li><strong>視点を増やす</strong>（別の立場からの意見、反対意見）<br><span style="font-size:15px;color:#94a3b8">→ いろんな立場の文章を見ているから、なりきりが上手い</span></li>
+  <li><strong>契約の選び方</strong>：法人プラン（Gemini Workspace、ChatGPT Team/Enterprise、Claude Team等）は既定で「学習されない」設定。個人版とは扱いが違う</li>
+  <li><strong>入れる前の工夫</strong>：顧客名→「顧客A」、商品名→「製品X」のように抽象化してから入れる</li>
 </ul>
 
-<h3>苦手</h3>
-<ul>
-  <li><strong>具体的な数字・固有名詞</strong><br><span style="font-size:15px;color:#94a3b8">→ 確率で選ぶので、それっぽい間違いを返すことがある</span></li>
-  <li><strong>最新の出来事</strong><br><span style="font-size:15px;color:#94a3b8">→ 訓練データの時点までしか知らない</span></li>
-  <li><strong>あなたの状況に固有のこと</strong><br><span style="font-size:15px;color:#94a3b8">→ あなたの会社・あなたの家族のことは知らない。教えないと使えない</span></li>
-</ul>
+<div class="box success">
+<strong>お土産：DeNAが100事例を公開しています</strong><br>
+エンジニア・ビジネス・クリエイター職それぞれの具体例。「自分の職種ではどう使う？」のヒントになります。<br>
+<a href="https://dena.ai/" target="_blank" style="color:#16a34a">dena.ai</a>
+</div>
 </div>
 </div>
 
-<div class="slide">
+<!-- ========== Slide 9: 振り返り + 次回 ========== -->
+<div class="slide" data-notes="<strong>10分。Googleフォームに記入。</strong>第1回は手で書いてもらう。第2回以降はAIに伴走してもらってもよいと案内。<br>フォームURLは事前に準備しておく。<br>次回の問いは、シンプルに『自分の業務でAIを試したい場面を1つ、来週までに見つけてくる』。これが第2回の素材になる。">
 <div class="inner">
-<div class="tag">振り返り</div>
-<h1>今日を1分で振り返る</h1>
-<p>チャット欄に、今日触ってみて感じたことを一言ずつ投稿してください。短くて構いません。指名はしません。</p>
+<div class="tag">振り返り + 次回<span class="dur">10分</span></div>
+<h1>今日を振り返って<br>次回へつなぐ</h1>
 
-<h3>投稿の型（コピーして埋める）</h3>
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>触ってみて、思ったより◯◯だった。</div>
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>明日もう一度使うとしたら、◯◯に使ってみたい。</div>
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>不安に感じたのは◯◯。</div>
+<h3>振り返りフォーム（Googleフォーム）</h3>
+<div class="box accent">
+<p style="margin:0;font-size:18px">講師がチャットに投稿したGoogleフォームのURLを開いて記入してください。</p>
+<p style="margin-top:8px;font-size:14px;color:#94a3b8">※ フォームURLはここに埋め込み予定</p>
+</div>
 
-<p style="font-size:15px;color:#64748b">うまく言葉にならない人は、AI自体に振り返りを手伝ってもらっても構いません：</p>
-<div class="try"><button class="cp" onclick="cp(this)">コピー</button>今日初めてあなた（AI）に触れてみました。私の気づきや、感じたことを言葉にする手伝いをしてください。質問してくれて構いません。</div>
+<h3>記入する内容</h3>
+<ul>
+  <li>今日いちばん印象に残ったこと</li>
+  <li>明日試したいAIの使い方を1つ</li>
+  <li>詰まったこと・分からなかったこと（任意）</li>
+  <li>講師への質問・コメント（任意）</li>
+</ul>
 
-<h2>質疑応答 ＆ 次回への問い</h2>
-<p>残り時間は質問タイムです。チャットでも音声でも構いません。</p>
-<p>第2回では「自分の状況を言葉にする」ことを中心にやります。今日触ってみて「もう少しこう聞けばよかった」と感じた瞬間があれば、それが次回の手がかりです。</p>
+<p style="font-size:15px;color:#94a3b8">第2回以降は、AIに振り返りの伴走をしてもらってもOKです。詳しいやり方は次回お伝えします。</p>
+
+<h2>次回までの宿題</h2>
+<div class="box success">
+<p style="margin:0;font-size:19px"><strong>自分の業務の中で「AIに任せてみたい場面」を1つ、見つけてきてください</strong></p>
+<p style="margin-top:8px;font-size:15px;color:#475569">大きな話でなくて構いません。「いつもこの書類を作るのに30分かかる」「この調べものが苦手」など、小さな場面で十分。第2回はそれを素材に進めます。</p>
+</div>
+
+<h2>第2回テーマ</h2>
+<p>「AIに自分の状況をうまく伝える」がテーマです。今日触ってみて「もう少しこう聞けばよかった」と感じた瞬間があれば、それが次回の手がかりです。</p>
 
 <div class="box calm">お疲れさまでした。</div>
 </div>
@@ -250,13 +355,12 @@ li strong,p strong{color:#1e293b}
 <button class="nav l" id="navL">←</button>
 <button class="nav r" id="navR">→</button>
 <button class="notesBtn" id="notesBtn">N</button>
-<div class="notes" id="notes">講師ノートはここに表示されます（各スライドに準備したい）。</div>
-<div class="hint">← → スライド移動 ／ N 講師メモ ／ Space タイマー</div>
+<div class="notes" id="notes">講師ノート</div>
 
 <script>
 const slides=document.querySelectorAll('.slide');const total=slides.length;document.getElementById('tot').textContent=total;
 let cur=0,running=false,sec=0,it=null;
-function show(i){if(i<0||i>=total)return;slides.forEach((s,x)=>s.classList.toggle('on',x===i));cur=i;document.getElementById('cur').textContent=i+1;document.getElementById('navL').disabled=i===0;document.getElementById('navR').disabled=i===total-1}
+function show(i){if(i<0||i>=total)return;slides.forEach((s,x)=>s.classList.toggle('on',x===i));cur=i;document.getElementById('cur').textContent=i+1;document.getElementById('navL').disabled=i===0;document.getElementById('navR').disabled=i===total-1;document.getElementById('notes').innerHTML=slides[i].dataset.notes||''}
 document.getElementById('navL').onclick=()=>show(cur-1);
 document.getElementById('navR').onclick=()=>show(cur+1);
 document.getElementById('tBtn').onclick=()=>{if(running){clearInterval(it);running=false;document.getElementById('tBtn').textContent='▶'}else{it=setInterval(()=>{sec++;const m=String(Math.floor(sec/60)).padStart(2,'0'),s=String(sec%60).padStart(2,'0');document.getElementById('elapsed').textContent=m+':'+s},1000);running=true;document.getElementById('tBtn').textContent='■'}};
