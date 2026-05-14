@@ -20,22 +20,53 @@ h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
 .section { margin-bottom: 32px; }
 h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
 .overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
-.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
-.steps { list-style: none; padding: 0; }
-.step { display: flex; gap: 16px; margin-bottom: 20px; }
-.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
-.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
-.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
-.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
-.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
 .table-wrap { overflow-x: auto; margin: 10px 0; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th { background: #f1f5f9; color: #334155; font-weight: 700; padding: 8px 12px; text-align: left; border: 1px solid #e2e8f0; }
 td { padding: 8px 12px; border: 1px solid #e2e8f0; color: #475569; }
+td.hi { background: #fef9c3; font-weight: 600; color: #854d0e; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+/* 請求書プレビュー */
+.invoice-preview { border: 2px solid #e2e8f0; border-radius: 8px; padding: 24px; margin: 10px 0; background: #fff; font-size: 13px; }
+.inv-title { font-size: 20px; font-weight: 700; text-align: center; margin-bottom: 20px; color: #0f172a; }
+.inv-row { display: flex; justify-content: space-between; margin-bottom: 4px; }
+.inv-section { margin-bottom: 16px; }
+.inv-section-title { font-size: 11px; font-weight: 700; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 6px; }
+.inv-table { width: 100%; border-collapse: collapse; font-size: 12px; margin-bottom: 12px; }
+.inv-table th { background: #f1f5f9; padding: 6px 10px; text-align: left; font-weight: 700; color: #475569; border: 1px solid #e2e8f0; }
+.inv-table td { padding: 6px 10px; border: 1px solid #e2e8f0; color: #334155; }
+.inv-table td.amount { text-align: right; }
+.inv-summary { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 12px 16px; }
+.inv-sum-row { display: flex; justify-content: space-between; font-size: 13px; color: #475569; margin-bottom: 4px; }
+.inv-sum-row.total { font-size: 15px; font-weight: 700; color: #0f172a; border-top: 1px solid #e2e8f0; padding-top: 8px; margin-top: 4px; }
+.inv-sum-row.transfer { color: #2563eb; font-weight: 700; }
+/* シナリオ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連 */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 .notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
 .notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
 .notes ul li { margin-bottom: 5px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 16px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
@@ -44,7 +75,7 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
 <body>
 <div class="page-header">
   <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 経理・バックオフィス</div>
-  <h1>「A社にコンサル料50万円の請求書を出して」で源泉徴収・消費税を自動判定して下書き生成</h1>
+  <h1>「A社にコンサル料50万円の請求書を出して」で源泉・消費税を自動判定して下書き生成</h1>
   <div class="meta">
     <span class="badge lv1">★ 今日から</span>
     <span class="time-b">設定不要・即使える</span>
@@ -57,7 +88,7 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
   <div class="section">
     <h2>概要</h2>
     <div class="overview">
-      「A社にコンサル料50万円の請求書を出して」という自然言語の指示だけで、源泉徴収の要否・消費税の計算・請求書の下書きをClaude.aiが自動生成する。税務知識がなくても正確な金額計算が可能。
+      「A社にコンサル料50万円の請求書を出して」という自然言語の指示だけで、源泉徴収の要否・税率・消費税の計算・振込金額・インボイス記載要件の確認まで自動で判定し、そのまま使える請求書の下書きを生成する。税務知識がなくても正確な金額計算が可能。
     </div>
   </div>
 
@@ -65,74 +96,282 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>源泉徴収の基本判定表</h2>
     <div class="table-wrap">
       <table>
-        <tr><th>業務種別</th><th>源泉徴収</th><th>税率</th></tr>
-        <tr><td>コンサルタント料・顧問料</td><td>あり</td><td>10.21%（100万円超は20.42%）</td></tr>
-        <tr><td>デザイン・イラスト料</td><td>あり</td><td>10.21%</td></tr>
-        <tr><td>執筆・翻訳料</td><td>あり</td><td>10.21%</td></tr>
-        <tr><td>SaaS・システム利用料</td><td>なし</td><td>—</td></tr>
-        <tr><td>物品販売</td><td>なし</td><td>—</td></tr>
-        <tr><td>広告費・PR費用</td><td>なし（芸能除く）</td><td>—</td></tr>
+        <tr><th>業務種別</th><th>源泉徴収</th><th>税率</th><th>備考</th></tr>
+        <tr><td>コンサルタント料・顧問料</td><td class="hi">あり</td><td>10.21%（100万円超は20.42%）</td><td>個人への支払いが対象</td></tr>
+        <tr><td>デザイン・イラスト料</td><td class="hi">あり</td><td>10.21%</td><td></td></tr>
+        <tr><td>執筆・翻訳料</td><td class="hi">あり</td><td>10.21%</td><td></td></tr>
+        <tr><td>講演料・原稿料</td><td class="hi">あり</td><td>10.21%</td><td></td></tr>
+        <tr><td>SaaS・システム利用料</td><td>なし</td><td>—</td><td>法人・個人問わず</td></tr>
+        <tr><td>物品販売</td><td>なし</td><td>—</td><td></td></tr>
+        <tr><td>広告費・PR費用</td><td>なし（芸能除く）</td><td>—</td><td>芸能人への出演料は対象</td></tr>
       </table>
     </div>
+    <p style="font-size:12px;color:#94a3b8;margin-top:6px;">※ 法人→法人への支払いは一部を除き源泉徴収不要。法人→個人への支払いは多くの場合必要。</p>
   </div>
 
   <div class="section">
-    <h2>プロンプトテンプレート</h2>
-    <div class="prompt">
-      <div class="prompt-label">そのまま使えるプロンプト</div>
-      <pre>以下の条件で請求書の下書きを作成してください。
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">入力：「A社（株式会社A）にコンサル料50万円の請求書を作って。消費税10%、源泉徴収あり。振込締め切りは5月末。」</p>
+    <div class="invoice-preview">
+      <div class="inv-title">請　求　書</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;">
+        <div class="inv-section">
+          <div class="inv-section-title">請求先</div>
+          <div><strong>株式会社A 御中</strong></div>
+        </div>
+        <div class="inv-section" style="text-align:right;">
+          <div class="inv-section-title">発行者</div>
+          <div><strong>〇〇株式会社</strong></div>
+          <div style="font-size:12px;color:#64748b;">登録番号：T0000000000000</div>
+          <div style="font-size:12px;color:#64748b;">発行日：2026年5月1日</div>
+          <div style="font-size:12px;color:#64748b;">請求書番号：INV-2026-0501</div>
+        </div>
+      </div>
+      <div class="inv-section">
+        <div class="inv-section-title">請求内容</div>
+        <table class="inv-table">
+          <tr><th>品目</th><th>数量</th><th style="text-align:right;">単価</th><th style="text-align:right;">税率</th><th style="text-align:right;">金額</th></tr>
+          <tr>
+            <td>経営コンサルティング料（2026年4月分）</td>
+            <td>1式</td>
+            <td class="amount">500,000円</td>
+            <td class="amount">10%</td>
+            <td class="amount">500,000円</td>
+          </tr>
+        </table>
+      </div>
+      <div class="inv-summary">
+        <div class="inv-sum-row"><span>小計</span><span>500,000円</span></div>
+        <div class="inv-sum-row"><span>消費税（10%）</span><span>50,000円</span></div>
+        <div class="inv-sum-row"><span>税込合計</span><span>550,000円</span></div>
+        <div class="inv-sum-row"><span>源泉徴収額（10.21%）</span><span style="color:#dc2626;">▲ 51,050円</span></div>
+        <div class="inv-sum-row transfer"><span>お振込金額</span><span>498,950円</span></div>
+      </div>
+      <div style="margin-top:16px;font-size:12px;color:#64748b;">
+        <strong>お振込期限：</strong>2026年5月31日<br>
+        <strong>振込先：</strong>〇〇銀行 〇〇支店 普通 0000000 〇〇カブシキガイシャ
+      </div>
+    </div>
+    <p style="font-size:12px;color:#64748b;margin-top:6px;">↑ Claudeがこのような金額計算の内訳付きで下書きを生成します。</p>
+  </div>
 
-【依頼主情報】
-発行者：〇〇株式会社（登録番号：T0000000000000）
+  <div class="section">
+    <h2>プロンプトテンプレート（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('basic',this)">基本（コンサル料）</button>
+      <button class="stab" onclick="showScenario('multi',this)">複数品目</button>
+      <button class="stab" onclick="showScenario('over1m',this)">100万円超</button>
+      <button class="stab" onclick="showScenario('notax',this)">源泉不要業務</button>
+    </div>
+
+    <div id="scenario-basic" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">基本パターン（コンサル料・デザイン料・執筆料）</div>
+        <pre>以下の条件で請求書の下書きを作成してください。
+
+【発行者情報】
+会社名：〇〇株式会社
 住所：〇〇
-振込先：〇〇銀行 〇〇支店 普通 0000000
+インボイス登録番号：T0000000000000
+振込先：〇〇銀行 〇〇支店 普通 0000000 〇〇カブシキガイシャ
 
 【請求内容】
 宛先：〇〇株式会社 御中
 業務内容：経営コンサルティング料（2026年4月分）
-金額：500,000円
+金額：500,000円（税抜）
+消費税率：10%
+支払期限：2026年5月31日
 
-【確認事項】
-・源泉徴収の要否と金額
-・消費税額（10%）
-・お振込金額（源泉徴収控除後）
-・適格請求書の要件を満たしているか
+---
 
-請求書の下書きと金額計算の内訳を教えてください。</pre>
+以下を計算・確認してください：
+1. 源泉徴収の要否（コンサルタント料は源泉徴収対象）
+2. 源泉徴収額（10.21% または 20.42%）
+3. 消費税額
+4. 税込合計金額
+5. 源泉徴収控除後の振込金額
+6. 適格請求書（インボイス）の記載要件を満たしているか
+
+請求書の下書きと金額計算の内訳を出力してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-multi" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">複数品目が含まれる場合</div>
+        <pre>以下の条件で複数品目の請求書下書きを作成してください。
+
+【発行者情報】
+会社名：〇〇株式会社
+インボイス登録番号：T0000000000000
+振込先：〇〇銀行 〇〇支店 普通 0000000
+
+【請求内容】
+宛先：〇〇株式会社 御中
+品目1：Webサイト制作費（デザイン）　300,000円（税抜）　税率10%
+品目2：Webサイト制作費（実装）　200,000円（税抜）　税率10%
+品目3：ドメイン・サーバー初期費用　50,000円（税抜）　税率10%
+支払期限：来月末
+
+---
+
+・源泉徴収の対象品目を判定してください
+  （デザイン料は対象、実装料・サーバー費は対象外の場合あり）
+・品目ごとに源泉徴収の要否を明記
+・全体の振込金額を計算
+・インボイス要件の確認</pre>
+      </div>
+    </div>
+
+    <div id="scenario-over1m" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">100万円を超える場合（税率が変わる）</div>
+        <pre>以下の請求書を作成してください。金額が100万円を超えるため、
+源泉徴収税率が変わる点も正確に計算してください。
+
+【発行者情報】
+会社名：〇〇株式会社
+インボイス登録番号：T0000000000000
+振込先：〇〇銀行 〇〇支店 普通 0000000
+
+【請求内容】
+宛先：〇〇株式会社 御中
+業務内容：経営顧問料（2026年4月）
+金額：1,500,000円（税抜）
+消費税率：10%
+
+---
+
+源泉徴収の計算ルールを踏まえて計算してください：
+・100万円以下の部分：10.21%
+・100万円を超える部分：20.42%
+
+計算内訳を段階的に示した上で、振込金額を出力してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-notax" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">源泉徴収不要の業務（SaaS・物品販売等）</div>
+        <pre>以下の条件で請求書を作成してください。
+SaaS利用料のため源泉徴収は不要です。
+
+【発行者情報】
+会社名：〇〇株式会社
+インボイス登録番号：T0000000000000
+振込先：〇〇銀行 〇〇支店 普通 0000000
+
+【請求内容】
+宛先：〇〇株式会社 御中
+品目：〇〇SaaSツール月額利用料（2026年4月分）
+金額：30,000円（税抜）
+消費税率：10%
+
+---
+
+・源泉徴収不要であることを確認して明記
+・消費税込みの請求金額を計算
+・インボイス要件チェック
+・請求書フォーマットを出力</pre>
+      </div>
     </div>
   </div>
 
   <div class="section">
-    <h2>活用のコツ</h2>
+    <h2>カスタム指示への登録（毎回の入力を省略）</h2>
     <ul class="steps">
       <li class="step">
         <div class="step-num">1</div>
         <div class="step-body">
-          <strong>発行者情報をシステムプロンプトに固定</strong>
-          <p>Claude.aiのカスタム指示（Custom Instructions）に自社の発行者情報・振込先・登録番号を設定しておくと毎回の入力を省略できる。</p>
+          <strong>Claude.ai のカスタム指示に自社情報を登録する</strong>
+          <p>右上メニュー → 「カスタム指示」に以下を貼り付ける。以降は「A社にコンサル料50万円」だけで完結する。</p>
+          <div class="prompt">
+            <div class="prompt-label">カスタム指示に登録する内容</div>
+            <pre>請求書の下書きを求められたときは、以下の発行者情報を使ってください。
+
+【発行者情報】
+会社名：〇〇株式会社
+住所：〇〇県〇〇市〇〇1-2-3
+電話：00-0000-0000
+インボイス登録番号：T0000000000000
+振込先：〇〇銀行 〇〇支店 普通 0000000 〇〇カブシキガイシャ
+
+【計算ルール】
+・消費税は10%を適用（軽減税率品目がある場合は別途確認）
+・源泉徴収の対象か否かを業種別に判定して明記
+・100万円超の場合は段階計算（〜100万：10.21%、超過分：20.42%）
+・振込金額は「税込金額 − 源泉徴収額」で計算</pre>
+          </div>
         </div>
       </li>
       <li class="step">
         <div class="step-num">2</div>
         <div class="step-body">
-          <strong>Claude Codeでスキルコマンド化（★★レベル）</strong>
-          <p>Claude Codeのスキル機能を使えば <code>/invoice A社 コンサル料 50万円</code> のような短い指示だけでPDF請求書まで生成できる。</p>
+          <strong>登録後の使い方（1行で完結）</strong>
+          <div class="prompt">
+            <div class="prompt-label">登録後はこれだけでOK</div>
+            <pre>A社にコンサル料50万円の請求書（5月末振込）を作って</pre>
+          </div>
         </div>
       </li>
     </ul>
   </div>
 
   <div class="section">
-    <h2>注意点</h2>
-    <div class="notes">
+    <h2>送信前チェックリスト</h2>
+    <div class="checklist">
       <ul>
-        <li>AIの判定はあくまで参考。税務上の判断は税理士に確認すること。特に個人への支払いと法人への支払いで源泉徴収の扱いが異なる場合がある。</li>
-        <li>適格請求書（インボイス）として有効にするには、発行者の登録番号（T+13桁）の記載が必須。</li>
-        <li>1回の支払いが100万円を超える場合、源泉徴収税率が変わる（10.21%→20.42%）ので注意。</li>
+        <li>インボイス登録番号（T+13桁）が記載されているか</li>
+        <li>税率（10% or 8%）が品目ごとに明記されているか</li>
+        <li>源泉徴収額の計算が正確か（特に100万円超の場合）</li>
+        <li>振込金額（税込 − 源泉）が正しいか</li>
+        <li>宛先の会社名・部署名に誤字がないか</li>
+        <li>支払期限が正確に記載されているか</li>
+        <li>発行日と請求書番号が入っているか</li>
+        <li>振込先の口座情報（支店・種別・番号・カナ名義）が正確か</li>
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>AIの判定はあくまで参考。特に業種の境界が曖昧な場合（システム開発 + コンサル等）は、必ず税理士に確認する。</li>
+        <li>法人→個人への支払いと法人→法人への支払いで源泉徴収の扱いが異なる。支払先が個人か法人かを確認する。</li>
+        <li>インボイス登録番号は国税庁のサイトで有効性を確認できる（<a href="../06-invoice-number-verify.html">→ 一括検証のガイドはこちら</a>）。</li>
+        <li>海外企業への請求・海外からの受取は源泉徴収・消費税のルールが異なる。海外取引は都度確認が必要。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="06-invoice-number-verify.html">適格請求書番号の国税庁API一括検証</a>
+        <span>★★ インボイス番号の有効性確認</span>
+      </div>
+      <div class="related-card">
+        <a href="02-journal-anomaly.html">freee API 仕訳異常値検出</a>
+        <span>★★★ 会計データの自動チェック</span>
+      </div>
+      <div class="related-card">
+        <a href="../02-sales/02-quote-pdf.html">見積書をPDFで自動出力</a>
+        <span>★★ 請求書→見積書への応用</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 経理・バックオフィス</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

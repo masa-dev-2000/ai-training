@@ -20,20 +20,47 @@ h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
 .section { margin-bottom: 32px; }
 h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
 .overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
-.tool-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
-.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; }
-.steps { list-style: none; padding: 0; }
-.step { display: flex; gap: 16px; margin-bottom: 20px; }
-.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
-.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
-.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
-.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
-.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
-.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
 .table-wrap { overflow-x: auto; margin: 10px 0; }
 table { width: 100%; border-collapse: collapse; font-size: 13px; }
 th { background: #f1f5f9; color: #334155; font-weight: 700; padding: 8px 12px; text-align: left; border: 1px solid #e2e8f0; }
 td { padding: 8px 12px; border: 1px solid #e2e8f0; color: #475569; vertical-align: top; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; }
+.platform-block { margin-bottom: 20px; }
+.platform-block:last-child { margin-bottom: 0; }
+.platform-label { font-size: 12px; font-weight: 700; margin-bottom: 10px; display: flex; align-items: center; gap: 8px; }
+.platform-label .icon { width: 22px; height: 22px; border-radius: 6px; display: inline-flex; align-items: center; justify-content: center; font-size: 13px; }
+.pl-x { background: #000; color: #fff; }
+.pl-li { background: #0a66c2; color: #fff; }
+.pl-ig { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); color: #fff; }
+.post-cards { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 8px; }
+@media (max-width: 600px) { .post-cards { grid-template-columns: 1fr; } }
+.post-card { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 10px 12px; font-size: 12px; color: #334155; line-height: 1.6; }
+.post-num { font-size: 10px; font-weight: 700; color: #94a3b8; margin-bottom: 4px; text-transform: uppercase; }
+.char-count { font-size: 10px; color: #94a3b8; margin-top: 6px; text-align: right; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* ヒント */
+.tips { display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin: 10px 0; }
+@media (max-width: 560px) { .tips { grid-template-columns: 1fr; } }
+.tip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; }
+.tip-title { font-size: 13px; font-weight: 700; color: #0f172a; margin-bottom: 4px; }
+.tip-body { font-size: 12px; color: #64748b; line-height: 1.5; }
+/* 関連 */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 .notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
 .notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
 .notes ul li { margin-bottom: 5px; }
@@ -58,7 +85,7 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
   <div class="section">
     <h2>概要</h2>
     <div class="overview">
-      1つのテーマ・情報をベースに、X（旧Twitter）・LinkedIn・Instagram向けの投稿文を各3本ずつ計9本を一括生成する。各プラットフォームの特性（文字数制限・トーン・ハッシュタグ文化）を踏まえた投稿文が一度のプロンプトで得られる。
+      1つのテーマ・情報をベースに、X（旧Twitter）・LinkedIn・Instagram向けの投稿文を各3本ずつ計9本一括生成する。各プラットフォームの文字数・トーン・ハッシュタグ文化を踏まえた最適な投稿文が、1回のプロンプトで完成する。週3投稿×3週分を約5分で準備できる。
     </div>
   </div>
 
@@ -66,90 +93,259 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>各プラットフォームの特性</h2>
     <div class="table-wrap">
       <table>
-        <tr><th>プラットフォーム</th><th>文字数目安</th><th>トーン</th><th>ハッシュタグ</th></tr>
-        <tr><td>X（旧Twitter）</td><td>140文字以内</td><td>カジュアル・簡潔・フック重視</td><td>1〜2個</td></tr>
-        <tr><td>LinkedIn</td><td>300〜600字</td><td>プロフェッショナル・洞察重視</td><td>3〜5個</td></tr>
-        <tr><td>Instagram</td><td>150〜300字</td><td>感情的・ビジュアル補完・共感</td><td>10〜15個</td></tr>
+        <tr><th>プラットフォーム</th><th>文字数目安</th><th>トーン</th><th>ハッシュタグ</th><th>効果的な投稿</th></tr>
+        <tr><td>X（旧Twitter）</td><td>140文字以内</td><td>カジュアル・簡潔・フック重視</td><td>1〜2個</td><td>問いかけ・数字・引用</td></tr>
+        <tr><td>LinkedIn</td><td>300〜600字</td><td>プロフェッショナル・洞察重視</td><td>3〜5個</td><td>失敗談・学び・業界知見</td></tr>
+        <tr><td>Instagram</td><td>150〜300字</td><td>感情的・ビジュアル補完・共感</td><td>10〜15個</td><td>共感・ライフスタイル・舞台裏</td></tr>
       </table>
     </div>
   </div>
 
   <div class="section">
-    <h2>プロンプトテンプレート</h2>
-    <div class="prompt">
-      <div class="prompt-label">そのままコピーして使えるプロンプト</div>
-      <pre>以下の情報をもとに、各SNS向けの投稿文を3本ずつ計9本作成してください。
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">入力：「AIを活用した経費精算自動化SaaSをリリース。月額3,000円から。主なターゲットは中小企業の経理担当者」</p>
+    <div class="output-example">
+      <div class="output-header">Claude の出力（一部）</div>
+      <div class="output-body">
+        <div class="platform-block">
+          <div class="platform-label"><span class="icon pl-x">𝕏</span> X（旧Twitter）向け</div>
+          <div class="post-cards">
+            <div class="post-card"><div class="post-num">投稿1</div>経費精算、まだ手作業でやってますか？AIが領収書を読んで仕訳まで自動化。中小企業向けに月額3,000円〜でリリースしました。無料トライアルあります。#AI #経費精算<div class="char-count">83文字</div></div>
+            <div class="post-card"><div class="post-num">投稿2</div>「経費精算の月次作業に何時間かけてますか？」弊社調査では平均6.5時間。AIで15分に短縮できます。詳細はリプ欄へ。<div class="char-count">62文字</div></div>
+            <div class="post-card"><div class="post-num">投稿3</div>freee連携の経費精算AIをリリース。領収書を撮影するだけで仕訳・承認・振込まで完結。初月無料。 #SaaS #バックオフィス<div class="char-count">65文字</div></div>
+          </div>
+        </div>
+        <div class="platform-block">
+          <div class="platform-label"><span class="icon pl-li">in</span> LinkedIn向け</div>
+          <div class="post-cards">
+            <div class="post-card"><div class="post-num">投稿1（洞察型）</div>中小企業の経理担当者が毎月平均6.5時間を経費精算に費やしているというデータがあります。
+
+これは年間78時間。人件費に換算すると約40万円。
+
+AIで自動化すれば、この時間を本来の分析業務に充てられます。
+
+本日、そのためのツールをリリースしました。
+月額3,000円〜、freee連携対応。
+
+経営者・管理部門の方、ご連絡ください。
+
+#バックオフィス自動化 #中小企業 #AI活用<div class="char-count">213文字</div></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>プロンプトテンプレート（用途別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('release',this)">新機能・リリース</button>
+      <button class="stab" onclick="showScenario('event',this)">イベント告知</button>
+      <button class="stab" onclick="showScenario('knowhow',this)">知識・ノウハウ</button>
+      <button class="stab" onclick="showScenario('recruit',this)">採用・会社紹介</button>
+    </div>
+
+    <div id="scenario-release" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">新機能・リリース告知</div>
+        <pre>以下の情報をもとに、各SNS向けの投稿文を3本ずつ計9本作成してください。
 
 【伝えたい情報】
-（例：新サービス「〇〇」をリリースしました。月額3,000円で△△が使い放題）
+サービス名：〇〇
+リリースした機能・内容：〇〇
+価格：〇〇円〜
+ターゲット：〇〇
 
-【ターゲット読者】
-（例：中小企業の経営者・マーケター）
-
-【トーン・ブランドの雰囲気】
-（例：親しみやすく、専門知識があるが難しすぎない）
+【ブランドの雰囲気】
+〇〇（例：親しみやすく、専門知識があるが難しすぎない）
 
 ---
 
 出力形式：
 
-■ X（旧Twitter）向け — 各140文字以内
-投稿1：
-投稿2：
-投稿3：
+■ X（旧Twitter）向け — 各140文字以内、ハッシュタグ1〜2個
+・投稿1：数字・実績で関心を引くフック型
+・投稿2：疑問形・問いかけ型
+・投稿3：機能を端的に伝える告知型
 
 ■ LinkedIn向け — 各300〜600字、改行多め、プロフェッショナルトーン
-投稿1：
-投稿2：
-投稿3：
+・投稿1：業界の課題提起 → 解決策として提案
+・投稿2：ビフォー/アフターで価値を示す
+・投稿3：データ・実績を軸にした説得型
 
-■ Instagram向け — 各150〜300字、絵文字を適度に使用、ハッシュタグ付き
-投稿1：
-投稿2：
-投稿3：
+■ Instagram向け — 各150〜300字、絵文字適度、ハッシュタグ10〜15個
+・投稿1：感情的な共感を呼ぶストーリー型
+・投稿2：舞台裏・開発秘話的な親近感型
+・投稿3：シンプルな価値訴求型
 
-各投稿は内容・切り口・フックが重複しないようにしてください。</pre>
+各投稿は切り口・フックが重複しないこと。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-event" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">イベント・セミナー告知</div>
+        <pre>以下のイベント情報をもとに、告知投稿文を各SNS3本ずつ計9本作成してください。
+
+【イベント情報】
+タイトル：〇〇セミナー
+日時：〇月〇日（〇）〇〇:〇〇〜
+形式：オンライン／リアル（場所：〇〇）
+参加費：無料 / 〇〇円
+登録URL：https://（URL）
+ゲスト・登壇者：〇〇（〇〇社）
+
+【ターゲット参加者】
+〇〇担当者・〇〇に興味がある方
+
+---
+
+■ X（旧Twitter）— 3本
+・1本目：日程・概要を端的に（緊急感あり）
+・2本目：「こんな方に向けて」という絞り込み型
+・3本目：ゲスト・登壇者の権威性を前面に
+
+■ LinkedIn — 3本
+・1本目：参加することで得られるビジネス価値を伝える
+・2本目：過去イベントの実績・参加者の声
+・3本目：登壇者紹介を中心にした告知
+
+■ Instagram — 3本
+・1本目：期待感を高める体験型（「〇〇を学ぼう！」）
+・2本目：「あなたは参加しますか？」という問いかけ型
+・3本目：ビジュアル映えを想定したシンプル告知</pre>
+      </div>
+    </div>
+
+    <div id="scenario-knowhow" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">知識・ノウハウ発信</div>
+        <pre>以下のテーマで、有益なノウハウ・知識共有の投稿文を各SNS3本ずつ作成してください。
+
+【テーマ】
+〇〇について（例：中小企業がAIを導入する際の3つの落とし穴）
+
+【キーメッセージ・ポイント】
+1. 〇〇
+2. 〇〇
+3. 〇〇
+
+【ターゲット読者】
+〇〇担当者・〇〇に悩んでいる方
+
+---
+
+■ X（旧Twitter）— 3本
+・1本目：「〇つの〇〇」というリスト型（スレッド誘導あり）
+・2本目：反直感的な主張型（「実は〇〇なんです」）
+・3本目：1つのポイントを深掘りした単発型
+
+■ LinkedIn — 3本
+・1本目：自分の失敗体験からの学び（共感型）
+・2本目：業界データを使った問題提起型
+・3本目：ステップバイステップ解説（番号付き）
+
+■ Instagram — 3本
+・全て保存したくなる「お役立ちTips」形式
+・絵文字と改行を使い読みやすく</pre>
+      </div>
+    </div>
+
+    <div id="scenario-recruit" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">採用・会社紹介</div>
+        <pre>以下の情報をもとに採用・会社紹介の投稿文を各SNS3本ずつ作成してください。
+
+【採用情報】
+職種：〇〇
+必要なスキル：〇〇
+待遇・特徴：〇〇（例：フルリモート、裁量あり、副業OK）
+応募URL：https://（URL）
+
+【会社の雰囲気・カルチャー】
+〇〇（例：少数精鋭、スピード重視、社員の自律性を尊重）
+
+---
+
+■ X（旧Twitter）— 3本
+・1本目：「こんな人を探してます」という具体的な人物像
+・2本目：仕事の魅力を数字で表現
+・3本目：カジュアルな社風を伝えるトーン
+
+■ LinkedIn — 3本
+・1本目：採用の背景・会社のビジョンから語る
+・2本目：実際の業務内容と成長機会を詳述
+・3本目：チームの雰囲気と実際の働き方
+
+■ Instagram — 3本
+・1本目：「一緒に働きたい人」への呼びかけ
+・2本目：オフィス・チームの雰囲気を伝える（写真訴求前提）
+・3本目：社員の声・体験談風</pre>
+      </div>
     </div>
   </div>
 
   <div class="section">
     <h2>活用のコツ</h2>
-    <ul class="steps">
-      <li class="step">
-        <div class="step-num">1</div>
-        <div class="step-body">
-          <strong>投稿スケジュールと組み合わせる</strong>
-          <p>生成した9本をBuffer・Hootsuite等の予約投稿ツールに登録。週3投稿×3週分を一度に準備できる。</p>
-        </div>
-      </li>
-      <li class="step">
-        <div class="step-num">2</div>
-        <div class="step-body">
-          <strong>A/Bテスト用に活用する</strong>
-          <p>同じテーマで3本生成することでA/Bテストのバリエーションとして活用。エンゲージメントが高い型を分析して次回に活かす。</p>
-        </div>
-      </li>
-      <li class="step">
-        <div class="step-num">3</div>
-        <div class="step-body">
-          <strong>ブランドガイドラインをプロンプトに含める</strong>
-          <p>使ってはいけない言葉・必ず含めたい表現・トーンの制約を「制約条件」として事前に追記すると品質が安定する。</p>
-        </div>
-      </li>
-    </ul>
+    <div class="tips">
+      <div class="tip">
+        <div class="tip-title">予約投稿ツールと組み合わせる</div>
+        <div class="tip-body">生成した9本をBuffer・Hootsuite・Later等の予約投稿ツールに登録。週3投稿×3週分を一度に準備できる。</div>
+      </div>
+      <div class="tip">
+        <div class="tip-title">A/Bテスト用に活用する</div>
+        <div class="tip-body">同テーマで3本生成 → エンゲージメントが高い型を分析 → 次回のプロンプトに「〇〇型を優先して」と指示すると精度が上がる。</div>
+      </div>
+      <div class="tip">
+        <div class="tip-title">ブランドガイドラインを固定する</div>
+        <div class="tip-body">Claude.aiのカスタム指示に「使ってはいけない言葉」「必ず含める表現」「NGな訴求（誇大広告等）」を登録しておく。</div>
+      </div>
+      <div class="tip">
+        <div class="tip-title">コンテンツカレンダーと連動</div>
+        <div class="tip-body">月初に1か月分のテーマを決め、一括でプロンプトを回す。月単位の投稿計画が30分で完成する。</div>
+      </div>
+    </div>
   </div>
 
   <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
-        <li>生成した文章は必ず人間がレビューしてから投稿する。事実誤認や不適切な表現が含まれていないか確認。</li>
-        <li>各社のガイドラインで禁止されている内容（医療・金融等の誇大表現など）は生成後に除去する。</li>
-        <li>Instagram のハッシュタグは業界・地域・規模に合わせて都度調整が必要。</li>
+        <li>生成した文章は必ず人間がレビューしてから投稿する。事実誤認・不適切表現・景品表示法違反がないか確認する。</li>
+        <li>医療・金融・健康に関連する投稿は法規制に注意。「〇〇が治る」「必ず儲かる」等の表現はAIが生成しても法的に問題になる。</li>
+        <li>Instagramのハッシュタグは業界・地域・規模に合わせて都度調整する。使用禁止タグ（シャドウバンの原因になるもの）を含まないか確認。</li>
+        <li>AIが生成した投稿は均一感が出やすい。週に1本は自分の言葉で書いたものを混ぜると、フォロワーへの信頼感が維持しやすい。</li>
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="05-youtube-to-content.html">YouTube動画→ブログ+SNS一括生成</a>
+        <span>★★ 動画コンテンツを流用する場合</span>
+      </div>
+      <div class="related-card">
+        <a href="07-brand-monitoring.html">SNSブランド評判監視→Slack通知</a>
+        <span>★★★ 投稿後の反応を監視する</span>
+      </div>
+      <div class="related-card">
+        <a href="../08-content/04-document-draft.html">ビジネス文書の自動ドラフト</a>
+        <span>★★ プレスリリース等の文書作成</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — マーケティング・広告</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

@@ -20,7 +20,6 @@ h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
 .section { margin-bottom: 32px; }
 h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
 .overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
-.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
 .steps { list-style: none; padding: 0; }
 .step { display: flex; gap: 16px; margin-bottom: 20px; }
 .step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
@@ -29,6 +28,34 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
 .prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
 .prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; }
+.tone-block { margin-bottom: 16px; padding-bottom: 16px; border-bottom: 1px dashed #e2e8f0; }
+.tone-block:last-child { margin-bottom: 0; padding-bottom: 0; border-bottom: none; }
+.tone-label { display: inline-flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 700; padding: 3px 10px; border-radius: 12px; margin-bottom: 8px; }
+.tone-polite { background: #eff6ff; color: #1d4ed8; }
+.tone-standard { background: #f0fdf4; color: #166534; }
+.tone-brief { background: #fefce8; color: #854d0e; }
+.tone-block pre { font-size: 13px; color: #334155; white-space: pre-wrap; font-family: inherit; line-height: 1.7; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 16px; }
+.stab { padding: 5px 14px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 13px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 .notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
 .notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
 .notes ul li { margin-bottom: 5px; }
@@ -40,10 +67,10 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
 <body>
 <div class="page-header">
   <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › カスタマーサポート</div>
-  <h1>問い合わせメール → トーン別返信案3種を自動生成（15分→3分、月60時間削減）</h1>
+  <h1>問い合わせメール → トーン別返信案3種を自動生成</h1>
   <div class="meta">
     <span class="badge lv1">★ 今日から</span>
-    <span class="time-b">15分→3分（月60時間削減）</span>
+    <span class="time-b">15分 → 3分（月60時間削減）</span>
     <span class="tool-b">Claude.ai</span>
   </div>
 </div>
@@ -53,65 +80,283 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
   <div class="section">
     <h2>概要</h2>
     <div class="overview">
-      受信した問い合わせメールをClaude.aiに貼り付けるだけで、「丁寧・標準・簡潔」の3つのトーンで返信案を自動生成。担当者は最適な案を選んで微調整するだけでよく、返信時間を15分から3分に短縮できる。
+      受信した問い合わせメールをClaude.aiに貼り付けるだけで「丁寧・標準・簡潔」の3トーンで返信案を即時生成。担当者は最適な案を選んで微調整するだけでよく、返信時間を15分から3分に短縮できる。クレーム・操作質問・解約申請など種別ごとのテンプレートも収録。
     </div>
   </div>
 
   <div class="section">
-    <h2>プロンプトテンプレート</h2>
-    <div class="prompt">
-      <div class="prompt-label">そのまま使えるプロンプト</div>
-      <pre>以下の問い合わせメールに対して、3つのトーンで返信案を作成してください。
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 以下のメールを入力した場合のClaudeの出力例</p>
+    <div class="prompt" style="margin-bottom:10px;">
+      <div class="prompt-label">入力したメール（例）</div>
+      <pre>件名：ログインできなくなりました
+送信者：田中 太郎 &lt;tanaka@example.co.jp&gt;
+
+先週からログインできなくなっています。
+パスワードリセットも試しましたがメールが届きません。
+早急に対応してもらえますか？</pre>
+    </div>
+    <div class="output-example">
+      <div class="output-header">Claude の出力（3種類の返信案）</div>
+      <div class="output-body">
+        <div class="tone-block">
+          <span class="tone-label tone-polite">① 丁寧 — クレーム・初回問い合わせ向け</span>
+          <pre>件名：Re: ログインできなくなりました
+
+田中 太郎 様
+
+平素より〇〇をご利用いただきありがとうございます。
+カスタマーサポートの山田と申します。
+
+ログインおよびパスワードリセットのメールが届かないとのこと、
+大変ご不便をおかけしており、誠に申し訳ございません。
+
+早急に確認・対応いたします。いくつかお伺いしてもよろしいでしょうか。
+
+1. ご登録のメールアドレスはどちらでしょうか？
+2. パスワードリセットメールの迷惑メールフォルダへの振り分けはご確認いただけましたか？
+
+ご返信いただき次第、優先対応いたします。
+引き続きどうぞよろしくお願いいたします。
+
+——
+〇〇株式会社 カスタマーサポート
+山田 花子
+support@example.co.jp</pre>
+        </div>
+        <div class="tone-block">
+          <span class="tone-label tone-standard">② 標準 — 一般的な問い合わせ向け</span>
+          <pre>件名：Re: ログインできなくなりました
+
+田中様
+
+お問い合わせありがとうございます。
+
+ログインできない件、確認させていただきます。
+以下をご確認ください。
+
+・迷惑メールフォルダにパスワードリセットメールが届いていないか
+・ご登録メールアドレス（本メールの送信元と同じか）
+
+確認後、対応策をご連絡いたします。
+
+〇〇株式会社 サポート</pre>
+        </div>
+        <div class="tone-block">
+          <span class="tone-label tone-brief">③ 簡潔 — リピート顧客・技術者向け</span>
+          <pre>件名：Re: ログインできなくなりました
+
+田中様
+
+ご連絡ありがとうございます。
+
+迷惑メールフォルダをご確認いただき、
+ご登録のメールアドレスを折り返しご共有ください。
+確認次第ご連絡します。
+
+〇〇 サポート</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>プロンプトテンプレート（シナリオ別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('general',this)">一般問い合わせ</button>
+      <button class="stab" onclick="showScenario('claim',this)">クレーム対応</button>
+      <button class="stab" onclick="showScenario('cancel',this)">解約申請</button>
+      <button class="stab" onclick="showScenario('tech',this)">技術的質問</button>
+    </div>
+
+    <div id="scenario-general" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">一般問い合わせ — そのままコピーして使えるプロンプト</div>
+        <pre>以下の問い合わせメールに対して、3つのトーンで返信案を作成してください。
 
 【問い合わせ内容】
-（ここに受信したメールをペーストする）
+（ここに受信したメールをペースト）
 
 ---
 
 【会社・サービス情報】
 会社名：〇〇株式会社
-サービス：〇〇（〇〇向けのSaaSツール）
+サービス名：〇〇
 担当部署：カスタマーサポート
+担当者名：（自分の名前）
 
 ---
 
 出力形式：
 
-■ 返信案①：丁寧（謝罪・共感・詳細説明を含む。クレーム・初回問い合わせ向け）
+■ 返信案①：丁寧
+（謝罪・共感・詳細な説明を含む。クレーム・初回問い合わせ向け）
 
-■ 返信案②：標準（事務的だが温かみがある。一般的な問い合わせ向け）
+■ 返信案②：標準
+（事務的だが温かみがある。一般的な問い合わせ向け）
 
-■ 返信案③：簡潔（要点のみ。リピート顧客・技術者向け）
+■ 返信案③：簡潔
+（要点のみ。リピート顧客・技術者向け）
 
-各案とも件名・宛名・署名欄を含める。</pre>
+各案とも件名・宛名・署名欄を含めてください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-claim" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">クレーム対応 — 専用プロンプト</div>
+        <pre>以下のクレームメールに対して、誠実かつ問題解決を重視した返信案を2種類作成してください。
+
+【クレームメール】
+（ここに受信したメールをペースト）
+
+---
+
+【背景情報（わかっている範囲で）】
+・障害・問題の概要：
+・発生期間：
+・すでに対応済みの内容：
+・補償・対応方針：
+
+---
+
+出力形式：
+
+■ 返信案①：謝罪重視型
+冒頭に誠実な謝罪 → 原因説明（わかっている範囲） → 再発防止策 → 対応方針
+
+■ 返信案②：解決重視型
+簡潔な謝罪 → 具体的な解決策の提示 → 次のアクション（期日付き）
+
+禁止事項：責任転嫁・曖昧な約束・「検討します」だけで終わらない</pre>
+      </div>
+    </div>
+
+    <div id="scenario-cancel" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">解約申請 — 引き留め・手続き案内プロンプト</div>
+        <pre>以下の解約申請メールに対して、返信案を2種類作成してください。
+
+【解約申請メール】
+（ここに受信したメールをペースト）
+
+---
+
+【方針】
+解約理由を確認し、可能であれば課題解決を提案する。
+強引な引き留めはしない。手続きは丁寧に案内する。
+
+解約手続きURL：https://example.com/cancel
+解約完了期間：申請から3営業日
+返金ポリシー：月額の場合、当月分は返金なし
+
+---
+
+■ 返信案①：課題解決提案型
+まず解約理由を確認し、改善できる点があれば提案する。手続きは最後に案内。
+
+■ 返信案②：手続き案内型
+お礼と残念な旨を伝えつつ、手続きをスムーズに案内。再利用の余地を残す。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-tech" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">技術的質問 — 手順付き回答プロンプト</div>
+        <pre>以下の技術的な問い合わせに対して、わかりやすい手順付きの回答を作成してください。
+
+【問い合わせ】
+（ここに受信したメールをペースト）
+
+---
+
+【サービス仕様（わかっている範囲で）】
+・該当機能：
+・正しい操作手順：
+・よくある原因：
+
+---
+
+出力形式：
+
+■ 回答：標準ユーザー向け
+ステップバイステップで番号付き手順。スクリーンショットがあれば参照を示す。
+
+■ 回答：技術者向け（簡潔）
+技術用語OK、手順は簡潔に。
+
+両案とも「解決しない場合の次のステップ（問い合わせ先・ログ取得方法等）」を末尾に追加。</pre>
+      </div>
     </div>
   </div>
 
   <div class="section">
-    <h2>効率化のコツ</h2>
+    <h2>Claude.ai カスタム指示への登録（時短設定）</h2>
     <ul class="steps">
       <li class="step">
         <div class="step-num">1</div>
         <div class="step-body">
-          <strong>よくある問い合わせ種別ごとにプロンプトを用意</strong>
-          <p>「クレーム対応」「操作方法の質問」「解約申請」「請求確認」など種別ごとにプロンプトテンプレートを作ると、さらに精度と速度が上がる。</p>
+          <strong>カスタム指示に会社情報を一度だけ登録する</strong>
+          <p>Claude.ai 右上メニュー → 「カスタム指示」に以下を設定すると、毎回の入力が不要になる。</p>
+          <div class="prompt">
+            <div class="prompt-label">カスタム指示（System Prompt）に登録する内容</div>
+            <pre>あなたは〇〇株式会社のカスタマーサポート担当として返信案を作成します。
+
+【会社情報】
+会社名：〇〇株式会社
+サービス：〇〇（〇〇向けの〇〇ツール）
+サポート時間：平日 10:00〜18:00
+問い合わせ窓口：support@example.co.jp
+
+【返信のルール】
+・敬語を使う（「〜させていただきます」は使いすぎない）
+・問題解決を最優先にする
+・担当者名は「（担当者名をここに入れてください）」と仮置きする
+・クレームには必ず謝罪から始める
+
+【禁止事項】
+・根拠のない約束をしない
+・「確認中です」で終わらせない
+・競合サービスを否定しない</pre>
+          </div>
         </div>
       </li>
       <li class="step">
         <div class="step-num">2</div>
         <div class="step-body">
-          <strong>Claude.aiのプロジェクト機能を活用</strong>
-          <p>Claude.aiのプロジェクトにサービス概要・FAQ・返答禁止事項を登録しておくと、毎回情報を貼り付ける必要がなくなる。</p>
+          <strong>登録後の使い方（3行だけで完結）</strong>
+          <div class="prompt">
+            <div class="prompt-label">登録後はこれだけでOK</div>
+            <pre>以下のメールに返信案を3種類作って。
+
+件名：〇〇について
+本文：（受信メールをペースト）</pre>
+          </div>
         </div>
       </li>
       <li class="step">
         <div class="step-num">3</div>
         <div class="step-body">
-          <strong>Gmailと組み合わせたより高度な自動化（★★レベル）</strong>
-          <p>Gmail API + Claude CodeのSMTPスクリプトで、受信→生成→下書き保存まで完全自動化できる。担当者は下書きを確認して送信するだけになる。</p>
+          <strong>プロジェクト機能でFAQを登録する</strong>
+          <p>Claude.aiの「プロジェクト」にFAQ・対応事例・禁止用語リストをドキュメントとして追加しておくと、より的確な返信案が生成される。</p>
         </div>
       </li>
     </ul>
+  </div>
+
+  <div class="section">
+    <h2>送信前チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>宛名が正確か（名前の誤字・会社名の間違いがないか）</li>
+        <li>事実と異なる内容が含まれていないか</li>
+        <li>根拠のない約束（「必ず対応します」等）をしていないか</li>
+        <li>個人情報や社外秘情報が誤って含まれていないか</li>
+        <li>担当者名の仮置き（〇〇）が残っていないか</li>
+        <li>クレームの場合、謝罪と具体的な解決策が含まれているか</li>
+        <li>署名欄が正しいか（電話番号・メールアドレス）</li>
+      </ul>
+    </div>
   </div>
 
   <div class="section">
@@ -119,12 +364,40 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <div class="notes">
       <ul>
         <li>生成された返信案は必ず担当者がレビューしてから送信する。特にクレーム・法的リスクが絡む内容は慎重に対応。</li>
-        <li>個人情報が含まれるメール内容をAIに入力する場合は、社内のデータ取り扱い規定を確認する。</li>
-        <li>同じテンプレートを使い続けると定型文感が出る。月1回程度プロンプトを見直して鮮度を保つ。</li>
+        <li>個人情報が含まれるメール内容をAIに入力する場合は、社内のデータ取り扱い規定を確認する。Claude.aiは入力データをモデル学習に使用しないが、社内ポリシーによっては外部AI利用自体が制限される場合がある。</li>
+        <li>同じテンプレートを使い続けると定型文感が出やすい。月1回程度プロンプトを見直して鮮度を保つ。</li>
+        <li>クレーム対応は感情的な配慮が重要。AIの文章は正確でも温かみが不足する場合がある。送信前に人間らしい言葉を少し加えると効果的。</li>
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-slack-bot.html">Slack自動返信ボット FAQ一次対応</a>
+        <span>★★★ Slackで自動化する場合</span>
+      </div>
+      <div class="related-card">
+        <a href="../06-hr/05-faq-update.html">社内FAQ・ナレッジベースの自動更新</a>
+        <span>★★★ よくある質問を蓄積する</span>
+      </div>
+      <div class="related-card">
+        <a href="../08-content/04-document-draft.html">ビジネス文書の自動ドラフト</a>
+        <span>★★ 提案書・マニュアルにも応用</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — カスタマーサポート</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>
