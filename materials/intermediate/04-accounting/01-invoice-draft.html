@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>「請求書を出して」で源泉・消費税自動判定し下書き生成 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv1 { background: #dcfce7; color: #166534; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.table-wrap { overflow-x: auto; margin: 10px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #f1f5f9; color: #334155; font-weight: 700; padding: 8px 12px; text-align: left; border: 1px solid #e2e8f0; }
+td { padding: 8px 12px; border: 1px solid #e2e8f0; color: #475569; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 経理・バックオフィス</div>
+  <h1>「A社にコンサル料50万円の請求書を出して」で源泉徴収・消費税を自動判定して下書き生成</h1>
+  <div class="meta">
+    <span class="badge lv1">★ 今日から</span>
+    <span class="time-b">設定不要・即使える</span>
+    <span class="tool-b">Claude.ai</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      「A社にコンサル料50万円の請求書を出して」という自然言語の指示だけで、源泉徴収の要否・消費税の計算・請求書の下書きをClaude.aiが自動生成する。税務知識がなくても正確な金額計算が可能。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>源泉徴収の基本判定表</h2>
+    <div class="table-wrap">
+      <table>
+        <tr><th>業務種別</th><th>源泉徴収</th><th>税率</th></tr>
+        <tr><td>コンサルタント料・顧問料</td><td>あり</td><td>10.21%（100万円超は20.42%）</td></tr>
+        <tr><td>デザイン・イラスト料</td><td>あり</td><td>10.21%</td></tr>
+        <tr><td>執筆・翻訳料</td><td>あり</td><td>10.21%</td></tr>
+        <tr><td>SaaS・システム利用料</td><td>なし</td><td>—</td></tr>
+        <tr><td>物品販売</td><td>なし</td><td>—</td></tr>
+        <tr><td>広告費・PR費用</td><td>なし（芸能除く）</td><td>—</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>プロンプトテンプレート</h2>
+    <div class="prompt">
+      <div class="prompt-label">そのまま使えるプロンプト</div>
+      <pre>以下の条件で請求書の下書きを作成してください。
+
+【依頼主情報】
+発行者：〇〇株式会社（登録番号：T0000000000000）
+住所：〇〇
+振込先：〇〇銀行 〇〇支店 普通 0000000
+
+【請求内容】
+宛先：〇〇株式会社 御中
+業務内容：経営コンサルティング料（2026年4月分）
+金額：500,000円
+
+【確認事項】
+・源泉徴収の要否と金額
+・消費税額（10%）
+・お振込金額（源泉徴収控除後）
+・適格請求書の要件を満たしているか
+
+請求書の下書きと金額計算の内訳を教えてください。</pre>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>活用のコツ</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>発行者情報をシステムプロンプトに固定</strong>
+          <p>Claude.aiのカスタム指示（Custom Instructions）に自社の発行者情報・振込先・登録番号を設定しておくと毎回の入力を省略できる。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Claude Codeでスキルコマンド化（★★レベル）</strong>
+          <p>Claude Codeのスキル機能を使えば <code>/invoice A社 コンサル料 50万円</code> のような短い指示だけでPDF請求書まで生成できる。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>AIの判定はあくまで参考。税務上の判断は税理士に確認すること。特に個人への支払いと法人への支払いで源泉徴収の扱いが異なる場合がある。</li>
+        <li>適格請求書（インボイス）として有効にするには、発行者の登録番号（T+13桁）の記載が必須。</li>
+        <li>1回の支払いが100万円を超える場合、源泉徴収税率が変わる（10.21%→20.42%）ので注意。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 経理・バックオフィス</footer>
+</body>
+</html>

@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>操作録画＋ナレーション→Markdownマニュアル自動生成 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv4 { background: #f3e8ff; color: #6b21a8; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 総務・人事</div>
+  <h1>操作録画 ＋ ナレーション → Markdownマニュアル自動生成</h1>
+  <div class="meta">
+    <span class="badge lv4">★★★★ エンジニア向け</span>
+    <span class="time-b">マニュアル作成を全自動化</span>
+    <span class="tool-b">FFmpeg</span>
+    <span class="tool-b">Whisper</span>
+    <span class="tool-b">Claude Code</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      操作手順を録画したMP4ファイル（ナレーション付き）を入力として、スクリーンショット抽出・ナレーション文字起こし・操作手順の構造化を自動で行い、スクリーンショット付きMarkdownマニュアルを出力する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>処理パイプライン</h2>
+    <div class="code"><span class="c"># 処理の流れ</span>
+録画MP4
+  ↓ FFmpegでスクリーンショット抽出（1秒ごと）
+  ↓ Whisperでナレーション文字起こし
+  ↓ タイムスタンプを使って「画面変化点」を検出
+  ↓ 画面変化点のスクリーンショット + 対応するナレーションを紐付け
+  ↓ Claudeで操作手順を構造化
+  ↓ Markdownマニュアル出力（スクリーンショット埋め込み）</div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">FFmpeg（インストール必要）</span>
+      <span class="tool-chip">OpenAI Whisper（pip install openai-whisper）</span>
+      <span class="tool-chip">Pillow（スクリーンショット処理）</span>
+      <span class="tool-chip">Claude Code</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>操作録画を撮影する</strong>
+          <p>OBS Studio・QuickTime・Windows標準録画等で操作手順を録画。ナレーションを入れながら録画すると精度が上がる。ナレーションがない場合はテロップを付けた動画でも対応可能。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>スクリーンショット抽出</strong>
+          <div class="code"><span class="c"># 1秒ごとにスクリーンショット抽出</span>
+ffmpeg -i input.mp4 -vf fps=1 screenshots/frame_%04d.png</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>ナレーション文字起こし</strong>
+          <div class="code"><span class="c"># Whisperで文字起こし（タイムスタンプ付き）</span>
+whisper input.mp4 --language ja --output_format json --output_dir ./</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>マニュアル生成スクリプトをClaude Codeで作成</strong>
+          <p>タイムスタンプを使ってスクリーンショットとナレーション文字起こしを紐付け、Claudeで操作手順を構造化するスクリプトを生成してもらう。</p>
+          <div class="code"><span class="c"># 出力例（manual.md）</span>
+# 〇〇の操作マニュアル
+
+## 手順1：ログイン
+![ログイン画面](screenshots/frame_0001.png)
+1. ブラウザで https://... にアクセスする
+2. メールアドレスとパスワードを入力する
+3. 「ログイン」ボタンをクリックする</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>画面変化が少ない操作（文字入力・スクロール等）は変化点検出が難しい。ナレーションの区切りでステップを区切る実装が安定する。</li>
+        <li>スクリーンショットに個人情報・パスワードが映り込まないよう注意。マニュアル公開前に全スクショを確認する。</li>
+        <li>Whisperのローカル実行はGPUがあると高速。CPU環境では長い動画の文字起こしに時間がかかる。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 総務・人事</footer>
+</body>
+</html>

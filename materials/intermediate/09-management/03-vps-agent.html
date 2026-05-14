@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>VPS常駐エージェント：LINE WORKSから指示→Gmail・Calendar・Drive・Notion横断操作 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv4 { background: #f3e8ff; color: #6b21a8; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.arch { background: #fafafa; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; margin: 10px 0; font-size: 13px; color: #475569; }
+.arch .flow { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; margin-top: 8px; }
+.arch .node { background: #e0f2fe; color: #075985; padding: 4px 12px; border-radius: 6px; font-weight: 600; white-space: nowrap; }
+.arch .arrow { color: #94a3b8; font-size: 18px; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 経営・全社横断</div>
+  <h1>VPS常駐エージェント：LINE WORKSから指示 → Gmail・Calendar・Drive・Notion横断操作</h1>
+  <div class="meta">
+    <span class="badge lv4">★★★★ エンジニア向け</span>
+    <span class="time-b">スマホから全ツールを一元操作</span>
+    <span class="tool-b">VPS</span>
+    <span class="tool-b">LINE WORKS</span>
+    <span class="tool-b">Claude API</span>
+    <span class="tool-b">MCP</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      VPS（仮想プライベートサーバー）にClaudeエージェントを常駐させ、LINE WORKSから自然言語で指示を送るとGmail・Googleカレンダー・Googleドライブ・Notionを横断して操作する。スマートフォンだけで全ツールの操作が完結する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>システム構成</h2>
+    <div class="arch">
+      <div><strong>データの流れ</strong></div>
+      <div class="flow">
+        <span class="node">LINE WORKS（スマホ）</span>
+        <span class="arrow">→</span>
+        <span class="node">Webhook</span>
+        <span class="arrow">→</span>
+        <span class="node">VPS（Python常駐）</span>
+        <span class="arrow">→</span>
+        <span class="node">Claude API</span>
+        <span class="arrow">→</span>
+        <span class="node">MCPサーバー群</span>
+      </div>
+      <div class="flow" style="margin-top:8px">
+        <span class="node">Gmail</span>
+        <span class="node">Googleカレンダー</span>
+        <span class="node">Googleドライブ</span>
+        <span class="node">Notion</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>VPSにサーバー環境を構築する</strong>
+          <p>さくらVPS・ConoHa等の月額500〜1,000円程度のVPSを用意する。Ubuntu 22.04 LTS推奨。</p>
+          <div class="code"><span class="c"># Python環境とMCPサーバーのインストール</span>
+sudo apt update && sudo apt install -y python3-pip nodejs npm
+pip3 install anthropic flask gunicorn
+
+<span class="c"># Google Workspace MCPのインストール</span>
+npm install -g @modelcontextprotocol/server-gdrive
+npm install -g @modelcontextprotocol/server-gcal
+
+<span class="c"># Notion MCPのインストール</span>
+npm install -g @notionhq/notion-mcp-server</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>LINE WORKS Botを作成してWebhookを設定する</strong>
+          <p>LINE WORKS Developer Consoleでボットを作成し、Webhook URLにVPSのエンドポイントを設定する。</p>
+          <div class="code"><span class="c"># LINE WORKS Bot設定（Developer Console）</span>
+Bot名：業務アシスタント
+Webhook URL：https://your-vps-ip/webhook
+権限：メッセージ送受信
+
+<span class="c"># 環境変数ファイル（.env）</span>
+LINEWORKS_BOT_SECRET=xxx
+LINEWORKS_ACCESS_TOKEN=xxx
+LINEWORKS_CHANNEL_ID=xxx
+ANTHROPIC_API_KEY=sk-ant-xxx
+GOOGLE_CREDENTIALS_PATH=/app/credentials/google-creds.json
+NOTION_API_KEY=secret_xxx</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Webhookサーバーを実装する</strong>
+          <div class="code"><span class="c"># agent_server.py（抜粋）</span>
+from flask import Flask, request, jsonify
+import anthropic, json, subprocess
+
+app = Flask(__name__)
+client = anthropic.Anthropic()
+
+MCP_CONFIG = {
+    "mcpServers": {
+        "gdrive": {"command": "npx", "args": ["-y", "@modelcontextprotocol/server-gdrive"]},
+        "gcal":   {"command": "npx", "args": ["-y", "@modelcontextprotocol/server-gcal"]},
+        "notion": {"command": "npx", "args": ["-y", "@notionhq/notion-mcp-server"],
+                   "env": {"NOTION_API_KEY": os.environ["NOTION_API_KEY"]}}
+    }
+}
+
+@app.route('/webhook', methods=['POST'])
+def webhook():
+    data = request.json
+    user_message = data.get('content', {}).get('text', '')
+    channel_id = data.get('channelId')
+
+    <span class="c"># Claudeエージェントに処理を委任</span>
+    result = run_agent(user_message)
+
+    <span class="c"># LINE WORKSに返信を送信</span>
+    send_lineworks_message(channel_id, result)
+    return jsonify({"status": "ok"})
+
+def run_agent(instruction: str) -> str:
+    <span class="c"># Claude CLIをヘッドレスモードで実行（MCPが自動接続）</span>
+    proc = subprocess.run(
+        ["claude", "--headless", "--print", "--mcp-config", json.dumps(MCP_CONFIG), instruction],
+        capture_output=True, text=True, timeout=120
+    )
+    return proc.stdout.strip()</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>systemdで常駐サービスとして登録する</strong>
+          <div class="code"><span class="c"># /etc/systemd/system/agent.service</span>
+[Unit]
+Description=Business Agent Server
+After=network.target
+
+[Service]
+User=ubuntu
+WorkingDirectory=/app
+ExecStart=/usr/bin/gunicorn agent_server:app -b 0.0.0.0:5000
+Restart=always
+EnvironmentFile=/app/.env
+
+[Install]
+WantedBy=multi-user.target</div>
+          <div class="code"><span class="c"># サービスを起動・自動起動設定</span>
+sudo systemctl daemon-reload
+sudo systemctl enable agent
+sudo systemctl start agent</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <strong>LINE WORKSから操作する（使い方の例）</strong>
+          <div class="prompt">
+            <div class="prompt-label">LINE WORKSに送るメッセージ例</div>
+            <pre>「明日14時に鈴木さんとのミーティングをカレンダーに追加して。タイトルは"Q2振り返り"で90分。」
+
+「先週受信したメールで未返信のものをリストアップして。」
+
+「Notionの議事録データベースに今日の会議メモを追加して。
+内容：〇〇プロジェクト進捗確認。次回アクション：□□さんが資料作成（期限5/20）」
+
+「Googleドライブの"提案書"フォルダにある最新ファイルの名前を教えて。」</pre>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>VPSはインターネット上に公開されるため、Webhookエンドポイントの認証（LINE WORKSの署名検証）を必ず実装する。署名未検証のまま公開すると第三者から任意の指示を実行される危険がある。</li>
+        <li>Googleの認証情報（OAuth2）はVPS上のファイルに保存される。VPSのSSHアクセスを鍵認証のみに制限し、認証情報ファイルのパーミッションを600に設定する。</li>
+        <li>エージェントはGmail送信・カレンダー作成・Notion書き込み等の<strong>破壊的操作</strong>も実行できる。重要な操作の前に確認メッセージを送り、「はい」の返信を受けてから実行する確認フローを設けることを強く推奨する。</li>
+        <li>LINE WORKSのAPIはエンタープライズプランが必要な機能がある。ボットAPIの利用可否・メッセージ送信上限を事前に確認する。</li>
+        <li>Claude APIの利用料金はメッセージ量に比例する。エージェントがループに入ったり大量の文書を処理するとコストが急増するため、タイムアウト（120秒等）とトークン上限を設定する。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 経営・全社横断</footer>
+</body>
+</html>

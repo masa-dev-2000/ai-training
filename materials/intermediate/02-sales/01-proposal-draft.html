@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>顧客情報→提案書ドラフト自動生成 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv2 { background: #fef9c3; color: #854d0e; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 営業</div>
+  <h1>顧客情報・課題・決裁者タイプを渡すだけで提案書ドラフト自動生成</h1>
+  <div class="meta">
+    <span class="badge lv2">★★ 設定1〜2時間</span>
+    <span class="time-b">提案書作成時間を大幅短縮</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">Skills</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      顧客情報・課題・予算・決裁者タイプを入力フォーム形式で渡すだけで、自社サービスの提案書ドラフトを自動生成するスキルコマンドを構築する。毎回ゼロから書いていた提案書作成をテンプレート起点に変え、人間は仕上げと確認に集中できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">Claude Code</span>
+      <span class="tool-chip">自社サービス・商品情報（Markdownファイル）</span>
+      <span class="tool-chip">過去の提案書サンプル3〜5件</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>自社サービス情報をMarkdownにまとめる</strong>
+          <p>サービス概要・料金プラン・導入事例・よくある質問を <code>company-info.md</code> に記述。これがAIの「知識ベース」になる。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>決裁者タイプ別の訴求ポイントを定義</strong>
+          <div class="code"><span class="c"># decision-makers.md</span>
+## 経営者タイプ（ROI重視）
+訴求ポイント：投資回収期間・競合優位性・リスク軽減
+
+## 現場責任者タイプ（実務重視）
+訴求ポイント：操作性・既存システムとの連携・サポート体制
+
+## IT部門タイプ（技術重視）
+訴求ポイント：セキュリティ・API連携・スケーラビリティ</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>スキルファイルを作成する</strong>
+          <div class="code"><span class="c"># .claude/skills/proposal.md</span>
+---
+name: proposal
+description: 顧客情報を受け取り提案書ドラフトを生成する
+---
+
+以下の情報を元に提案書ドラフトを生成してください。
+company-info.mdとdecision-makers.mdを参照し、
+決裁者タイプに合わせた訴求で提案書を構成してください。
+
+出力形式：Markdown（後でPowerPointに変換可能な構造）
+構成：エグゼクティブサマリー→課題認識→解決策→導入効果→費用→スケジュール→次のステップ</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>/proposalコマンドで実行</strong>
+          <div class="prompt">
+            <div class="prompt-label">使い方</div>
+            <pre>/proposal
+
+顧客名：株式会社〇〇（製造業、従業員500名）
+課題：在庫管理が手作業でExcel依存、月次集計に3日かかっている
+予算感：年間300〜500万円
+決裁者タイプ：経営者（ROI重視）
+商談フェーズ：初回提案
+競合：すでに〇〇社と比較検討中</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <strong>出力をレビューして仕上げ</strong>
+          <p>生成されたドラフトを確認し、具体的な数値・事例・担当者名を追記して完成させる。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>顧客の機密情報（業績・予算・課題）をAIに渡すことに注意。社内利用専用のClaude Codeを使い、データが外部学習に使われない設定を確認する。</li>
+        <li>生成されたドラフトには必ず担当者がレビューを入れる。特に数値・事例・競合への言及は慎重に確認すること。</li>
+        <li>提案書のテンプレートは四半期ごとに更新し、最新の事例・料金を反映させる。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 営業</footer>
+</body>
+</html>

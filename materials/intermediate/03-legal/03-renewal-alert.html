@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>契約更新期限・自動更新条項 横断管理＋アラート — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv2 { background: #fef9c3; color: #854d0e; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 法務</div>
+  <h1>契約更新期限・自動更新条項 横断管理 ＋ アラート通知</h1>
+  <div class="meta">
+    <span class="badge lv2">★★ 設定1〜2時間</span>
+    <span class="time-b">更新見落としゼロへ</span>
+    <span class="tool-b">Google Sheets</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">Slack / メール</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      全契約書の更新期限・自動更新条項・解約通知期限をGoogle Sheetsで一元管理し、期限30日前・7日前・当日にSlackとメールで自動アラートを送信する。担当者が変わっても更新見落としが起きない体制を構築できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>契約管理スプレッドシートを設計する</strong>
+          <div class="code"><span class="c"># 列構成（Google Sheets）</span>
+A: 契約ID
+B: 相手方企業名
+C: 契約種別（NDA/業務委託/保守等）
+D: 契約開始日
+E: 契約終了日
+F: 自動更新（あり/なし）
+G: 解約通知期限（終了〇日前まで）
+H: 担当者名
+I: 担当者メール
+J: 備考
+K: ステータス（有効/更新済/終了）</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>既存契約書からデータを一括取り込み（Claude Codeで自動化）</strong>
+          <p>契約書PDFが多数ある場合、Claude Codeに「これらのPDFから契約管理シートの各列に必要な情報を抽出してCSVで出力して」と指示すると大量のデータ入力を自動化できる。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>アラートスクリプトを作成（Claude Codeで生成）</strong>
+          <div class="code"><span class="c"># contract_alert.py（Claude Codeで生成・抜粋）</span>
+import gspread, anthropic, smtplib, json
+from datetime import datetime, timedelta
+
+def check_and_alert():
+    ws = gc.open("契約管理").sheet1
+    records = ws.get_all_records()
+    today = datetime.today().date()
+
+    for row in records:
+        if row['ステータス'] != '有効':
+            continue
+        end_date = datetime.strptime(row['契約終了日'], '%Y/%m/%d').date()
+        days_left = (end_date - today).days
+
+        if days_left in [30, 7, 0]:
+            message = f"【契約更新アラート】{row['相手方企業名']}\n" \
+                      f"契約終了日：{row['契約終了日']}（あと{days_left}日）\n" \
+                      f"自動更新：{row['自動更新']}\n担当：{row['担当者名']}"
+            send_slack(message)
+            send_email(row['担当者メール'], message)</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>毎朝9時に自動実行</strong>
+          <div class="code"><span class="c"># crontab</span>
+0 9 * * * python contract_alert.py</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <strong>AIによる解約通知期限の計算（任意）</strong>
+          <p>「解約通知期限は終了60日前まで」のような条件をClaudeが自動計算し、「今週中に解約通知を送るべき契約一覧」を毎週月曜に生成する機能を追加できる。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>自動更新条項がある契約は解約通知期限（例：終了60日前）を必ずG列に記載する。この期限を逃すと不要な契約が自動更新されてしまう。</li>
+        <li>スプレッドシートは複数人で管理するため、編集権限と変更履歴を適切に設定する。</li>
+        <li>メール通知のSMTP設定にはGoogleアカウントのアプリパスワード（2段階認証が必要）を使用する。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 法務</footer>
+</body>
+</html>

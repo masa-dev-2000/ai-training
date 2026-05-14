@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>事業計画書・提案資料・マニュアルの自動ドラフト — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv2 { background: #fef9c3; color: #854d0e; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.table-wrap { overflow-x: auto; margin: 10px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #f1f5f9; color: #334155; font-weight: 700; padding: 8px 12px; text-align: left; border: 1px solid #e2e8f0; }
+td { padding: 8px 12px; border: 1px solid #e2e8f0; color: #475569; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › コンテンツ制作</div>
+  <h1>事業計画書・社内マニュアル・提案資料の自動ドラフト</h1>
+  <div class="meta">
+    <span class="badge lv2">★★ 設定1〜2時間</span>
+    <span class="time-b">各種ビジネス文書を自動ドラフト</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">Skills</span>
+    <span class="tool-b">テンプレート集</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      事業計画書・社内マニュアル・提案資料など用途ごとのテンプレートをClaude Codeのスキルとして登録し、最低限の情報を渡すだけで構成・本文のドラフトを自動生成する。人間は確認と仕上げに集中できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>対応文書の種類</h2>
+    <div class="table-wrap">
+      <table>
+        <tr><th>文書種別</th><th>スキルコマンド</th><th>必要な入力</th></tr>
+        <tr><td>事業計画書</td><td>/biz-plan</td><td>事業概要・市場・収支見通し</td></tr>
+        <tr><td>社内マニュアル</td><td>/manual</td><td>対象業務・手順の概要</td></tr>
+        <tr><td>提案資料（スライド構成）</td><td>/proposal-deck</td><td>課題・解決策・費用・効果</td></tr>
+        <tr><td>プレスリリース</td><td>/press-release</td><td>発表内容・日時・担当者</td></tr>
+        <tr><td>稟議書</td><td>/ringi</td><td>申請内容・理由・金額・期間</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>テンプレートファイルを作成する</strong>
+          <p>各文書の構成・必須セクション・文体ガイドラインをMarkdownで <code>templates/</code> フォルダに保存する。過去の良い文書をベースにするとAIの出力品質が上がる。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>スキルファイルを作成する（例：事業計画書）</strong>
+          <div class="prompt">
+            <div class="prompt-label">.claude/skills/biz-plan.md</div>
+            <pre>---
+name: biz-plan
+description: 事業計画書のドラフトを生成する
+---
+
+templates/biz-plan-template.mdを参照し、
+ユーザーが入力した情報をもとに事業計画書のドラフトを生成してください。
+
+以下の情報を確認してから生成：
+・事業名・概要
+・市場規模・ターゲット顧客
+・競合状況と差別化ポイント
+・ビジネスモデル・収益構造
+・初年度・3年後の収支見通し
+・必要な投資・調達計画
+
+情報が不足している場合は確認してから生成すること。
+生成後は「確認・修正が必要な箇所」を箇条書きで案内すること。</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>実行例</strong>
+          <div class="prompt">
+            <div class="prompt-label">使い方</div>
+            <pre>/biz-plan
+
+事業名：AIを活用した経費精算自動化サービス
+概要：中小企業向けにfreeeと連携した経費精算自動化SaaS
+市場：中小企業50万社、月額3,000円〜
+差別化：AIによる領収書OCR精度と freee直接連携
+収益：月額SaaS（3,000〜30,000円/社）
+初年度目標：50社獲得、月次150万円ARR</pre>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>生成されたドラフトには数値・固有名詞・法的事項の誤りが含まれることがある。特に財務数値は必ず担当者が確認する。</li>
+        <li>社外提出書類（融資申請・補助金申請等）はAIドラフトのまま提出せず、必ず専門家（税理士・弁護士）のレビューを受ける。</li>
+        <li>テンプレートは年1回以上見直す。業界の規制変更・社内方針変更を反映させる。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — コンテンツ制作</footer>
+</body>
+</html>

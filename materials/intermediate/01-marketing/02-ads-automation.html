@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Google/Meta広告 入札・除外KW・クリエイティブ自動化 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › マーケティング・広告</div>
+  <h1>Google/Meta広告 入札・除外KW・クリエイティブ自動化</h1>
+  <div class="meta">
+    <span class="badge lv3">★★★ 設定半日〜</span>
+    <span class="time-b">MCP経由で操作自動化</span>
+    <span class="tool-b">Google Ads API</span>
+    <span class="tool-b">Meta Ads API</span>
+    <span class="tool-b">MCP</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      Google Ads API と Meta Marketing API をMCPサーバー経由でClaude Codeから操作できるようにする。入札額の自動調整・除外キーワードの追加・パフォーマンスの低いクリエイティブの入れ替えを自然言語の指示で実行できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div class="tool-list">
+      <span class="tool-chip">Claude Code</span>
+      <span class="tool-chip">Google Ads APIアクセス（開発者トークン）</span>
+      <span class="tool-chip">Meta Business APIアクセストークン</span>
+      <span class="tool-chip">Node.js / Python環境</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Google Ads API の認証情報を取得</strong>
+          <p>Google Ads APIセンターで開発者トークンを申請。OAuth2.0でアクセストークンを取得し <code>.env</code> に保存する。</p>
+          <div class="code">GOOGLE_ADS_DEVELOPER_TOKEN=your_token
+GOOGLE_ADS_CLIENT_ID=your_client_id
+GOOGLE_ADS_CLIENT_SECRET=your_client_secret
+GOOGLE_ADS_REFRESH_TOKEN=your_refresh_token
+GOOGLE_ADS_CUSTOMER_ID=1234567890</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Meta Ads API のアクセストークンを取得</strong>
+          <p>Meta for Developersでアプリを作成し、広告アカウントへのアクセス権を持つ長期アクセストークンを発行。</p>
+          <div class="code">META_ACCESS_TOKEN=your_long_lived_token
+META_AD_ACCOUNT_ID=act_1234567890</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>MCPサーバーを実装する</strong>
+          <p>Claude CodeからAPI操作を呼び出せるMCPサーバーを作成。主要ツール：<code>get_campaigns</code>、<code>update_bid</code>、<code>add_negative_keyword</code>、<code>pause_creative</code>。</p>
+          <div class="code"><span class="c"># mcp-ads-server.py（抜粋）</span>
+from mcp.server import Server
+import google.ads.googleads.client as google_ads
+
+app = Server("ads-automation")
+
+@app.tool()
+async def update_bid(campaign_id: str, new_bid_micros: int):
+    """キャンペーンの入札額を更新する"""
+    client = google_ads.GoogleAdsClient.load_from_env()
+    <span class="c"># 入札額更新処理...</span>
+
+@app.tool()
+async def add_negative_keyword(campaign_id: str, keyword: str):
+    """除外キーワードを追加する"""
+    <span class="c"># 除外KW追加処理...</span></div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>Claude CodeのMCP設定ファイルに追加</strong>
+          <div class="code"><span class="c"># .claude/settings.json</span>
+{
+  "mcpServers": {
+    "ads-automation": {
+      "command": "python",
+      "args": ["mcp-ads-server.py"],
+      "env": {
+        "GOOGLE_ADS_DEVELOPER_TOKEN": "${GOOGLE_ADS_DEVELOPER_TOKEN}"
+      }
+    }
+  }
+}</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <strong>自然言語で広告操作を実行</strong>
+          <div class="prompt">
+            <div class="prompt-label">指示例</div>
+            <pre>先週のGoogle Adsキャンペーンを確認して、CPAが目標の150%を超えているキャンペーンの入札額を20%下げてください。また、CTRが0.5%未満のキーワードを除外KWに追加してください。</pre>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>Google Ads APIの開発者トークン取得には審査が必要（数日〜数週間）。テスト環境では「テストアカウント」を使用すること。</li>
+        <li>入札額の自動変更は取り消せないため、必ず変更前に確認ステップを挟む設計にする。</li>
+        <li>Meta Ads APIのレート制限に注意。1時間あたりのAPIコール数が制限されている。</li>
+        <li>本番環境での初回実行は少数のキャンペーンに限定してテストする。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — マーケティング・広告</footer>
+</body>
+</html>

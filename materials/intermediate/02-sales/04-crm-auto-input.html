@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>商談メモ→CRM自動入力＋次アクション提案 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 営業</div>
+  <h1>商談メモ → CRM自動入力 ＋ 次アクション提案</h1>
+  <div class="meta">
+    <span class="badge lv3">★★★ 設定半日〜</span>
+    <span class="time-b">商談後の入力作業を自動化</span>
+    <span class="tool-b">HubSpot API</span>
+    <span class="tool-b">Claude Code</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      商談後に書いたメモ（箇条書きでもOK）をClaude Codeに渡すと、構造化してHubSpot / SalesforceのCRMに自動入力し、商談フェーズと会話内容に基づいて次のアクションを提案する。商談後の入力作業（平均20〜30分）を3分に短縮する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">HubSpot アカウント（無料プランでも可）</span>
+      <span class="tool-chip">HubSpot Private App APIキー</span>
+      <span class="tool-chip">Claude Code</span>
+      <span class="tool-chip">Python（hubspot-api-client）</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>HubSpot Private App を作成してAPIキーを取得</strong>
+          <p>HubSpot → 設定 → インテグレーション → プライベートアプリ → アプリ作成。スコープ：<code>crm.objects.contacts.write</code>、<code>crm.objects.deals.write</code>、<code>crm.objects.notes.write</code></p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>MCPサーバーまたはスクリプトを作成（Claude Codeで生成）</strong>
+          <div class="prompt">
+            <div class="prompt-label">プロンプト例</div>
+            <pre>HubSpot APIを使って商談メモから以下を自動処理するPythonスクリプトを作成してください。
+
+処理内容：
+1. 商談メモのテキストから構造化データを抽出
+   （会社名・担当者・課題・予算・決裁者・競合・次回アクション・確度）
+2. HubSpotの対応するコンタクト・案件を検索or作成
+3. アクティビティノートとして記録
+4. 案件フェーズを更新
+5. 次のアクション候補3つを提案（内容・期限・優先度付き）
+
+HubSpot APIキー：環境変数から取得</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>スキルコマンド化する</strong>
+          <div class="code"><span class="c"># .claude/skills/crm-update.md</span>
+---
+name: crm-update
+description: 商談メモをCRMに自動入力して次アクションを提案する
+---
+ユーザーの商談メモからcrm_updater.pyを実行し、
+HubSpotへの自動入力と次アクション提案を行ってください。</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>実行例</strong>
+          <div class="prompt">
+            <div class="prompt-label">使い方</div>
+            <pre>/crm-update
+今日の商談メモ：
+・株式会社〇〇 田中部長と面談（製造業、300名）
+・現在の課題：月次報告書作成に丸2日かかっている
+・予算：年間100〜200万で検討中
+・決裁は田中部長が単独でできる
+・競合は〇〇社と比較中、来週デモを見せてほしいとのこと
+・確度：B（先方は前向き）</pre>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>顧客の個人情報・商談金額はClaude Codeのプロジェクト設定でデータ保持をオフにしてから使用する。</li>
+        <li>HubSpotの既存データと重複しないよう、コンタクト検索ロジック（メールアドレス・会社名）を丁寧に実装する。</li>
+        <li>Salesforceを使う場合はsimple-salesforceライブラリを使用。APIスコープはHubSpotと異なるため調整が必要。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 営業</footer>
+</body>
+</html>

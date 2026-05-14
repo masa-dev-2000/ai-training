@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>freee API連携 仕訳異常値検出・レポート出力 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 経理・バックオフィス</div>
+  <h1>freee API連携 仕訳異常値検出・レポート出力</h1>
+  <div class="meta">
+    <span class="badge lv3">★★★ 設定半日〜</span>
+    <span class="time-b">件数に関わらず処理時間一定</span>
+    <span class="tool-b">freee API</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">Python</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      freee APIから当月の仕訳データを取得し、Claudeが統計的な異常値・計上ミスの疑いがある仕訳を自動検出してレポートを出力する。仕訳件数が増えても処理時間は一定に保たれる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">freee会計アカウント（スターター以上）</span>
+      <span class="tool-chip">freee APIアプリ登録（開発者向け）</span>
+      <span class="tool-chip">Python（requests, anthropic, pandas）</span>
+      <span class="tool-chip">Claude Code</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>freee APIのOAuth認証を設定</strong>
+          <p>freee開発者サイト（developer.freee.co.jp）でアプリを作成し、アクセストークンを取得。スコープ：<code>accounting</code></p>
+          <div class="code">FREEE_ACCESS_TOKEN=your_access_token
+FREEE_COMPANY_ID=1234567</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>仕訳データ取得スクリプトを作成</strong>
+          <div class="code"><span class="c"># fetch_journals.py（Claude Codeで生成・抜粋）</span>
+import requests, pandas as pd
+
+def get_journals(start_date: str, end_date: str) -> pd.DataFrame:
+    url = "https://api.freee.co.jp/api/1/deals"
+    headers = {"Authorization": f"Bearer {FREEE_ACCESS_TOKEN}"}
+    params = {
+        "company_id": FREEE_COMPANY_ID,
+        "start_issue_date": start_date,
+        "end_issue_date": end_date,
+        "limit": 100
+    }
+    all_deals = []
+    while True:
+        response = requests.get(url, headers=headers, params=params).json()
+        all_deals.extend(response.get("deals", []))
+        if not response.get("meta", {}).get("next_page"):
+            break
+        params["offset"] = params.get("offset", 0) + 100
+    return pd.DataFrame(all_deals)</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>異常検出ロジックをClaude Codeで設計</strong>
+          <div class="prompt">
+            <div class="prompt-label">プロンプト例</div>
+            <pre>freeeから取得した仕訳データ（journals_df）の異常値を検出するロジックを実装してください。
+
+検出項目：
+1. 同一勘定科目への極端に大きい/小さい金額（前月比300%超等）
+2. 土日・祝日に計上された仕訳
+3. 摘要が空白または「テスト」等の疑わしい仕訳
+4. 借方貸方の不一致（合計金額が合わない）
+5. 前月に同一取引先・同一金額がない突発的な支払い
+
+異常と判定した仕訳の一覧とAIによる判定理由をMarkdownレポートで出力してください。</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>月次自動実行を設定</strong>
+          <p>毎月5日（前月分のデータが揃うタイミング）にcronで自動実行。担当者にレポートをメール送信する。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>freee APIのアクセストークンは有効期限があるため、リフレッシュトークンを使った自動更新処理を実装する。</li>
+        <li>異常検出はあくまでフラグ立て。実際の修正はfreee上で経理担当者が行う。</li>
+        <li>会計データは高機密情報。APIアクセストークンは環境変数で管理し、コードに直書きしない。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 経理・バックオフィス</footer>
+</body>
+</html>

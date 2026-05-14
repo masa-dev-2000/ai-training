@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>請求書確認作業の大幅効率化（4.5時間→35分） — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 経理・バックオフィス</div>
+  <h1>請求書確認作業の大幅効率化（4.5時間 → 35分、87%削減）</h1>
+  <div class="meta">
+    <span class="badge lv3">★★★ 設定半日〜</span>
+    <span class="time-b">87%の時間削減</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">PDFパーサー</span>
+    <span class="tool-b">承認フロー</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      月間100〜200枚の請求書確認作業を自動化するパイプラインを構築する。受信したPDFから必要情報を抽出・検証し、問題のないものは自動承認キューへ、疑問点があるものだけを担当者に振り分けることで87%の時間削減を実現する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>自動化の対象業務</h2>
+    <div class="code"><span class="c"># 従来の手作業ステップ（1枚あたり約2〜3分）</span>
+1. メール受信 → 添付PDFを開く
+2. 発行者名・金額・支払期日を確認
+3. 過去の取引データと照合
+4. 消費税の計算が正しいか確認
+5. インボイス登録番号の確認
+6. 支払条件（〇日払い）の確認
+7. 会計ソフトへの入力
+8. 承認者へ回覧
+
+<span class="c"># 自動化後のステップ（担当者は3.と7.のみ）</span>
+1〜6: AI自動チェック
+7: 問題なし → 自動承認キュー / 問題あり → 担当者に通知
+8: 担当者確認後、会計ソフトに一括インポート</div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>請求書受信フォルダを設定</strong>
+          <p>専用メールアドレス（例：invoice@company.com）を作成し、受信した添付PDFを自動で処理フォルダに保存するフィルタを設定する（Gmailフィルタ → Google Drive保存）。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>バッチ処理スクリプトを作成（Claude Codeで生成）</strong>
+          <div class="code"><span class="c"># invoice_processor.py（抜粋）</span>
+import pdfplumber, anthropic
+from pathlib import Path
+
+def process_invoices(folder: str):
+    results = []
+    for pdf_file in Path(folder).glob("*.pdf"):
+        text = extract_text(pdf_file)
+        data = structure_invoice(text)  <span class="c"># Claudeで構造化</span>
+        checks = run_checks(data)       <span class="c"># 7項目チェック</span>
+        results.append({
+            "file": pdf_file.name,
+            "data": data,
+            "status": "OK" if all(checks.values()) else "要確認",
+            "issues": [k for k, v in checks.items() if not v]
+        })
+    return results</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>承認キューUIを用意（任意）</strong>
+          <p>問題なしの請求書一覧を表示するシンプルなHTMLページを作成し、担当者が一括確認・承認できるUIを提供する。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>会計ソフトへの一括インポートを設定</strong>
+          <p>承認済みデータをCSVに変換し、会計ソフトのインポート機能で一括登録する。freeeはCSVインポート対応。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>初期精度は70〜80%程度。誤検出のパターンを学習して改善していく運用が必要。</li>
+        <li>請求書のフォーマットは取引先によって異なる。フォーマットが特殊な取引先は個別対応ルールを追加する。</li>
+        <li>完全自動承認は避ける。必ず人間がサンプルチェックを行い、自動化の精度を定期的に確認する。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 経理・バックオフィス</footer>
+</body>
+</html>

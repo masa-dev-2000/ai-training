@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zoom録画→構造化議事録→Slack/Notion自動投稿 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 総務・人事</div>
+  <h1>Zoom録画 → 構造化議事録 → Slack/Notion自動投稿</h1>
+  <div class="meta">
+    <span class="badge lv3">★★★ 設定半日〜</span>
+    <span class="time-b">会議後の議事録作成を自動化</span>
+    <span class="tool-b">Zoom API</span>
+    <span class="tool-b">Whisper / AssemblyAI</span>
+    <span class="tool-b">Notion MCP</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      Zoomのクラウド録画が完了すると自動でZoom APIから音声ファイルを取得、文字起こしを行い、Claudeが構造化議事録を生成してSlackとNotionに自動投稿するパイプラインを構築する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</html></h2>
+    <div>
+      <span class="tool-chip">Zoom Pro以上のアカウント（クラウド録画有効）</span>
+      <span class="tool-chip">Zoom OAuth App（recordings:read スコープ）</span>
+      <span class="tool-chip">AssemblyAI または OpenAI Whisper APIキー</span>
+      <span class="tool-chip">Slack Webhook / Notion MCP</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Zoom Webhookを設定して録画完了イベントを受信</strong>
+          <p>Zoom Apps Marketplace → Webhook Only App作成 → <code>recording.completed</code> イベントを購読。録画完了時に自動でパイプラインが起動する。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>音声ファイルを取得して文字起こし</strong>
+          <div class="code"><span class="c"># transcriber.py（抜粋）</span>
+import assemblyai as aai
+
+def transcribe_audio(audio_url: str) -> str:
+    aai.settings.api_key = ASSEMBLYAI_API_KEY
+    config = aai.TranscriptionConfig(
+        speaker_labels=True,  <span class="c"># 話者識別</span>
+        language_code="ja"
+    )
+    transcript = aai.Transcriber().transcribe(audio_url, config)
+    <span class="c"># 話者ラベル付きテキストを整形</span>
+    return format_transcript(transcript.utterances)</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Claudeで構造化議事録を生成</strong>
+          <div class="prompt">
+            <div class="prompt-label">議事録生成プロンプト</div>
+            <pre>以下の会議の文字起こしから構造化議事録を作成してください。
+
+## 〇〇会議 議事録（YYYY/MM/DD）
+
+### 参加者
+（文字起こしから推定）
+
+### 議題
+（会議冒頭から推定）
+
+### 決定事項
+（明確に決まったこと）
+
+### アクションアイテム
+| 担当者 | タスク | 期限 |
+|--------|--------|------|
+
+### 次回会議
+（言及があれば）
+
+### 補足メモ
+（重要な発言・背景情報）</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>Slack/Notionに自動投稿</strong>
+          <p>生成した議事録をSlack Incoming Webhookで該当チャンネルに投稿し、Notion MCPで議事録データベースに追加する。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>会議の録画・文字起こしには参加者の同意が必要。会議開始時に「録画・AI文字起こしを行う」旨を案内する。</li>
+        <li>AssemblyAIの日本語対応は良好だが、専門用語・固有名詞の精度は低い。固有名詞辞書の設定（Custom Vocabulary）で改善できる。</li>
+        <li>Zoomのクラウド録画は長時間・高頻度の会議が多い場合、ストレージ費用がかかる。ローカル録画との使い分けを検討する。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 総務・人事</footer>
+</body>
+</html>

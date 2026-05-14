@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>法務プレイブック参照 条項差異・リスク瞬時判定 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv4 { background: #f3e8ff; color: #6b21a8; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.warn { background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 14px 18px; margin: 10px 0; font-size: 14px; color: #92400e; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 法務</div>
+  <h1>法務プレイブックと過去契約書を参照し、条項ごとに差異・リスクを瞬時に判定</h1>
+  <div class="meta">
+    <span class="badge lv4">★★★★ エンジニア向け</span>
+    <span class="time-b">構築に数日〜</span>
+    <span class="tool-b">ベクトルDB</span>
+    <span class="tool-b">RAG</span>
+    <span class="tool-b">Claude Code</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      自社の法務プレイブック（許容条件の基準書）と過去の締結済み契約書をベクトルデータベースに格納し、新規契約書の各条項を照合。プレイブックとの差異・損害賠償上限なし・管轄問題等のリスクをリアルタイムで判定するRAGシステムを構築する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意</h2>
+    <div class="warn">
+      このシステムはエンジニアリングスキルが必要です。法的判断の最終確認は必ず弁護士が行ってください。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">Python（langchain / llama-index）</span>
+      <span class="tool-chip">ベクトルDB（Chroma / Pinecone / Qdrant）</span>
+      <span class="tool-chip">法務プレイブック（PDF / Word）</span>
+      <span class="tool-chip">過去契約書データ（匿名化済み）</span>
+      <span class="tool-chip">Anthropic APIキー</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>法務プレイブックをベクトルDBに格納</strong>
+          <div class="code">pip install langchain chromadb anthropic pypdf2
+
+<span class="c"># ingest_playbook.py（Claude Codeで生成）</span>
+from langchain.document_loaders import PyPDFLoader
+from langchain.text_splitter import RecursiveCharacterTextSplitter
+from langchain_community.vectorstores import Chroma
+from langchain_anthropic import AnthropicEmbeddings
+
+loader = PyPDFLoader("legal_playbook.pdf")
+docs = loader.load()
+splitter = RecursiveCharacterTextSplitter(chunk_size=500, chunk_overlap=50)
+chunks = splitter.split_documents(docs)
+vectordb = Chroma.from_documents(chunks, AnthropicEmbeddings(), persist_directory="./legal_db")</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>契約書の条項を分割して格納</strong>
+          <p>過去契約書も同様にチャンク化してベクトルDB（別コレクション）に格納。各チャンクに「契約種別・リスクレベル・特記事項」のメタデータを付与する。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>条項審査エンジンを実装</strong>
+          <div class="code"><span class="c"># contract_reviewer.py（Claude Codeで生成・抜粋）</span>
+def review_clause(clause_text: str) -> dict:
+    <span class="c"># プレイブックから関連基準を検索</span>
+    relevant_standards = vectordb.similarity_search(clause_text, k=3)
+    <span class="c"># Claudeで差異分析</span>
+    response = client.messages.create(
+        model="claude-opus-4-7",
+        messages=[{"role": "user", "content":
+            f"以下の契約条項を審査してください。\n\n"
+            f"条項：{clause_text}\n\n"
+            f"自社基準：{[d.page_content for d in relevant_standards]}\n\n"
+            f"差異・リスク（損害賠償上限・管轄・秘密保持期間等）を指摘し、"
+            f"修正案を提示してください。"}]
+    )
+    return {"risk_level": extract_risk(response), "details": response.content[0].text}</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>審査レポートを生成する</strong>
+          <p>全条項を順番に審査し、リスクレベル別の一覧表と修正提案付きレポートをMarkdown/PDFで出力する。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>プレイブックは最新の法律・社内方針に合わせて定期的にアップデートが必要。古い基準で審査し続けると誤判定が増える。</li>
+        <li>ベクトルDBのchunk_sizeは条項の長さに合わせて調整が必要。条項の途中で切れると判断精度が下がる。</li>
+        <li>個人情報が含まれる過去契約書は格納前に匿名化処理を施すこと。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 法務</footer>
+</body>
+</html>

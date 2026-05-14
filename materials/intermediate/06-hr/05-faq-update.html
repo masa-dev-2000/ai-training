@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>社内FAQ・ナレッジベースの自動更新 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 総務・人事</div>
+  <h1>社内FAQ・ナレッジベースの自動更新</h1>
+  <div class="meta">
+    <span class="badge lv3">★★★ 設定半日〜</span>
+    <span class="time-b">FAQを常に最新に保つ</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">Slack MCP</span>
+    <span class="tool-b">Notion/GitBook</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      Slackの質問チャンネルを監視し、繰り返し質問されている内容をClaudeが検出・整理してFAQに追加するフローを構築する。ナレッジベースが常に最新の状態に保たれ、同じ質問への対応時間を削減できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>質問収集の仕組みを設計する</strong>
+          <p>情報源として以下を使用する：
+          <br>・Slackの #質問 #help チャンネルのログ
+          <br>・サポートメールのスレッド
+          <br>・社内問い合わせフォームの履歴</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>月次FAQ更新スクリプトを作成（Claude Codeで生成）</strong>
+          <div class="code"><span class="c"># faq_updater.py（Claude Codeで生成・抜粋）</span>
+def extract_new_faq_candidates(slack_messages: list, existing_faq: str) -> list:
+    client = anthropic.Anthropic()
+    messages_text = "\n".join([f"Q: {m['text']}" for m in slack_messages])
+    response = client.messages.create(
+        model="claude-opus-4-7",
+        messages=[{"role": "user", "content":
+            f"以下のSlackメッセージを分析し、FAQに追加すべき質問を抽出してください。\n"
+            f"既存のFAQ：\n{existing_faq}\n\n"
+            f"新規質問一覧：\n{messages_text}\n\n"
+            f"既存FAQと重複しない、かつ3回以上登場する質問のみを抽出し、\n"
+            f"Q/A形式で回答案も生成してください。"}]
+    )
+    return parse_faq_candidates(response.content[0].text)</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>レビューワークフローを設定する</strong>
+          <p>自動生成されたFAQ候補を担当者がSlackで確認・承認できるフローを設定。承認されたFAQのみをNotionに自動追加する。</p>
+          <div class="code"><span class="c"># Slackに承認リクエストを送信</span>
+新しいFAQ候補が〇件見つかりました。
+以下のリンクから確認・承認してください：
+[FAQ承認ページ]（https://...）</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>古くなったFAQの検出と削除提案</strong>
+          <p>過去6ヶ月参照されていないFAQ・製品バージョンが古いFAQをClaudeが検出して担当者に削除・更新を提案する機能を追加する。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>AI生成のFAQ回答は必ず担当者がレビューしてから公開する。誤った回答がナレッジベースに混入すると、誤情報が拡散するリスクがある。</li>
+        <li>個人情報が含まれるSlackメッセージをAIに渡す場合は、個人名・プロジェクト名等を匿名化してから処理する。</li>
+        <li>FAQの更新頻度は月1回程度が目安。更新しすぎると現場の混乱を招く。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 総務・人事</footer>
+</body>
+</html>

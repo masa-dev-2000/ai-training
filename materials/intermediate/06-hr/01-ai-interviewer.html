@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI面接官 リアルタイム質問・回答収集・採点 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv4 { background: #f3e8ff; color: #6b21a8; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.warn { background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 14px 18px; margin: 10px 0; font-size: 14px; color: #92400e; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 総務・人事</div>
+  <h1>AI面接官：リアルタイム質問・回答収集・採点</h1>
+  <div class="meta">
+    <span class="badge lv4">★★★★ エンジニア向け</span>
+    <span class="time-b">構築数日〜</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">音声認識</span>
+    <span class="tool-b">採点ロジック</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      オンライン面接（Zoom/Google Meet等）でAIが面接官として質問を行い、応募者の回答をリアルタイムでテキスト化・採点・記録するシステム。一次面接のスクリーニングを自動化し、採用担当者の工数を削減する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>重要な留意事項</h2>
+    <div class="warn">
+      AIによる採用選考は公正採用の観点から慎重な運用が必要です。AIの評価は一次スクリーニングの参考情報として使用し、採用可否の最終決定は必ず人間が行ってください。また、応募者に対してAI面接であることを事前に告知することが求められます。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>システム構成（テキストベース版）</h2>
+    <div class="code"><span class="c"># 音声なしのシンプルな構成（推奨スタート地点）</span>
+1. 応募者がWebフォームでURLにアクセス
+2. AIが質問を1問ずつテキスト表示
+3. 応募者がテキストで回答を入力
+4. AIが次の質問を生成（回答に応じた深掘り質問も可能）
+5. 面接終了後に評価レポートを採用担当者に送信</div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>評価基準と質問バンクを設計する</strong>
+          <div class="code"><span class="c"># evaluation_criteria.md（例）</span>
+## 評価軸
+1. 論理的思考力（5点満点）：理由を順序立てて説明できるか
+2. 問題解決力（5点満点）：困難な状況への対処法を具体的に語れるか
+3. コミュニケーション力（5点満点）：簡潔かつ明確に伝えられるか
+4. カルチャーフィット（5点満点）：自社の価値観との合致
+
+## 質問バンク（抜粋）
+- 自己紹介（3分以内）
+- これまでのキャリアで最も困難だった経験と乗り越え方
+- なぜ当社に興味を持ったのか
+- 5年後のキャリアビジョン</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>面接ウェブアプリをClaude Codeで構築</strong>
+          <p>シンプルなHTMLフォームとPython（Flask/FastAPI）バックエンドで構成。セッション管理で面接の進行状態を保持する。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>採点ロジックを実装する</strong>
+          <div class="code"><span class="c"># scorer.py（抜粋）</span>
+def score_response(question: str, answer: str, criteria: str) -> dict:
+    client = anthropic.Anthropic()
+    response = client.messages.create(
+        model="claude-opus-4-7",
+        messages=[{"role": "user", "content":
+            f"面接の質問と回答を評価基準に沿って採点してください。\n"
+            f"質問：{question}\n回答：{answer}\n"
+            f"評価基準：{criteria}\n\n"
+            f"各評価軸のスコア（5点満点）と根拠を JSON で返してください。"}]
+    )
+    return parse_scores(response.content[0].text)</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>評価レポートを採用担当者に送信</strong>
+          <p>面接終了後に採点結果・回答の要約・合否推奨をメールで自動送信する。採用担当者はレポートを元に最終判断を行う。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>応募者の回答テキストは個人情報。適切なセキュリティ措置（HTTPS・DB暗号化・アクセス制限）を施す。</li>
+        <li>AIの採点結果に偏り（性別・年齢・出身等に関する偏見）が生じていないか定期的に監査する。</li>
+        <li>外部サービス（OpenAI等）にデータを送る場合は個人情報の取り扱い規約を確認し、応募者の同意を得ること。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 総務・人事</footer>
+</body>
+</html>

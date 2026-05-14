@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>発注書 vs 請求書 品目・数量・税額の差異自動検出 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 経理・バックオフィス</div>
+  <h1>発注書 vs 請求書：品目・数量・税額の差異を自動検出</h1>
+  <div class="meta">
+    <span class="badge lv3">★★★ 設定半日〜</span>
+    <span class="time-b">3方向照合を自動化</span>
+    <span class="tool-b">OCR</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">Python</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      発注書・納品書・請求書の3つの書類をPDFで渡すと、品目名・数量・単価・税額を自動で突合し、差異がある箇所をハイライトしたレポートを出力する。手作業での照合ミスをゼロにする。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">Python（PyPDF2 または pdfplumber）</span>
+      <span class="tool-chip">Claude Code（PDFの読み取り能力を活用）</span>
+      <span class="tool-chip">Google Document AI（スキャンPDFの場合）</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>テキストPDFの場合：直接抽出</strong>
+          <div class="code">pip install pdfplumber
+
+<span class="c"># pdf_extractor.py（Claude Codeで生成）</span>
+import pdfplumber
+
+def extract_invoice_data(pdf_path: str) -> dict:
+    with pdfplumber.open(pdf_path) as pdf:
+        text = "\n".join([page.extract_text() for page in pdf.pages])
+    <span class="c"># Claudeでデータを構造化</span>
+    return claude_structure(text)</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Claudeでデータを構造化する</strong>
+          <div class="prompt">
+            <div class="prompt-label">構造化プロンプト</div>
+            <pre>以下のPDFテキストから請求書の構造化データを抽出してください。
+
+JSON形式で出力：
+{
+  "document_type": "発注書/請求書/納品書",
+  "document_number": "文書番号",
+  "issue_date": "発行日",
+  "items": [
+    {"name": "品目名", "quantity": 数量, "unit_price": 単価, "amount": 金額}
+  ],
+  "subtotal": 小計,
+  "tax": 消費税額,
+  "total": 合計
+}</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>3書類の突合ロジックを実装</strong>
+          <div class="code"><span class="c"># matcher.py（Claude Codeで生成・抜粋）</span>
+def match_documents(po: dict, receipt: dict, invoice: dict) -> list:
+    discrepancies = []
+    for po_item in po['items']:
+        inv_item = find_matching_item(po_item['name'], invoice['items'])
+        if not inv_item:
+            discrepancies.append({
+                "type": "品目不一致",
+                "detail": f"発注書の'{po_item['name']}'が請求書にない"
+            })
+        elif po_item['quantity'] != inv_item['quantity']:
+            discrepancies.append({
+                "type": "数量不一致",
+                "detail": f"'{po_item['name']}': 発注{po_item['quantity']} vs 請求{inv_item['quantity']}"
+            })
+    return discrepancies</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>差異レポートを出力</strong>
+          <p>差異がある場合は「差異あり・要確認」として担当者にSlack/メールで通知。差異なしは自動承認キューに送る。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>品目名の表記揺れ（スペース・略称・漢字/カナの違い等）に対応するため、類似度マッチングを実装する。</li>
+        <li>スキャンPDFはOCRが必要。Google Document AIはGCP設定が必要だが精度が高い。</li>
+        <li>差異が見つかった場合の確認フローを事前に決めておく（誰が・いつ・どのように確認するか）。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 経理・バックオフィス</footer>
+</body>
+</html>

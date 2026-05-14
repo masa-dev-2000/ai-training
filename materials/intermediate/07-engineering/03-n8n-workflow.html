@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>n8nワークフローを自然言語→JSON自動生成→即インポート — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 開発・エンジニアリング</div>
+  <h1>n8nワークフローを自然言語で記述 → JSON自動生成 → 即インポート</h1>
+  <div class="meta">
+    <span class="badge lv3">★★★ 設定半日〜</span>
+    <span class="time-b">ノーコードのさらなる効率化</span>
+    <span class="tool-b">n8n</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">n8n API</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      「Gmailで受信したPDFをGoogle Driveに保存してSlackに通知する」のような自然言語でワークフローを記述するだけで、n8nのワークフローJSONをClaude Codeが自動生成し、n8n APIを通じて即インポートできる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">n8n（セルフホスト or n8n Cloud）</span>
+      <span class="tool-chip">n8n REST API（有効化済み）</span>
+      <span class="tool-chip">Claude Code</span>
+      <span class="tool-chip">n8nのノード仕様ドキュメント（参考）</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>n8n APIを有効化する</strong>
+          <p>n8n設定 → API → API Key を発行。<code>N8N_API_KEY</code> と <code>N8N_BASE_URL</code> を環境変数に設定する。</p>
+          <div class="code">N8N_API_KEY=your_api_key
+N8N_BASE_URL=https://your-n8n.example.com/api/v1</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>n8nワークフロー生成プロンプトをClaude Codeで設計</strong>
+          <div class="prompt">
+            <div class="prompt-label">プロンプト例</div>
+            <pre>以下のワークフローをn8nのJSON形式で生成してください。
+
+ワークフロー名：「請求書PDF処理」
+
+処理内容：
+1. Gmailで件名に「請求書」を含むメールを受信したらトリガー
+2. 添付PDFファイルをBase64デコード
+3. Google Driveの「請求書/YYYY-MM」フォルダに保存
+   （フォルダが存在しない場合は作成）
+4. Slack #経理チャンネルに「新着請求書：ファイル名」と通知
+
+n8nのノード仕様に準拠したJSON（nodes配列とconnections）を出力してください。</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>n8n APIでワークフローを自動インポート</strong>
+          <div class="code"><span class="c"># import_workflow.py（Claude Codeで生成）</span>
+import requests, json
+
+def import_workflow(workflow_json: dict) -> str:
+    response = requests.post(
+        f"{N8N_BASE_URL}/workflows",
+        headers={
+            "X-N8N-API-KEY": N8N_API_KEY,
+            "Content-Type": "application/json"
+        },
+        json=workflow_json
+    )
+    if response.status_code == 200:
+        wf_id = response.json()["id"]
+        return f"ワークフロー作成完了: ID={wf_id}"
+    return f"エラー: {response.text}"</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>認証情報を手動で設定してアクティブ化</strong>
+          <p>インポートされたワークフローのGmail/Drive/Slack等の認証情報はn8nのUI上で手動設定が必要。設定後にワークフローをアクティブ化する。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>n8nのノード仕様はバージョンによって異なる。Claude Codeに「n8n v1.x系の仕様で生成して」と指定するか、既存ワークフローのJSONを参考として渡すと精度が上がる。</li>
+        <li>生成されたJSONは必ずn8n UIで動作確認してから本番環境にアクティブ化する。</li>
+        <li>認証情報（APIキー・OAuth）はn8nのCredentials機能で管理。JSOに直接トークンを含めないこと。</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 開発・エンジニアリング</footer>
+</body>
+</html>
