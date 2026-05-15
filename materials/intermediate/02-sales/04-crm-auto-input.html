@@ -37,6 +37,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -57,6 +75,51 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       商談後に書いたメモ（箇条書きでもOK）をClaude Codeに渡すと、構造化してHubSpot / SalesforceのCRMに自動入力し、商談フェーズと会話内容に基づいて次のアクションを提案する。商談後の入力作業（平均20〜30分）を3分に短縮する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 商談メモを渡した後にClaude Codeが表示する確認画面と次アクション提案の例</p>
+    <div class="output-example">
+      <div class="output-header">CRM への入力内容（確認画面）と次アクション提案</div>
+      <div class="output-body">
+        <pre>【HubSpotへの入力内容（確認してください）】
+
+■ コンタクト情報
+  会社名：株式会社〇〇（製造業・従業員300名）
+  担当者：田中 部長
+  フェーズ：デモ・提案 → 見積もり提示に更新
+
+■ アクティビティノート
+  日時：2026年5月15日 15:00〜16:00
+  場所：先方オフィス（対面）
+  参加者：田中部長（先方）、山田（自社）
+  主な内容：
+    - 月次報告書作成の課題を詳しくヒアリング（現在丸2日消費）
+    - 当社ツールのデモを実施。操作性に好感触
+    - 予算は年間100〜200万で検討中。決裁は田中部長が単独で可能
+    - 〇〇社と比較検討中。来週デモを依頼済み
+  確度：B（前向き、競合次第）
+
+✅ 入力完了 → HubSpotに反映しました
+
+---
+
+【次のアクション提案（優先度順）】
+
+1. 【最優先 / 期限：5/19】
+   見積書を準備して田中部長にメール送付
+   → 理由：「予算感が固まっている」かつ「競合が動いている」ため先手を打つ
+
+2. 【今週中 / 期限：5/17】
+   競合〇〇社との差別化ポイントをまとめた資料を作成
+   → 理由：来週の競合デモの前に先方への訴求材料を揃える
+
+3. 【来週 / 期限：5/22】
+   田中部長にフォローアップ電話（競合デモの感触を確認）
+   → 理由：競合デモ後の比較段階で自社に有利な情報提供のタイミング</pre>
+      </div>
     </div>
   </div>
 
@@ -134,6 +197,98 @@ HubSpotへの自動入力と次アクション提案を行ってください。<
   </div>
 
   <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('first',this)">初回商談メモ</button>
+      <button class="stab" onclick="showScenario('followup',this)">フォローアップ記録</button>
+      <button class="stab" onclick="showScenario('closing',this)">クロージング前チェック</button>
+    </div>
+
+    <div id="scenario-first" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">初回商談メモ — 新規コンタクトとして登録</div>
+        <pre>/crm-update
+
+【商談種別】初回訪問
+【日時】2026年5月15日 14:00〜15:30
+【先方】株式会社〇〇 / 営業部 田中部長（tanaka@example.co.jp）/ 製造業・従業員500名
+【自社参加者】山田（営業）
+
+【商談内容メモ】
+- 展示会で名刺交換、今回が初訪問
+- 現状の課題：受注管理がExcelで属人化、担当者不在時に業務が止まる
+- 現在のシステム：〇〇ERPを使用（2017年導入、刷新を検討中）
+- 予算感：まだ決まっていない。まずは比較検討フェーズ
+- 決裁プロセス：田中部長が稟議を上げ、取締役会で承認
+- 次回：資料送付後、2週間後に再訪問を提案。先方も同意
+
+→ HubSpotに新規コンタクト・新規案件として登録し、
+  フェーズを「初回接触」に設定してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-followup" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">フォローアップ記録 — 既存案件の進捗更新</div>
+        <pre>/crm-update
+
+【商談種別】フォローアップ（電話）
+【日時】2026年5月15日 11:00〜11:20
+【先方】株式会社〇〇 / 鈴木課長（既存コンタクト）
+【自社参加者】山田
+
+【通話内容メモ】
+- 先週送付した提案書について感触を確認
+- 全体的には好評。特に自動化機能に興味あり
+- 懸念点：既存ERPとの連携が可能かどうか確認したい
+- 社内で稟議を上げる予定。タイミングは来月初旬
+- 追加で「導入事例（同業他社のもの）」を送ってほしいとのこと
+
+→ 既存案件の活動履歴に追記し、
+  フェーズを「提案中」→「稟議・社内検討」に更新してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-closing" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">クロージング前チェック — 受注直前の最終確認</div>
+        <pre>/crm-update
+
+【商談種別】クロージング商談
+【日時】2026年5月15日 16:00〜17:00
+【先方】株式会社〇〇 / 田中社長・鈴木部長（2名）
+【自社参加者】山田（営業）・佐藤（マネージャー）
+
+【商談内容メモ】
+- 社内稟議が通過した。来月から契約したい
+- 契約金額：年額180万円（12ヶ月一括払い）
+- 開始時期：6月1日を希望
+- 契約書のドラフトを来週中に送付してほしい
+- 懸案だったERP連携は技術チームで対応可能と確認済み
+
+→ 案件フェーズを「クロージング」に変更し、
+  契約金額・開始予定日を案件情報に更新してください。
+  また、契約書送付・導入準備の次アクションを作成してください。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>入力前チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>既存コンタクトの重複がないか（同じ会社・担当者が二重登録になっていないか）</li>
+        <li>予算・金額の数値がメモの内容と一致しているか（AIが概算した数値になっていないか）</li>
+        <li>確度（A/B/C）の判定がメモの内容に基づいているか</li>
+        <li>次のアクションの期日が現実的かつ抜け漏れがないか</li>
+        <li>先方が話した内容と、担当者の推測が混在していないか</li>
+        <li>顧客の個人情報（メールアドレス・電話番号）が正確に入力されているか</li>
+        <li>CRMへの反映後、HubSpot画面で実際に確認が取れているか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -143,7 +298,34 @@ HubSpotへの自動入力と次アクション提案を行ってください。<
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="03-slack-summary.html">Slackチャンネルの自動要約</a>
+        <span>★★ 商談議論をSlackから自動集約</span>
+      </div>
+      <div class="related-card">
+        <a href="01-proposal-draft.html">提案書ドラフト自動生成</a>
+        <span>★★ CRM情報から提案書を展開</span>
+      </div>
+      <div class="related-card">
+        <a href="02-quote-pdf.html">PDF見積書の自動生成</a>
+        <span>★★ クロージング前の見積書作成</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 営業</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

@@ -201,6 +201,89 @@ def transcribe_audio(audio_url: str) -> str:
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('regular',this)">定例会議</button>
+      <button class="stab" onclick="showScenario('project',this)">プロジェクト進捗会議</button>
+      <button class="stab" onclick="showScenario('executive',this)">経営会議（機密レベル高）</button>
+    </div>
+    <div id="scenario-regular" class="scenario-content active">
+      <div class="output-example">
+        <div class="output-header">定例会議 — 議事録プロンプト設定例</div>
+        <div class="output-body">
+          <pre>以下の文字起こしから週次定例会議の議事録を作成してください。
+
+【出力形式】
+- 参加者一覧（文字起こしから推定）
+- 前回アクションアイテムの消化状況
+- 今回の報告事項（部門別に整理）
+- 決定事項（箇条書き）
+- 新規アクションアイテム（担当者・期限付き表）
+- 次回会議日時
+
+【投稿先】Slack #weekly-meeting、Notion 週次定例DB
+【機密レベル】低（全社共有可）</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-project" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">プロジェクト進捗会議 — 議事録プロンプト設定例</div>
+        <div class="output-body">
+          <pre>以下の文字起こしからプロジェクト進捗会議の議事録を作成してください。
+
+【出力形式】
+- 参加者一覧・プロジェクト名
+- マイルストーン進捗（赤/黄/緑でステータス表示）
+- 課題・リスク一覧（発生日・影響度・担当者・解決策）
+- 決定事項（箇条書き）
+- アクションアイテム（担当者・期限・優先度付き表）
+- 次回会議日時
+
+【投稿先】Slack #project-xxx、Notion プロジェクトDB
+【機密レベル】中（プロジェクトメンバーのみ共有）</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-executive" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">経営会議（機密レベル高）— 設定例</div>
+        <div class="output-body">
+          <pre>【機密対応設定】
+- 文字起こしデータは暗号化ストレージにのみ保存
+- 外部AIサービス（AssemblyAI等）への送信は禁止
+  → Whisperをオンプレミス・ローカル実行に切り替え
+- 議事録の投稿先はSlack ではなく 社内の権限付きNotionページのみ
+- 閲覧権限は参加者と指定役員のみ
+
+【出力形式】
+- 参加者（役職付き）
+- 経営上の決定事項（箇条書き）
+- 対外秘項目の明示（⚠️ 機密マーク付き）
+- アクションアイテム（担当役員・期限）
+- 次回経営会議日時
+
+【注意】議事録の承認は社長が行ってから配布する</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>会議開始時に参加者全員に録画・AI文字起こしの実施を告知しているか</li>
+        <li>アクションアイテムの担当者名と期限が正確に記録されているか（AIが推測したものは要確認）</li>
+        <li>固有名詞（社名・製品名・人名）の誤変換がないか目視確認しているか</li>
+        <li>機密情報を含む会議の議事録を外部サービスに送信していないか</li>
+        <li>議事録の共有範囲が会議の機密レベルに合っているか（全社共有か、参加者のみか）</li>
+        <li>Notionへの投稿が正常に完了しているか（リンク切れ・権限エラーがないか）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -210,7 +293,34 @@ def transcribe_audio(audio_url: str) -> str:
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="03-minutes-command.html">「議事録まとめて」スラッシュコマンド化</a>
+        <span>★★ テキストを貼って1コマンドで完結</span>
+      </div>
+      <div class="related-card">
+        <a href="05-faq-update.html">社内FAQ・ナレッジベースの自動更新</a>
+        <span>★★★ 議事録からFAQを自動生成する</span>
+      </div>
+      <div class="related-card">
+        <a href="../05-support/01-email-reply.html">問い合わせメール→トーン別返信案自動生成</a>
+        <span>★ 今日から — 会議後のメール対応も効率化</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 総務・人事</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>
