@@ -181,6 +181,88 @@ def extract_new_faq_candidates(slack_messages: list, existing_faq: str) -> list:
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('monthly',this)">月次更新</button>
+      <button class="stab" onclick="showScenario('weekly',this)">週次チェック</button>
+      <button class="stab" onclick="showScenario('emergency',this)">緊急FAQの即時追加</button>
+    </div>
+    <div id="scenario-monthly" class="scenario-content active">
+      <div class="output-example">
+        <div class="output-header">月次更新 — スクリプト実行設定例</div>
+        <div class="output-body">
+          <pre>【月次バッチ処理設定】
+実行タイミング：毎月1日 AM 8:00（cronで自動実行）
+
+処理内容：
+1. 前月分のSlack #質問 チャンネルのメッセージを取得
+2. 個人名・プロジェクト名を匿名化してからClaudeに送信
+3. FAQ候補レポートを生成（出現3回以上を対象）
+4. 担当者のSlackに承認依頼メッセージを送信
+5. 承認されたFAQのみをNotionに自動追加
+
+# cron設定
+0 8 1 * * python faq_updater.py --mode=monthly</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-weekly" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">週次チェック — 軽量版スクリプト設定例</div>
+        <div class="output-body">
+          <pre>【週次チェック処理設定】
+実行タイミング：毎週月曜 AM 9:00
+
+処理内容：
+1. 先週のSlackメッセージを取得（匿名化済み）
+2. 出現5回以上の質問のみをスクリーニング（月次より閾値高め）
+3. 既存FAQで解決できない質問を担当者にSlackで共有
+4. 担当者が「FAQ化」ボタンを押した場合のみ追加フローへ
+
+目的：月次を待たずに急増する質問を早期発見する
+出力：Slack DM（担当者宛）に週次サマリーを送信</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-emergency" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">緊急FAQの即時追加 — 設定例</div>
+        <div class="output-body">
+          <pre>【緊急FAQ追加ワークフロー】
+トリガー：Slackで担当者が /faq-add コマンドを実行
+
+使い方：
+/faq-add
+質問：システムにアクセスできません
+回答：現在サーバーメンテナンス中です。15:00に復旧予定です。
+カテゴリ：システム・障害
+有効期限：2026-05-15 15:00
+
+処理：
+1. Claudeが回答を適切な文体に整形
+2. 上長（@manager）に承認を依頼
+3. 承認後、即座にNotionとSlackのFAQチャンネルに投稿
+4. 有効期限が来たら自動的にアーカイブする</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>AI生成のFAQ回答を担当者がレビューしてから公開しているか（自動公開は禁止）</li>
+        <li>Slackメッセージに含まれる個人名・プロジェクト名をAIに渡す前に匿名化しているか</li>
+        <li>追加・更新・削除すべてのFAQ変更が承認フローを経ているか</li>
+        <li>FAQの更新頻度が月1〜2回の範囲に収まっているか（更新過多で現場が混乱しないか）</li>
+        <li>古くなったFAQ（製品バージョン・規程が変わったもの）を定期的にアーカイブしているか</li>
+        <li>FAQへのアクセス権限が適切に設定されているか（社外秘情報が含まれる場合）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -190,7 +272,34 @@ def extract_new_faq_candidates(slack_messages: list, existing_faq: str) -> list:
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="../05-support/02-slack-bot.html">Slack自動返信ボット FAQ一次対応</a>
+        <span>★★★ FAQをSlackBotで活用する</span>
+      </div>
+      <div class="related-card">
+        <a href="04-manual-generation.html">操作録画→Markdownマニュアル自動生成</a>
+        <span>★★★★ マニュアルもFAQ化して活用</span>
+      </div>
+      <div class="related-card">
+        <a href="../05-support/01-email-reply.html">問い合わせメール→トーン別返信案自動生成</a>
+        <span>★ 今日から — メール対応をFAQと連携</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 総務・人事</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

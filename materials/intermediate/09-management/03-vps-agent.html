@@ -40,6 +40,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -66,6 +84,36 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
   </div>
 
   <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ LINE WORKSにメッセージを送信した場合のエージェントの応答例</p>
+    <div class="output-example">
+      <div class="output-header">LINE WORKS への送信メッセージ</div>
+      <div class="output-body">
+        「明日14時に鈴木さんとのミーティングをカレンダーに追加して。タイトルは"Q2振り返り"で90分。場所はオンライン（Google Meet）。」
+      </div>
+    </div>
+    <div class="output-example" style="margin-top:8px;">
+      <div class="output-header">エージェントの応答（LINE WORKS に自動返信）</div>
+      <div class="output-body">
+        <pre>承りました。以下の内容でGoogleカレンダーに登録します。確認してください。
+
+タイトル：Q2振り返り
+日時：2026年5月16日（木）14:00〜15:30（90分）
+場所：Google Meet（自動生成リンクを添付）
+参加者：鈴木さん（suzuki@example.co.jp）
+
+登録してよろしいですか？（はい / いいえ）</pre>
+      </div>
+    </div>
+    <div class="output-example" style="margin-top:8px;">
+      <div class="output-header">「はい」と返信後のエージェントの応答</div>
+      <div class="output-body">
+        Googleカレンダーに登録しました。鈴木さんに招待メールを送信しました。Meet リンク：https://meet.google.com/xxx-yyyy-zzz
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>システム構成</h2>
     <div class="arch">
       <div><strong>データの流れ</strong></div>
@@ -85,6 +133,56 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
         <span class="node">Googleカレンダー</span>
         <span class="node">Googleドライブ</span>
         <span class="node">Notion</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('cal',this)">Googleカレンダー操作</button>
+      <button class="stab" onclick="showScenario('gmail',this)">Gmail確認・返信</button>
+      <button class="stab" onclick="showScenario('notion',this)">Notion記録</button>
+      <button class="stab" onclick="showScenario('drive',this)">Driveファイル検索</button>
+    </div>
+    <div id="scenario-cal" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">LINE WORKSへのメッセージ例（カレンダー操作）</div>
+        <pre">「来週火曜15時から1時間、山田さんと予算会議をカレンダーに追加して。場所は第1会議室。」
+
+「今月の残り予定を一覧で教えて。」
+
+「5月20日のMTGを30分後ろ倒しにして、参加者全員に変更通知を送って。」</pre>
+      </div>
+    </div>
+    <div id="scenario-gmail" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">LINE WORKSへのメッセージ例（Gmail確認・返信）</div>
+        <pre">「今日受信した未読メールの件名を一覧で教えて。」
+
+「ABC株式会社の田中さんから来たメールに、来週月曜午後に打ち合わせOKと返信して。」
+
+「先週受信したメールで未返信のものをリストアップして。返信期限が過ぎているものは赤フラグで。」</pre>
+      </div>
+    </div>
+    <div id="scenario-notion" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">LINE WORKSへのメッセージ例（Notion記録）</div>
+        <pre">「Notionの議事録DBに今日の会議メモを追加して。
+内容：〇〇プロジェクト進捗確認。参加者：山田・鈴木・田中。
+次回アクション：田中さんが設計書作成（期限5/20）、鈴木さんがクライアント確認（期限5/17）。」
+
+「Notionのタスクリストに"提案書のレビュー"を追加して。担当は自分、期限は今週金曜。」</pre>
+      </div>
+    </div>
+    <div id="scenario-drive" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">LINE WORKSへのメッセージ例（Driveファイル検索）</div>
+        <pre">「Googleドライブの"提案書"フォルダにある最新ファイルの名前と更新日を教えて。」
+
+「先月作成したABC社向けの提案資料を探して、ファイルのリンクを教えて。」
+
+「Driveの"契約書"フォルダにある未署名のファイルを一覧にして。」</pre>
       </div>
     </div>
   </div>
@@ -215,6 +313,22 @@ sudo systemctl start agent</div>
   </div>
 
   <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>LINE WORKSの署名検証（Bot Secret による HMAC 検証）が実装されているか</li>
+        <li>VPSのSSHアクセスが鍵認証のみに制限されているか（パスワード認証を無効化）</li>
+        <li>Google OAuth2・Notion APIキー等の認証情報ファイルのパーミッションが600になっているか</li>
+        <li>破壊的操作（Gmail送信・カレンダー作成・Notion書き込み）の前に確認メッセージを送る仕組みがあるか</li>
+        <li>エージェントのタイムアウト（120秒等）とトークン上限が設定されているか</li>
+        <li>LINE WORKSのボットAPIの利用プランとメッセージ送信上限を確認したか</li>
+        <li>systemdサービスが自動起動設定になっているか（VPS再起動後も動作するか）</li>
+        <li>Claude APIの利用コストを定期的に確認する仕組みがあるか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -226,7 +340,29 @@ sudo systemctl start agent</div>
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-business-monorepo.html">業務モノレポ：経費精算・稼働報告等を1リポジトリで管理</a>
+        <span>エージェントと連携するデータ基盤</span>
+      </div>
+      <div class="related-card">
+        <a href="01-57-skills.html">57個のカスタムスキルで6部門業務を1人でカバー</a>
+        <span>エージェントに呼び出させるスキル設計</span>
+      </div>
+    </div>
+  </div>
 </div>
 <footer>中級編 設定ガイド — 経営・全社横断</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

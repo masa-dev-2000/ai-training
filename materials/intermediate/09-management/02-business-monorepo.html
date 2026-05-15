@@ -346,6 +346,21 @@ expenses/*/receipts/*.pdf   <span class="c"># 領収書の原本</span>
   </div>
 
   <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>.gitignore に領収書・給与データ・個人情報ファイルが除外設定されているか</li>
+        <li>CLAUDE.md に経費精算の締め日・テンプレートの場所などのルールが記載されているか</li>
+        <li>スキルファイル（.claude/skills/）が各業務に対応して作成されているか</li>
+        <li>knowledge/ フォルダの会社情報・価格・事例が最新版に更新されているか</li>
+        <li>GitHub Actionsで週次サマリーが正常に実行されているか（Actions タブで確認）</li>
+        <li>プライベートリポジトリ設定・AIコード補完機能のデータ学習設定を確認したか</li>
+        <li>過去データのアーカイブ運用（コンテキスト上限対策）を決めているか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -356,7 +371,29 @@ expenses/*/receipts/*.pdf   <span class="c"># 領収書の原本</span>
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-57-skills.html">57個のカスタムスキルで6部門業務を1人でカバー</a>
+        <span>スキルの設計パターンを学ぶ</span>
+      </div>
+      <div class="related-card">
+        <a href="03-vps-agent.html">VPS常駐エージェント：LINE WORKSから横断操作</a>
+        <span>モノレポとエージェントを連携する</span>
+      </div>
+    </div>
+  </div>
 </div>
 <footer>中級編 設定ガイド — 経営・全社横断</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>
