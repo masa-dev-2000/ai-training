@@ -202,6 +202,87 @@ whisper input.mp4 --language ja --output_format json --output_dir ./</div>
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('procedure',this)">操作手順書</button>
+      <button class="stab" onclick="showScenario('troubleshoot',this)">トラブルシューティングガイド</button>
+      <button class="stab" onclick="showScenario('onboarding',this)">新人向けオンボーディング</button>
+    </div>
+    <div id="scenario-procedure" class="scenario-content active">
+      <div class="output-example">
+        <div class="output-header">操作手順書 — 構造化プロンプト設定例</div>
+        <div class="output-body">
+          <pre>以下のナレーション文字起こしとスクリーンショット情報から
+操作手順書を生成してください。
+
+【出力形式】
+- タイトル・対象バージョン・対象者を冒頭に記載
+- 各手順は「## 手順N：（操作名）」で始める
+- スクリーンショットを手順ごとに `![説明](path)` で挿入
+- 番号付きリストで操作を1ステップ1行で記載
+- 注意・警告事項は `> ⚠️` で記載
+
+【対象者】一般業務ユーザー（IT知識は不問）
+【口調】丁寧だが簡潔。専門用語は使わない</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-troubleshoot" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">トラブルシューティングガイド — 構造化プロンプト設定例</div>
+        <div class="output-body">
+          <pre>以下のナレーション・画面情報からトラブルシューティングガイドを生成してください。
+
+【出力形式】
+各トラブルは以下の構造で記載する：
+---
+### ❌ 症状：（画面に何が起きているか）
+**原因：**（なぜこの問題が起きるか）
+**解決手順：**
+1. （手順1）
+2. （手順2）
+**解決しない場合：** （次の連絡先・エスカレーション先）
+---
+
+スクリーンショットはエラー画面のみ挿入する
+「よくある質問（FAQ）」セクションを末尾に追加する</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-onboarding" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">新人向けオンボーディング — 構造化プロンプト設定例</div>
+        <div class="output-body">
+          <pre>以下の操作録画から新入社員向けのオンボーディングガイドを生成してください。
+
+【出力形式】
+- 冒頭に「このガイドを読み終えたら何ができるか」を3点で明示
+- 操作手順は丁寧に（なぜその操作をするかの理由も添える）
+- 「よくある間違い」コラムを各章末尾に追加
+- 「困ったときの連絡先」セクションを末尾に記載
+
+【対象者】PC操作は慣れているが業務システムは初めての新入社員
+【口調】友好的で励ます表現。「まず〇〇してみましょう」など促す語調</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>スクリーンショットに個人情報・パスワード・機密データが映り込んでいないか全件確認しているか</li>
+        <li>手順番号とスクリーンショットが正しく対応しているか（ズレていないか）</li>
+        <li>ナレーションの誤認識による手順の誤りがないか確認しているか</li>
+        <li>専門用語・略語に説明が添えられているか（対象読者に合わせて）</li>
+        <li>マニュアルの公開先（社内Wiki・Notion等）のアクセス権限が適切に設定されているか</li>
+        <li>システムのバージョン情報・作成日・作成者がマニュアルに明記されているか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -211,7 +292,34 @@ whisper input.mp4 --language ja --output_format json --output_dir ./</div>
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="05-faq-update.html">社内FAQ・ナレッジベースの自動更新</a>
+        <span>★★★ マニュアルからFAQを自動生成する</span>
+      </div>
+      <div class="related-card">
+        <a href="03-minutes-command.html">「議事録まとめて」スラッシュコマンド化</a>
+        <span>★★ 操作ガイドも1コマンドで生成</span>
+      </div>
+      <div class="related-card">
+        <a href="../05-support/01-email-reply.html">問い合わせメール→トーン別返信案自動生成</a>
+        <span>★ 今日から — マニュアル活用の問い合わせ対応</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 総務・人事</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

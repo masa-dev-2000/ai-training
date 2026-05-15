@@ -34,6 +34,28 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -55,6 +77,40 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       X（旧Twitter）等のSNSでブランド名・商品名への言及を定期監視し、Claudeが感情分析（ポジティブ・ネガティブ・中立）を実施。ネガティブ投稿が急増した際にSlackの緊急チャンネルへ即座に通知する炎上検知システム。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ ネガティブ投稿が閾値を超えた際のSlack通知メッセージ例</p>
+    <div class="output-example">
+      <div class="output-header">Slack #緊急-炎上対応 チャンネルへの通知メッセージ</div>
+      <div class="output-body">
+        <pre>🚨 【ブランド監視アラート】ネガティブ急増を検知
+
+監視キーワード：「〇〇サービス」「#〇〇不具合」
+検知時刻：2026-05-15 14:32
+
+■ 直近30分の集計
+・取得ツイート数：47件
+・ポジティブ：8件（17%）
+・ネガティブ：31件（66%）← 閾値5件を超過（31件）
+・中立：8件（17%）
+
+■ 主な批判内容（Claudeによる要約）
+過去30分に急増したネガティブ投稿の主な内容：
+1. ログインできないという報告が多数（19件）
+2. アプリが落ちるという声（8件）
+3. 対応が遅いとの不満（4件）
+
+■ 代表的な投稿（上位3件）
+・「〇〇サービスまた落ちてる…仕事にならない」（RT: 42）
+・「ログイン画面から先に進めない。サポートに連絡したが繋がらない」（RT: 28）
+・「〇〇の障害、もう3回目。さすがに解約考える」（RT: 15）
+
+対応担当：@marketing-team @support-team
+エスカレーション：10件超過で電話連絡を発動予定</pre>
+      </div>
     </div>
   </div>
 
@@ -135,6 +191,89 @@ def alert_slack(message: str, channel: str):
   </div>
 
   <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('brand', this)">ブランド名監視</button>
+      <button class="stab" onclick="showScenario('competitor', this)">競合監視</button>
+      <button class="stab" onclick="showScenario('keyword', this)">キーワード監視</button>
+    </div>
+
+    <div id="scenario-brand" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">ブランド名監視 — 感情分析プロンプト</div>
+        <pre>以下のX投稿リストを感情分析してください。
+
+【投稿リスト】
+（tweepyで取得したツイートテキストを貼り付け）
+
+分析してほしいこと：
+1. ポジティブ・ネガティブ・中立の件数と割合
+2. ネガティブ投稿の主な批判内容（上位3つのテーマにまとめる）
+3. 緊急度の判定（低/中/高/緊急）
+   ・緊急：製品不具合・サービス障害・法的リスク
+   ・高：大量クレーム・インフルエンサーによる批判
+   ・中：一般的な不満
+   ・低：軽微なネガティブ
+4. 推奨する初動対応（1〜2文で）
+
+JSON形式で出力してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-competitor" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">競合監視 — 競合への評価収集プロンプト</div>
+        <pre>以下の競合ブランドに関するX投稿を分析してください。
+
+監視対象：「競合社名A」「競合商品B」
+
+分析内容：
+1. 競合への感情傾向（ポジティブ/ネガティブ/中立の割合）
+2. よく挙げられている競合の強み（ポジティブ投稿から）
+3. よく挙げられている競合の弱点・不満（ネガティブ投稿から）
+4. 自社が差別化できるチャンスポイント
+5. 注目すべき投稿（RT数の多いもの上位3件）
+
+競合の弱点は自社の強みとして訴求できる可能性があるため、
+具体的な改善提案も含めてください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-keyword" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">キーワード監視 — 業界トレンド把握プロンプト</div>
+        <pre>以下のキーワードに関するX投稿を分析して業界トレンドをまとめてください。
+
+監視キーワード：「〇〇業界」「〇〇の課題」「〇〇 困った」
+
+分析内容：
+1. 最も多く言及されているトピックのランキング（上位10個）
+2. ユーザーが抱えている悩み・課題（自社製品のヒントになるもの）
+3. 急上昇中のトピック（先週比で急増しているワード）
+4. インフルエンサー（フォロワー5000以上）の主な発言傾向
+5. 自社コンテンツ・製品開発へのヒント（3点）
+
+週次でこの分析を実施し、Google Sheetsに蓄積してトレンド変化を追跡します。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>X API Bearerトークン・Slack Webhook URLなどの認証情報を .env ファイルに保存し、Gitに含まれないよう設定したか</li>
+        <li>監視キーワードに自社ブランドの表記ゆれ（略称・誤字・カタカナ・ひらがな）を含めたか</li>
+        <li>ネガティブ検知時の対応フロー（担当者・返答方針・承認プロセス）を事前にチームで決めたか</li>
+        <li>感情分析の精度をテストデータで確認し、誤検知の傾向を把握したか（皮肉・冗談の誤分類など）</li>
+        <li>Slackのアラートが正しいチャンネルに届くかテスト送信で確認したか</li>
+        <li>X APIの月次ツイート取得上限（無料プランで15万件）を把握し、過剰リクエストにならないよう設定したか</li>
+        <li>閾値（何件でアラートを発動するか）を実際の投稿量に合わせて調整したか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -144,7 +283,34 @@ def alert_slack(message: str, channel: str):
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-ads-automation.html">Google/Meta広告 入札・除外KW自動化</a>
+        <span>★★★ 炎上時に広告を素早く停止する</span>
+      </div>
+      <div class="related-card">
+        <a href="06-ga4-report.html">GA4×BigQuery 週次・月次レポート</a>
+        <span>★★★ SNS流入とCV数の相関を確認</span>
+      </div>
+      <div class="related-card">
+        <a href="../05-support/01-email-reply.html">メール返信 自動生成</a>
+        <span>★ 炎上時のお問い合わせ対応を効率化</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — マーケティング・広告</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

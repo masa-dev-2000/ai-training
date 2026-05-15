@@ -34,6 +34,36 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+/* テーブル */
+.table-wrap { overflow-x: auto; margin: 8px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #f1f5f9; color: #334155; font-weight: 700; padding: 8px 12px; text-align: left; border: 1px solid #e2e8f0; }
+td { padding: 8px 12px; border: 1px solid #e2e8f0; color: #475569; }
+td.v-ok { color: #166534; font-weight: 700; }
+td.v-ng { background: #fee2e2; color: #991b1b; font-weight: 700; }
+td.v-warn { background: #fef9c3; color: #854d0e; font-weight: 600; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -55,6 +85,61 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       取引先から受け取った請求書のインボイス番号（T+13桁の登録番号）を、国税庁の適格請求書発行事業者公表システムAPIに問い合わせて一括検証する。無効な番号の請求書を混入させないためのチェックを自動化する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 取引先リストのインボイス番号を一括検証した場合の結果レポート例</p>
+    <div class="output-example">
+      <div class="output-header">インボイス番号一括検証結果 — 2026年5月実行（取引先12社）</div>
+      <div class="output-body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>取引先名</th><th>登録番号</th><th>国税庁登録名</th><th>登録日</th><th>判定</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>株式会社A商事</td>
+                <td style="font-family:monospace;">T1234567890123</td>
+                <td>株式会社A商事</td>
+                <td>2023-10-01</td>
+                <td class="v-ok">有効</td>
+              </tr>
+              <tr>
+                <td>合同会社Bサービス</td>
+                <td style="font-family:monospace;">T9876543210987</td>
+                <td>合同会社Bサービス</td>
+                <td>2023-10-01</td>
+                <td class="v-ok">有効</td>
+              </tr>
+              <tr>
+                <td>C技術株式会社</td>
+                <td style="font-family:monospace;">T1111222233334</td>
+                <td>Ｃ技術株式会社</td>
+                <td>2024-04-01</td>
+                <td class="v-warn">名称相違（要確認）</td>
+              </tr>
+              <tr>
+                <td>D印刷株式会社</td>
+                <td style="font-family:monospace;">T0000000000001</td>
+                <td>（登録なし）</td>
+                <td>—</td>
+                <td class="v-ng">無効（番号なし）</td>
+              </tr>
+              <tr>
+                <td>E物流合同会社</td>
+                <td style="font-family:monospace;">T5555666677778</td>
+                <td>E物流合同会社</td>
+                <td>2023-10-01</td>
+                <td class="v-ng">取消済み（2025-03-31）</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px;color:#64748b;margin-top:10px;">有効：10社 ／ 名称相違（要確認）：1社 ／ 無効・取消：2社 ／ 無効分の仕入税額控除は認められない可能性があります。</p>
+      </div>
     </div>
   </div>
 
@@ -115,7 +200,7 @@ def batch_verify(csv_path: str):
         result = verify_number(row['invoice_number'])
         results.append({**row.to_dict(), **result})
         time.sleep(0.5)  <span class="c"># API制限対策</span>
-    pd.DataFrame(results).to_csv("verification_result.csv", index=False)
+    pd.DataFrame(results).to_csv("verification_result.csv", index=False, encoding="utf-8-sig")
     print("完了：verification_result.csvに出力しました")</div>
         </div>
       </li>
@@ -130,6 +215,97 @@ def batch_verify(csv_path: str):
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('single',this)">単一番号検証</button>
+      <button class="stab" onclick="showScenario('csv',this)">CSV一括検証</button>
+      <button class="stab" onclick="showScenario('new',this)">新規取引先の事前チェック</button>
+    </div>
+
+    <div id="scenario-single" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">単一番号検証 — 1件だけすぐに確認したい場合</div>
+        <pre>特定のインボイス番号を即座にコマンドラインで確認する簡易スクリプト。
+
+# 実行例
+python verify_single.py T1234567890123
+
+# 出力例
+番号：T1234567890123
+登録事業者名：株式会社〇〇商事
+登録日：2023-10-01
+状態：有効
+注意：請求書記載の名称「㈱〇〇商事」と国税庁登録名が異なります。
+     → 取引先に正式名称を確認することを推奨します。
+
+# 活用場面：
+# ・突発的な新規発注時の即時確認
+# ・疑わしい請求書を受け取った際の個別確認</pre>
+      </div>
+    </div>
+
+    <div id="scenario-csv" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">CSV一括検証 — 月次処理・取引先マスタの更新時</div>
+        <pre>取引先マスタCSVに記載された全インボイス番号を一括検証し、
+ステータスをマスタに上書き保存する。
+
+# 実行例（月次処理）
+python batch_verify.py \
+  --input  supplier_master.csv \
+  --output supplier_master_verified.csv \
+  --alert  keiri@company.co.jp
+
+# 出力CSV の追加列
+# verified_at     : 確認実行日時
+# api_status      : 有効 / 無効 / 取消済み / 確認失敗
+# api_name        : 国税庁登録名
+# name_match      : TRUE / FALSE（請求書名称との一致）
+
+# 変化検知（前回結果との比較）
+# 「有効 → 取消済み」になった取引先は即座にSlack通知</pre>
+      </div>
+    </div>
+
+    <div id="scenario-new" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">新規取引先の事前チェック — 契約前の与信確認に組み込む</div>
+        <pre>新規取引先との契約手続き時に、インボイス番号の検証を
+与信チェックの一部として自動実行するフローを設定してください。
+
+# トリガー：取引先マスタに新規登録されたとき（Webhook）
+def on_new_supplier_registered(supplier_data):
+    invoice_num = supplier_data.get("invoice_number")
+    if not invoice_num:
+        alert("⚠️ インボイス番号未登録：与信審査を保留")
+        return
+
+    result = verify_number(invoice_num)
+    if result["status"] != "有効":
+        alert(f"❌ 無効番号：{supplier_data['name']} の取引開始を保留してください")
+    elif not name_match(supplier_data["name"], result["registered_name"]):
+        alert(f"⚠️ 名称相違：登録名「{result['registered_name']}」を確認してください")
+    else:
+        notify(f"✓ インボイス番号確認済み：{supplier_data['name']}")</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>「名称相違」と判定された取引先は、正式法人名・屋号・略称の違いか確認したか（全角/半角・株式会社/㈱の表記違いも含む）</li>
+        <li>「取消済み」の番号が確認された取引先に対して、仕入税額控除の適用可否を税理士に確認したか</li>
+        <li>「無効（番号なし）」の請求書は支払いを保留にし、取引先に番号の再確認または修正請求書を依頼したか</li>
+        <li>API日次1,000件制限を超えるケースがある場合、処理を複数日に分けるか結果をキャッシュする仕組みがあるか</li>
+        <li>取引先マスタの検証結果は定期的に更新しているか（最低でも四半期に1回）</li>
+        <li>検証結果のCSVは仕訳の証憑として保管しているか（課税期間分は保存義務あり）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -140,7 +316,34 @@ def batch_verify(csv_path: str):
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="05-invoice-review.html">請求書確認作業の大幅効率化</a>
+        <span>★★★ 請求書全体の処理自動化</span>
+      </div>
+      <div class="related-card">
+        <a href="04-po-invoice-match.html">発注書 vs 請求書 差異自動検出</a>
+        <span>★★★ 照合作業とのパイプライン化</span>
+      </div>
+      <div class="related-card">
+        <a href="03-monthly-close.html">月次決算チェック（前払費用・社保漏れ）</a>
+        <span>★★★ 消費税区分チェックとの連携</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 経理・バックオフィス</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

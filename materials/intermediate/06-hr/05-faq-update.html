@@ -34,6 +34,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -55,6 +73,56 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       Slackの質問チャンネルを監視し、繰り返し質問されている内容をClaudeが検出・整理してFAQに追加するフローを構築する。ナレッジベースが常に最新の状態に保たれ、同じ質問への対応時間を削減できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 月次FAQ更新スクリプトが生成する新規FAQ候補レポートの例</p>
+    <div class="output-example">
+      <div class="output-header">新規FAQ候補レポート（2026年5月 月次分）</div>
+      <div class="output-body">
+        <pre>【新規FAQ候補レポート】
+集計期間：2026/04/15〜2026/05/15
+分析元：Slack #質問チャンネル（メッセージ数：347件）
+既存FAQ件数：42件 → 新規候補：6件
+
+==================================================
+No.1 【新規追加を推奨】
+質問：有給休暇の申請はどこからできますか？
+出現回数：12回（同義語含む）
+AI生成回答案：
+  有給休暇の申請は社内ポータル（portal.example.co.jp）から行えます。
+  「勤怠管理」→「休暇申請」→「有給休暇」の順に進み、
+  希望日を選択して申請ボタンを押してください。
+  承認通知はメールで届きます（通常1〜2営業日）。
+推奨アクション：✅ FAQに追加する
+カテゴリ：総務・勤怠
+
+--------------------------------------------------
+No.2 【新規追加を推奨】
+質問：リモートワーク申請の上限日数は？
+出現回数：9回
+AI生成回答案：
+  月20日までリモートワークが可能です（2026年4月改訂）。
+  申請は前日17時までに勤怠システムで行ってください。
+推奨アクション：✅ FAQに追加する（人事規程の確認後）
+カテゴリ：総務・働き方
+
+--------------------------------------------------
+No.3 【既存FAQ更新を推奨】
+質問：健康保険証の再発行手続きを教えてください
+出現回数：7回
+現在のFAQ：「総務部に申請書を提出する」（情報が古い）
+AI提案：マイナンバーカードの健康保険証利用に関する最新情報を追記
+推奨アクション：⚠️ 既存FAQを更新する
+カテゴリ：福利厚生
+
+==================================================
+【承認待ちアクション】
+新規追加候補：2件　更新候補：1件　棄却推奨：3件
+承認はこちら → https://notion.so/faq-review-2026-05</pre>
+      </div>
     </div>
   </div>
 

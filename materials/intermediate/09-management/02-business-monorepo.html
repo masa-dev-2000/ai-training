@@ -36,6 +36,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -57,6 +75,36 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       経費精算・稼働報告・ブログ記事・提案資料などの業務成果物をひとつのGitリポジトリで管理する。Claude Codeが過去の成果物を参照しながら新しい業務を処理できるため、ナレッジが蓄積するほど出力品質が上がる。バージョン管理・差分確認・ロールバックもGitで行える。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ /expense-report コマンドを実行した場合に生成される経費精算書の例</p>
+    <div class="output-example">
+      <div class="output-header">/expense-report の出力（expenses/2026-04/report.md）</div>
+      <div class="output-body">
+        <pre># 経費精算書 — 2026年4月分
+申請者：山田 太郎　申請日：2026-05-01　承認者：〇〇部長
+
+## 領収書一覧
+
+| No | 日付     | 内容                     | 勘定科目  | 金額      | インボイス | 備考         |
+|----|----------|--------------------------|-----------|-----------|-----------|--------------|
+| 1  | 2026/4/3 | JR東日本 品川→新宿        | 交通費    | ¥200      | 不要       | 顧客訪問     |
+| 2  | 2026/4/8 | 〇〇コーヒー（接待）      | 接待交際費 | ¥3,200    | T1234567890| A社△△様と打合せ |
+| 3  | 2026/4/15| Amazon ビジネス（消耗品） | 消耗品費  | ¥1,980    | T9876543210| ケーブル購入 |
+| 4  | 2026/4/22| タクシー（深夜）          | 交通費    | ¥2,100    | 不要       | 終電後の移動 |
+
+## 合計
+- 交通費：¥2,300
+- 接待交際費：¥3,200
+- 消耗品費：¥1,980
+- **合計：¥7,480**
+
+## 確認事項（要対応）
+- No.2 の接待費：参加者名・目的を承認者に口頭確認すること（接待交際費5,000円以上は詳細記録必須）</pre>
+      </div>
     </div>
   </div>
 
@@ -94,6 +142,83 @@ business-monorepo/
     ├── company-profile.md
     ├── pricing.md
     └── past-cases.md            ← 過去事例（提案参照用）</div>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('expense',this)">経費精算</button>
+      <button class="stab" onclick="showScenario('worklog',this)">稼働報告</button>
+      <button class="stab" onclick="showScenario('proposal',this)">提案書整理</button>
+      <button class="stab" onclick="showScenario('weekly',this)">週次サマリー生成</button>
+    </div>
+    <div id="scenario-expense" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">/expense-report の使い方</div>
+        <pre>/expense-report
+
+今月（2026年4月）の経費精算書を作成してください。
+expenses/2026-04/receipts/ フォルダに領収書のメモを保存済みです。
+テンプレート：expenses/templates/expense-template.md を使用すること。</pre>
+      </div>
+    </div>
+    <div id="scenario-worklog" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">/work-log の使い方</div>
+        <pre>/work-log
+
+今週（2026年4月21日〜25日）の稼働報告を作成してください。
+
+主な作業：
+- A社向け提案書の作成（2日）
+- B社定例MTG参加・議事録作成（0.5日）
+- 社内システム改善提案書のレビュー（0.5日）
+- 新入社員向けオンボーディング資料作成（1日）
+
+work-logs/ フォルダに保存してください。</pre>
+      </div>
+    </div>
+    <div id="scenario-proposal" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">/proposal-organize の使い方</div>
+        <pre>/proposal-organize
+
+株式会社ABC向けの提案書を作成してください。
+
+参照：
+- knowledge/past-cases.md の「製造業向け業務自動化」案件を参考にする
+- knowledge/pricing.md の最新料金表を使用する
+- 先方の課題：月次報告書作成に毎月40時間かかっている
+
+出力先：proposals/by-client/abc/draft-2026-05-15.md</pre>
+      </div>
+    </div>
+    <div id="scenario-weekly" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">週次サマリー（GitHub Actions）の設定</div>
+        <pre># .github/workflows/weekly-summary.yml
+name: 週次業務サマリー生成
+on:
+  schedule:
+    - cron: '0 9 * * 1'  # 毎週月曜 9:00 JST
+
+jobs:
+  generate-summary:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Claude で週次サマリーを生成
+        run: |
+          claude --headless --print \
+            "先週の work-logs/ を参照し、週次業務サマリーを \
+            work-logs/weekly-summary-$(date +%Y-%m-%d).md に保存してください"
+        env:
+          ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+      - uses: stefanzweifel/git-auto-commit-action@v5
+        with:
+          commit_message: "chore: 週次サマリーを自動生成"</pre>
+      </div>
+    </div>
   </div>
 
   <div class="section">
