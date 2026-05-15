@@ -41,6 +41,24 @@ td code { background: #f1f5f9; padding: 1px 6px; border-radius: 4px; font-family
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -66,6 +84,41 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
   </div>
 
   <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ /monthly-pl コマンドを実行した場合に生成される月次PL分析レポートの冒頭例</p>
+    <div class="output-example">
+      <div class="output-header">/monthly-pl の出力（抜粋）</div>
+      <div class="output-body">
+        <pre>【月次PL分析レポート】2026年4月度
+生成日：2026-05-01　参照ファイル：context/financials/2026-04-pl.csv
+
+━━ エグゼクティブサマリー ━━
+売上：1,240万円（前月比 +8.7% ／ 予算比 +3.3%）
+営業利益：186万円（前月比 +12.4% ／ 利益率 15.0%）
+注目点：人件費が前月比 +18%（採用2名）、広告費が予算比 −15%（施策見直し中）
+
+━━ 部門別詳細 ━━
+┌─────────┬──────┬──────┬──────┐
+│ 項目          │ 実績     │ 前月     │ 予算     │
+├─────────┼──────┼──────┼──────┤
+│ 売上          │ 1,240万  │ 1,141万  │ 1,200万  │
+│ 売上原価      │   620万  │   582万  │   600万  │
+│ 粗利          │   620万  │   559万  │   600万  │
+│ 人件費        │   248万  │   210万  │   240万  │
+│ 広告費        │    85万  │    88万  │   100万  │
+│ その他費用    │   101万  │    98万  │    95万  │
+│ 営業利益      │   186万  │   163万  │   165万  │
+└─────────┴──────┴──────┴──────┘
+
+━━ アクション推奨リスト ━━
+1. [高] 人件費増加（+38万）の内訳を人事に確認し、翌月予算を修正する
+2. [中] 広告費の未消化（−15万）の原因を確認。施策再開または予算削減を検討
+3. [低] 売上好調のため、5月のキャッシュ予測を更新する（/cash-forecast を実行）</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>部門別スキル一覧（例）</h2>
     <div class="table-wrap">
       <table>
@@ -77,6 +130,77 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
         <tr><td>CTO（技術）</td><td><code>/pr-review</code> <code>/arch-review</code> <code>/incident-report</code></td><td>PRレビュー・設計評価・インシデントレポート</td></tr>
         <tr><td>COO（オペレーション）</td><td><code>/sop-draft</code> <code>/kpi-dashboard</code> <code>/vendor-eval</code></td><td>業務手順書・KPI整理・ベンダー評価</td></tr>
       </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('ceo',this)">CEO業務（経営判断）</button>
+      <button class="stab" onclick="showScenario('cfo',this)">CFO業務（財務分析）</button>
+      <button class="stab" onclick="showScenario('cmo',this)">CMO業務（マーケ）</button>
+    </div>
+    <div id="scenario-ceo" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">CEO業務 — スキルファイル例（.claude/skills/ceo/board-report.md）</div>
+        <pre>---
+name: board-report
+description: 取締役会向けの月次報告資料を生成する
+---
+
+あなたはCEOとして取締役会向けの月次報告を作成します。
+
+参照ファイル：
+- context/financials/latest-pl.csv（最新PL）
+- context/okr/current-okr.md（OKR進捗）
+- context/company-overview.md（会社概要）
+
+出力内容：
+1. 経営サマリー（3行）
+2. 重点KPIの進捗（達成率・色分け）
+3. 今月の主要トピック（3〜5件）
+4. 次月の重点施策と判断が必要な事項</pre>
+      </div>
+    </div>
+    <div id="scenario-cfo" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">CFO業務 — スキルファイル例（.claude/skills/cfo/cash-forecast.md）</div>
+        <pre">---
+name: cash-forecast
+description: 3ヶ月先のキャッシュフロー予測を生成する
+---
+
+あなたはCFOとしてキャッシュフロー予測を作成します。
+
+参照ファイル：
+- context/financials/latest-pl.csv（直近実績）
+- context/financials/budget-fy26.csv（年間予算）
+- context/financials/receivables.csv（売掛金一覧）
+
+予測対象：今月含む3ヶ月（月次）
+出力：月別キャッシュイン・アウト・残高、資金ショートリスクの有無と対応策</pre>
+      </div>
+    </div>
+    <div id="scenario-cmo" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">CMO業務 — スキルファイル例（.claude/skills/cmo/content-calendar.md）</div>
+        <pre">---
+name: content-calendar
+description: 翌月のコンテンツカレンダーを生成する
+---
+
+あなたはCMOとしてコンテンツ計画を立案します。
+
+参照ファイル：
+- context/marketing/brand-guideline.md（ブランドガイド）
+- context/marketing/past-campaigns.md（過去施策）
+
+出力内容：
+1. 翌月の主要テーマ（2〜3テーマ）
+2. SNS投稿カレンダー（Twitter/X・LinkedIn：週3回）
+3. ブログ記事候補（月2本のタイトルと概要）
+4. メールマガジンの配信タイミングと主題</pre>
+      </div>
     </div>
   </div>
 
@@ -205,6 +329,22 @@ context/financials/latest-pl.csv を読み込み、
   </div>
 
   <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>スキルファイル（.claude/skills/）のフォルダ構成が部門別に整理されているか</li>
+        <li>context/ フォルダの財務データ・組織情報が最新版に更新されているか</li>
+        <li>CLAUDE.mdに会社コンテキスト・スキル使用の原則が記載されているか</li>
+        <li>MCPサーバーに接続する権限が必要最小限のスコープに絞られているか</li>
+        <li>財務・人事の機密データがローカルのみで管理され、外部リポジトリに含まれていないか</li>
+        <li>AIが生成した経営判断・財務分析を人間が最終確認してから意思決定に使っているか</li>
+        <li>対外資料（投資家向け・融資申請等）は専門家のレビューを受けているか</li>
+        <li>スキルの数が増えすぎていないか（最初は各部門3個程度が推奨）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -215,7 +355,29 @@ context/financials/latest-pl.csv を読み込み、
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-business-monorepo.html">業務モノレポ：経費精算・稼働報告等を1リポジトリで管理</a>
+        <span>スキルとデータを一元管理する</span>
+      </div>
+      <div class="related-card">
+        <a href="03-vps-agent.html">VPS常駐エージェント：LINE WORKSから横断操作</a>
+        <span>スマホからスキルを呼び出す</span>
+      </div>
+    </div>
+  </div>
 </div>
 <footer>中級編 設定ガイド — 経営・全社横断</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

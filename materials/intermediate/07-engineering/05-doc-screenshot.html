@@ -34,6 +34,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -55,6 +73,140 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       UIの変更がmainブランチにマージされるとGitHub Actionsが自動起動し、Playwrightがスクリーンショットを再撮影。既存のドキュメント画像と差分を検出し、変更があれば自動でドキュメントを更新してPRを作成する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ mainブランチへのマージ後にGitHub Actionsが起動し、差分を検出してPRを自動作成した場合の出力例</p>
+    <div class="output-example">
+      <div class="output-header">GitHub Actions 実行ログ と 自動作成PR の概要</div>
+      <div class="output-body">
+        <pre><strong>--- GitHub Actions 実行ログ ---</strong>
+
+[14:07:22] スクリーンショット撮影開始（対象: 4ページ）
+[14:07:28] login-page: 撮影完了 → 差分検出中...
+[14:07:29] login-page: 変更あり（ピクセル差分: 3.2%）→ 更新対象に追加
+[14:07:35] dashboard: 撮影完了 → 差分検出中...
+[14:07:36] dashboard: 変更なし → スキップ
+[14:07:41] settings-page: 撮影完了 → 差分検出中...
+[14:07:42] settings-page: 変更あり（ピクセル差分: 12.8%）→ 更新対象に追加
+[14:07:47] user-profile: 撮影完了 → 差分検出中...
+[14:07:48] user-profile: 変更なし → スキップ
+[14:07:49] 更新ファイル: 2件（login-page.png, settings-page.png）
+[14:07:52] ブランチ auto/update-screenshots-20260515 を作成
+[14:07:54] PRを作成しました: #87
+
+---
+
+<strong>PR #87: docs: スクリーンショットを最新UIに更新（自動）</strong>
+ブランチ: auto/update-screenshots-20260515
+
+## 変更内容
+
+UIの変更に伴い、以下のドキュメント画像を自動更新しました。
+
+| ページ | 変更内容 | 差分 |
+|--------|----------|------|
+| ログインページ | ボタンデザイン変更 | 3.2% |
+| 設定ページ | サイドバーレイアウト変更 | 12.8% |
+
+dashboard・user-profile は変更なし（スキップ）。
+
+## 確認事項
+
+- [ ] 画像が正しく更新されているか目視確認
+- [ ] ドキュメントの文章と画像の内容が一致しているか確認</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('single',this)">単一ページ更新</button>
+      <button class="stab" onclick="showScenario('bulk',this)">全ページ一括更新</button>
+      <button class="stab" onclick="showScenario('auth',this)">認証が必要なページ</button>
+    </div>
+
+    <div id="scenario-single" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">単一ページ更新 — GitHub Actions 設定例</div>
+        <pre><span style="color:#94a3b8"># .github/workflows/update-single-screenshot.yml</span>
+name: Update Single Page Screenshot
+on:
+  workflow_dispatch:
+    inputs:
+      page_id:
+        description: '更新するページID（screenshots.config.json のid）'
+        required: true
+        type: string
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci && npx playwright install chromium
+      - run: node scripts/update-screenshots.js --page ${{ inputs.page_id }}
+      - name: Create PR if changed
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "docs: ${{ inputs.page_id }} のスクリーンショットを更新"
+          title: "[${{ inputs.page_id }}] ドキュメント画像を手動更新"
+          branch: "manual/update-screenshot-${{ inputs.page_id }}"</pre>
+      </div>
+    </div>
+
+    <div id="scenario-bulk" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">全ページ一括更新 — 週次スケジュール実行設定例</div>
+        <pre><span style="color:#94a3b8"># .github/workflows/weekly-screenshot-update.yml</span>
+name: Weekly Screenshot Update
+on:
+  schedule:
+    - cron: '0 2 * * 1'  # 毎週月曜 2:00 UTC（日本時間 11:00）
+  workflow_dispatch:
+
+jobs:
+  update-all:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - run: npm ci && npx playwright install chromium
+      - run: node scripts/update-screenshots.js --all
+      - name: Create PR if any changed
+        uses: peter-evans/create-pull-request@v5
+        with:
+          commit-message: "docs: スクリーンショットを週次一括更新"
+          title: "ドキュメントのスクリーンショット週次自動更新"
+          branch: "auto/weekly-screenshots"
+          labels: "documentation,automated"</pre>
+      </div>
+    </div>
+
+    <div id="scenario-auth" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">認証が必要なページ — Playwright 設定例</div>
+        <pre><span style="color:#94a3b8">// scripts/update-screenshots.js（認証あり部分）</span>
+async function loginAndCapture(page, item) {
+  // ログイン処理
+  await page.goto(process.env.BASE_URL + '/login');
+  await page.fill('[name="email"]', process.env.TEST_USER_EMAIL);
+  await page.fill('[name="password"]', process.env.TEST_USER_PASSWORD);
+  await page.click('[type="submit"]');
+  await page.waitForURL('**/dashboard');
+
+  // 認証済みページのスクリーンショット撮影
+  await page.goto(process.env.BASE_URL + item.url);
+  return await page.screenshot({ fullPage: true });
+}
+
+<span style="color:#94a3b8">// GitHub Secretsに設定する環境変数</span>
+// TEST_USER_EMAIL: テスト用アカウントのメールアドレス
+// TEST_USER_PASSWORD: テスト用アカウントのパスワード
+// BASE_URL: 対象環境のベースURL</pre>
+      </div>
     </div>
   </div>
 
@@ -151,6 +303,21 @@ jobs:
   </div>
 
   <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>自動作成されたPRの画像を目視で確認し、意図しない変更が含まれていないか</li>
+        <li>ドキュメントの文章と更新後の画像の内容が一致しているか（手順番号・ボタン名等）</li>
+        <li>テスト用アカウントの認証情報をGitHub Secretsに安全に保存しているか</li>
+        <li>差分検出の閾値（ピクセル差分 %）を適切に設定しているか（小さすぎると誤検出、大きすぎると見落とし）</li>
+        <li>CI実行時間がプロジェクトの許容範囲内か（長ければ対象ページを絞るか週次実行に変更）</li>
+        <li>自動更新PRをマージする前にレビュアーが承認する設定になっているか</li>
+        <li>本番環境のURLを誤って撮影対象に含めていないか（ステージング環境を使うことを推奨）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -160,7 +327,33 @@ jobs:
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="04-ui-review.html">UIレビューをコマンド1発で完結</a>
+        <span>★★★★ スクリーンショット撮影の応用・AI分析まで</span>
+      </div>
+      <div class="related-card">
+        <a href="02-github-issue-pr.html">GitHub Issue → 実装 → PR自動作成</a>
+        <span>★★★★ ドキュメント更新もIssueから自動化</span>
+      </div>
+      <div class="related-card">
+        <a href="../06-hr/04-manual-generation.html">業務マニュアルの自動生成</a>
+        <span>★★★ スクリーンショットを使ったマニュアル作成</span>
+      </div>
+    </div>
+  </div>
 </div>
 <footer>中級編 設定ガイド — 開発・エンジニアリング</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

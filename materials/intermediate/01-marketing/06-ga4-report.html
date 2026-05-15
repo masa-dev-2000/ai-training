@@ -37,6 +37,28 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -58,6 +80,46 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       GA4とBigQueryを連携し、Claude CodeがSQLクエリを自動生成・実行してデータを取得。AIが分析コメントを付与したレポートをGoogle Sheets / PDFで定期出力する。手動で3〜5時間かかっていたレポート作業が7分で完了する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 週次レポートのGoogle Sheetsサマリーシートと、AIコメントの出力例</p>
+    <div class="output-example">
+      <div class="output-header">週次レポート — サマリーシート＋AIコメント出力例</div>
+      <div class="output-body">
+        <pre>【サマリーシート（2026年第19週 5/11〜5/17）】
+┌──────────────────┬──────────┬──────────┬──────────┐
+│ 指標             │ 今週     │ 先週     │ 前週比   │
+├──────────────────┼──────────┼──────────┼──────────┤
+│ セッション数     │ 12,430   │ 10,820   │ +14.9%   │
+│ ユーザー数       │ 8,910    │ 7,650    │ +16.5%   │
+│ コンバージョン数  │ 234      │ 198      │ +18.2%   │
+│ CVR             │ 1.88%    │ 1.83%    │ +0.05pt  │
+│ 直帰率          │ 42.3%    │ 45.1%    │ -2.8pt   │
+└──────────────────┴──────────┴──────────┴──────────┘
+
+【チャネル別CVR】
+有料検索（Google）：2.4%（先週比 +0.3pt）
+オーガニック検索：1.9%（先週比 +0.1pt）
+SNS流入：0.8%（先週比 -0.2pt）
+直接流入：3.1%（先週比 +0.5pt）
+
+【AIコメント（Claude 自動生成）】
+■ 改善提案①
+今週はセッション数・ユーザー数ともに前週比+15%超と好調です。
+有料検索からのCVRが2.4%と特に高く、先週の広告文変更が
+効果を発揮していると考えられます。
+
+■ 改善提案②
+SNS流入のCVRが0.8%と低下しています。SNSのランディングページを
+確認し、ファーストビューのCTAを見直すことを推奨します。
+
+■ 改善提案③
+直帰率が-2.8ptと改善。ページ速度の改善施策の効果が出ています。
+次はページ滞在時間の増加を目標に、コンテンツの充実を検討してください。</pre>
+      </div>
     </div>
   </div>
 
@@ -145,6 +207,89 @@ def generate_ai_comment(metrics_dict):
   </div>
 
   <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('weekly', this)">週次レポート</button>
+      <button class="stab" onclick="showScenario('monthly', this)">月次レポート</button>
+      <button class="stab" onclick="showScenario('deep', this)">特定指標の深掘り</button>
+    </div>
+
+    <div id="scenario-weekly" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">週次レポート — SQLクエリ生成プロンプト</div>
+        <pre>GA4のBigQueryテーブルから先週1週間分のデータを集計する週次レポート用SQLを生成してください。
+
+テーブル名：`my-project.analytics_123456789.events_*`
+対象期間：自動で先週月曜〜日曜を計算すること
+
+取得する指標：
+・セッション数、ユーザー数、新規ユーザー数
+・チャネル別セッション数とCVR
+・コンバージョンイベント（purchase / sign_up）の件数
+・前週比（前の週と比較する副問い合わせも含める）
+・直帰率（engaged_session_rateの逆数）
+
+出力形式：Pythonスクリプトとして完成させる。
+結果はGoogle Sheetsの指定シートに書き込むこと。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-monthly" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">月次レポート — 経営層向けサマリープロンプト</div>
+        <pre>GA4のBigQueryから先月1ヶ月分のデータを集計する月次レポートを生成してください。
+
+対象期間：自動で先月1日〜末日を計算すること
+
+取得指標（週次より詳細）：
+・月次セッション・ユーザー・CV・売上（ecommerce）
+・チャネル別の費用対効果（広告費用データはCSVで別途入力）
+・上位10ページのパフォーマンス
+・デバイス別（PC/スマホ/タブレット）の比較
+・前月比・前年同月比
+
+出力形式：
+・Google Sheetsにグラフ用データを整形して書き込む
+・経営層向けサマリー（250字以内の日本語テキスト）をAIに生成させる
+・PDFエクスポート用のHTMLレポートも生成する</pre>
+      </div>
+    </div>
+
+    <div id="scenario-deep" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">特定指標の深掘り — CVR低下調査プロンプト</div>
+        <pre>GA4のBigQueryデータを使って、今週CVRが低下した原因を深掘り調査してください。
+
+調査対象期間：今週（vs 先週）
+問題：全体CVRが先週比-0.5ptと低下
+
+調査観点：
+1. チャネル別のCVR変化（どのチャネルで下がっているか）
+2. デバイス別のCVR変化（スマホで下がっているか等）
+3. 流入ページ別のCVR変化（特定ページで離脱が増えていないか）
+4. 時間帯別のパターン（特定の時間帯に集中していないか）
+5. 新規 vs リピーターのCVR比較
+
+各観点のSQLを生成し、分析結果と仮説をコメントとして出力してください。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>GA4のBigQueryエクスポートが有効化されており、データが正しく蓄積されているか確認したか（有効化後24〜48時間で最初のデータが届く）</li>
+        <li>SQLクエリにWHERE句での日付絞り込みを追加し、BigQueryの処理量（コスト）を抑えているか</li>
+        <li>サービスアカウントのJSONキーが .gitignore に含まれており、リポジトリに含まれないよう設定したか</li>
+        <li>生成されたレポートの数値をGA4管理画面の数値と突き合わせて一致しているか確認したか</li>
+        <li>Slackへのレポートリンク通知を設定した場合、テスト通知が正しく届くか確認したか</li>
+        <li>cronまたはCloud Schedulerで定期実行が設定済みで、初回テスト実行が正常に完了したか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -154,7 +299,34 @@ def generate_ai_comment(metrics_dict):
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-ad-audit.html">広告監査190項目チェック</a>
+        <span>★★ レポートと合わせて広告全体を監査</span>
+      </div>
+      <div class="related-card">
+        <a href="02-ads-automation.html">Google/Meta広告 入札・除外KW自動化</a>
+        <span>★★★ レポート結果を受けて自動改善</span>
+      </div>
+      <div class="related-card">
+        <a href="../02-sales/01-proposal-draft.html">提案書ドラフト</a>
+        <span>★★ レポートデータを提案書に活用</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — マーケティング・広告</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

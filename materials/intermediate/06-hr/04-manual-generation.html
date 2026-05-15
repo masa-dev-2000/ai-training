@@ -34,6 +34,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -55,6 +73,65 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       操作手順を録画したMP4ファイル（ナレーション付き）を入力として、スクリーンショット抽出・ナレーション文字起こし・操作手順の構造化を自動で行い、スクリーンショット付きMarkdownマニュアルを出力する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 操作録画から自動生成されたMarkdownマニュアルの冒頭部分の例</p>
+    <div class="output-example">
+      <div class="output-header">生成された Markdown マニュアル（manual.md 冒頭）</div>
+      <div class="output-body">
+        <pre># 〇〇システム 操作マニュアル
+> 最終更新：2026-05-15 | 対象バージョン：v2.4.0 | 対象者：一般ユーザー
+
+---
+
+## はじめに
+このマニュアルでは〇〇システムへのログインから基本操作までを説明します。
+不明点は社内ヘルプデスク（内線 1234）までお問い合わせください。
+
+---
+
+## 手順1：ログイン
+
+![ログイン画面](screenshots/frame_0003.png)
+
+1. ブラウザ（Chrome推奨）で `https://system.example.co.jp` にアクセスする
+2. **メールアドレス**欄に社内メールアドレスを入力する
+3. **パスワード**欄にパスワードを入力する（初回ログイン時は仮パスワードを使用）
+4. 「ログイン」ボタンをクリックする
+
+> ⚠️ パスワードを3回間違えるとアカウントがロックされます。
+> ロック解除は管理者（admin@example.co.jp）に依頼してください。
+
+---
+
+## 手順2：ダッシュボードの見方
+
+![ダッシュボード](screenshots/frame_0012.png)
+
+ログイン後、以下のダッシュボードが表示されます。
+
+| エリア | 説明 |
+|--------|------|
+| 左メニュー | 各機能へのナビゲーション |
+| 中央パネル | 本日の作業一覧・通知 |
+| 右上アイコン | プロフィール設定・ログアウト |
+
+---
+
+## 手順3：新規案件の登録
+
+![新規案件登録画面](screenshots/frame_0021.png)
+
+1. 左メニューの「案件管理」をクリックする
+2. 右上の「＋ 新規登録」ボタンをクリックする
+3. 必須項目（赤枠）をすべて入力する
+4. 「保存」ボタンをクリックする → 登録完了メッセージが表示される
+
+（以下、手順4〜12 が続く）</pre>
+      </div>
     </div>
   </div>
 

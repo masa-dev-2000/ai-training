@@ -140,6 +140,73 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('biz',this)">事業計画書</button>
+      <button class="stab" onclick="showScenario('manual',this)">社内マニュアル</button>
+      <button class="stab" onclick="showScenario('proposal',this)">提案資料（スライド構成）</button>
+      <button class="stab" onclick="showScenario('ringi',this)">稟議書</button>
+    </div>
+    <div id="scenario-biz" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">/biz-plan の使い方</div>
+        <pre>/biz-plan
+
+事業名：AIを活用した経費精算自動化サービス
+概要：中小企業向けにfreeeと連携した経費精算自動化SaaS
+市場：中小企業50万社、月額3,000円〜
+差別化：AIによる領収書OCR精度とfreee直接連携
+収益：月額SaaS（3,000〜30,000円/社）
+初年度目標：50社獲得、月次150万円ARR</pre>
+      </div>
+    </div>
+    <div id="scenario-manual" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">/manual の使い方</div>
+        <pre>/manual
+
+業務名：新入社員の経費精算申請フロー
+対象者：入社1年目の社員
+手順の概要：
+1. 領収書を受け取ったらスマホアプリで撮影
+2. 経費精算システム（freee）にアップロード
+3. 勘定科目・金額を確認して申請ボタンを押す
+4. 上長が承認→経理が確認→翌月25日に振込
+
+注意事項：インボイス登録番号の記載がない領収書は仕入税額控除不可</pre>
+      </div>
+    </div>
+    <div id="scenario-proposal" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">/proposal-deck の使い方</div>
+        <pre>/proposal-deck
+
+提案先：〇〇株式会社 経営企画部
+課題：月次報告書の作成に毎月30時間かかっている
+解決策：Claude Codeのスキルで月次報告を自動化
+費用：初期設定50万円 + 月額10万円
+期待効果：月30時間→3時間（▲27時間）、年間コスト削減効果 324万円
+
+スライド枚数：10枚以内
+構成：表紙→課題認識→解決策→デモ→費用・スケジュール→導入事例→まとめ</pre>
+      </div>
+    </div>
+    <div id="scenario-ringi" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">/ringi の使い方</div>
+        <pre>/ringi
+
+申請内容：Claude Code（エンタープライズプラン）の導入
+申請理由：月次報告書・議事録・提案資料の作成時間を月50時間削減するため
+金額：年額480万円（月額40万円）
+期間：2026年6月〜2027年5月（1年間）
+申請部署：経営企画部
+承認ルート：部長→役員→社長</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>設定手順</h2>
     <ul class="steps">
       <li class="step">
@@ -197,6 +264,21 @@ templates/biz-plan-template.mdを参照し、
   </div>
 
   <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>スキルファイル（.claude/skills/）に各文書のテンプレートが正しく設定されているか</li>
+        <li>テンプレートの構成・必須セクションが自社の実際の書式と合っているか</li>
+        <li>生成されたドラフトの財務数値・固有名詞を担当者が確認したか</li>
+        <li>「【ドラフト】」の表記が残ったまま社外に送っていないか</li>
+        <li>社外提出書類（融資申請・補助金申請等）は専門家レビューを受けたか</li>
+        <li>過去の良い文書をテンプレートのベースとして活用しているか（品質向上に有効）</li>
+        <li>テンプレートを最後に見直した日付が把握できているか（年1回以上の見直し推奨）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -206,7 +288,29 @@ templates/biz-plan-template.mdを参照し、
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-screen-caption.html">画面録画→キャプション・矢印オーバーレイ動画自動生成</a>
+        <span>マニュアルと解説動画を組み合わせる</span>
+      </div>
+      <div class="related-card">
+        <a href="../07-engineering/01-pr-review.html">PRレビュー自動化</a>
+        <span>Claude Codeで開発フローを効率化</span>
+      </div>
+    </div>
+  </div>
 </div>
 <footer>中級編 設定ガイド — コンテンツ制作</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

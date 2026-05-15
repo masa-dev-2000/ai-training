@@ -37,6 +37,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -57,6 +75,53 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       会議中にとったメモ・チャットログ・文字起こしテキストをClaude Codeに貼り付けて <code>/minutes</code> と入力するだけで、決定事項・アクションアイテム・次回会議日程が整理された議事録を1発で生成するスキルコマンドを設定する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ /minutes コマンドへの入力と出力の例</p>
+    <div class="output-example">
+      <div class="output-header">入力（会議メモを貼り付け）</div>
+      <div class="output-body">
+        <pre>/minutes
+
+参加：田中、山田、佐藤
+・新機能リリースは来月15日に決定
+・テスト担当は山田さん、来週金曜までに完了
+・競合調査を佐藤さんが2週間以内に実施
+・次回MTGは来週水曜10時〜</pre>
+      </div>
+    </div>
+    <div class="output-example">
+      <div class="output-header">出力（生成された議事録）</div>
+      <div class="output-body">
+        <pre># 開発チーム会議
+日時：2026年5月15日
+参加者：田中、山田、佐藤
+
+## 議題
+1. 新機能リリース日程の確認
+2. テスト・競合調査の担当割り
+
+## 決定事項
+- 新機能のリリース日を来月15日（2026年6月15日）に確定
+
+## アクションアイテム
+| 担当者 | タスク | 期限 |
+|--------|--------|------|
+| 山田さん | 新機能のテスト完了 | 来週金曜（5/22） |
+| 佐藤さん | 競合調査の実施 | 2週間以内（5/29） |
+
+## 次回会議
+来週水曜 10:00〜（場所・URLは引き続き同様）
+
+## 備考・懸案事項
+（なし）
+
+---
+Notionにも保存しますか？ [はい / いいえ]</pre>
+      </div>
     </div>
   </div>
 
@@ -149,6 +214,96 @@ description: 会議メモから議事録を生成する
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('standard',this)">標準議事録</button>
+      <button class="stab" onclick="showScenario('action',this)">アクションアイテム重視</button>
+      <button class="stab" onclick="showScenario('decision',this)">決定事項のみ抽出</button>
+    </div>
+    <div id="scenario-standard" class="scenario-content active">
+      <div class="output-example">
+        <div class="output-header">標準議事録 — スキルファイル設定例</div>
+        <div class="output-body">
+          <pre># .claude/skills/minutes.md（標準版）
+---
+name: minutes
+description: 会議メモから標準フォーマットの議事録を生成
+---
+
+以下のフォーマットで議事録を生成してください：
+
+# 会議名（推定）
+日時：〇〇年〇月〇日
+参加者：（抽出）
+
+## 議題 / ## 決定事項 / ## アクションアイテム（表）
+## 次回会議 / ## 備考・懸案事項
+
+生成後「Notionに保存しますか？」と確認する</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-action" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">アクションアイテム重視 — スキルファイル設定例</div>
+        <div class="output-body">
+          <pre># .claude/skills/minutes-action.md（アクション重視版）
+---
+name: minutes-action
+description: 会議メモからアクションアイテムを優先的に抽出
+---
+
+以下の点を最優先で抽出してください：
+
+1. アクションアイテム（担当者・タスク・期限・優先度）
+2. 決定事項（1行1件）
+3. 懸案事項（未決定・要フォローアップ）
+
+フォーマット：
+## ⚡ アクションアイテム（優先度順）
+| 優先度 | 担当者 | タスク | 期限 |
+最後にSlackの @担当者 へのリマインダー文章を自動生成する</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-decision" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">決定事項のみ抽出 — スキルファイル設定例</div>
+        <div class="output-body">
+          <pre># .claude/skills/minutes-decision.md（決定事項抽出版）
+---
+name: minutes-decision
+description: 会議メモから決定事項のみをコンパクトに抽出
+---
+
+会議の決定事項のみを抽出して、以下のフォーマットで出力してください：
+
+## ✅ 決定事項（YYYY/MM/DD 会議）
+1. （決定内容）— 決定者：〇〇
+2. （決定内容）— 決定者：〇〇
+...
+
+決定事項が見つからない場合は「本会議では新たな決定事項はありませんでした」と記載する
+出力はコピーして即メール・Slackに貼れる形式にすること</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>アクションアイテムの担当者名・期限がメモに明記されているか（推測の場合は要確認）</li>
+        <li>決定事項の言い回しが原文のニュアンスを正確に反映しているか</li>
+        <li>参加者リストに抜けがないか（文字起こしから推定している場合は特に要確認）</li>
+        <li>個人名を含むメモをClaude.aiに貼る場合、プロジェクト設定でデータ保持をオフにしているか</li>
+        <li>Notion保存後、ページのアクセス権限が適切に設定されているか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -158,7 +313,34 @@ description: 会議メモから議事録を生成する
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-zoom-minutes.html">Zoom録画→構造化議事録→Slack/Notion自動投稿</a>
+        <span>★★★ 録音から全自動で議事録を生成</span>
+      </div>
+      <div class="related-card">
+        <a href="05-faq-update.html">社内FAQ・ナレッジベースの自動更新</a>
+        <span>★★★ 繰り返し質問をFAQ化する</span>
+      </div>
+      <div class="related-card">
+        <a href="../05-support/01-email-reply.html">問い合わせメール→トーン別返信案自動生成</a>
+        <span>★ 今日から — 会議後のメール連絡も効率化</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 総務・人事</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>
