@@ -1,0 +1,226 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI活用 中級編 — 自動化設定ガイド</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Hiragino Sans','Yu Gothic UI','Noto Sans JP',sans-serif;background:#f8fafc;color:#1e293b;line-height:1.7}
+
+/* ヘッダー */
+.hero{background:linear-gradient(135deg,#0f172a 0%,#1e3a5f 100%);color:#fff;padding:56px 32px 48px;text-align:center}
+.hero-label{display:inline-block;background:rgba(96,165,250,0.2);color:#93c5fd;font-size:11px;font-weight:700;letter-spacing:2px;padding:4px 12px;border-radius:20px;margin-bottom:16px}
+.hero h1{font-size:32px;font-weight:700;margin-bottom:10px;letter-spacing:-0.5px}
+.hero p{color:#94a3b8;font-size:15px;margin-bottom:32px}
+.stats{display:flex;justify-content:center;gap:36px;flex-wrap:wrap;margin-bottom:36px}
+.stat strong{display:block;font-size:36px;font-weight:700;color:#60a5fa;line-height:1}
+.stat span{font-size:12px;color:#94a3b8;margin-top:2px}
+.hero-btn{display:inline-block;background:#2563eb;color:#fff;font-size:15px;font-weight:600;padding:14px 32px;border-radius:10px;text-decoration:none;transition:background 0.15s}
+.hero-btn:hover{background:#1d4ed8}
+
+/* メインコンテンツ */
+.container{max-width:900px;margin:0 auto;padding:48px 24px 80px}
+.section-label{font-size:12px;font-weight:700;color:#64748b;letter-spacing:2px;text-transform:uppercase;margin-bottom:20px;padding-bottom:8px;border-bottom:2px solid #e2e8f0}
+
+/* カテゴリグリッド */
+.category-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));gap:14px;margin-bottom:48px}
+.cat-card{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px;text-decoration:none;color:#1e293b;transition:all 0.15s;display:flex;flex-direction:column;gap:8px}
+.cat-card:hover{border-color:#2563eb;box-shadow:0 4px 16px rgba(37,99,235,0.1);transform:translateY(-2px)}
+.cat-header{display:flex;align-items:center;gap:10px}
+.cat-icon{font-size:24px;min-width:32px}
+.cat-name{font-size:15px;font-weight:700;color:#0f172a}
+.cat-count{font-size:12px;color:#94a3b8;background:#f1f5f9;padding:2px 8px;border-radius:10px;margin-left:auto}
+.cat-desc{font-size:12px;color:#64748b;line-height:1.6}
+.cat-tags{display:flex;flex-wrap:wrap;gap:4px;margin-top:4px}
+.tag{font-size:10px;padding:2px 7px;border-radius:8px;background:#f1f5f9;color:#475569;border:1px solid #e2e8f0}
+
+/* 難易度凡例 */
+.legend{background:#fff;border:1px solid #e2e8f0;border-radius:12px;padding:20px 24px;margin-bottom:48px;display:flex;flex-wrap:wrap;gap:12px 28px;align-items:center}
+.legend-title{font-size:12px;font-weight:700;color:#64748b;width:100%;margin-bottom:4px}
+.badge{display:inline-flex;align-items:center;gap:6px;font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px}
+.lv1{background:#dcfce7;color:#166534}
+.lv2{background:#fef9c3;color:#854d0e}
+.lv3{background:#fee2e2;color:#991b1b}
+.lv4{background:#f3e8ff;color:#6b21a8}
+
+/* CTAセクション */
+.cta{background:#0f172a;border-radius:16px;padding:36px;text-align:center;color:#fff}
+.cta h2{font-size:20px;font-weight:700;margin-bottom:8px}
+.cta p{font-size:14px;color:#94a3b8;margin-bottom:24px}
+.cta-btn{display:inline-block;background:#2563eb;color:#fff;font-size:15px;font-weight:600;padding:14px 36px;border-radius:10px;text-decoration:none;transition:background 0.15s}
+.cta-btn:hover{background:#1d4ed8}
+
+footer{text-align:center;padding:32px;color:#94a3b8;font-size:12px;border-top:1px solid #e2e8f0;margin-top:48px}
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="hero-label">INTERMEDIATE</div>
+  <h1>AI活用 中級編<br>自動化設定ガイド</h1>
+  <p>業務カテゴリ別 41手法 — 設定手順・プロンプト・コード付き</p>
+  <div class="stats">
+    <div class="stat"><strong>41</strong><span>手法</span></div>
+    <div class="stat"><strong>9</strong><span>カテゴリ</span></div>
+    <div class="stat"><strong>4</strong><span>難易度レベル</span></div>
+  </div>
+  <a href="materials/intermediate/" class="hero-btn">全手法を検索・一覧で見る →</a>
+</div>
+
+<div class="container">
+
+  <p class="section-label">カテゴリから探す</p>
+
+  <div class="category-grid">
+
+    <a href="materials/intermediate/01-marketing/" class="cat-card">
+      <div class="cat-header">
+        <div class="cat-icon">📣</div>
+        <div class="cat-name">マーケティング・広告</div>
+        <div class="cat-count">7手法</div>
+      </div>
+      <div class="cat-desc">広告運用・SNS投稿・SEO競合分析・YouTube活用・GA4レポート・ブランド監視</div>
+      <div class="cat-tags">
+        <span class="tag">Claude.ai</span>
+        <span class="tag">Google Ads API</span>
+        <span class="tag">GA4</span>
+      </div>
+    </a>
+
+    <a href="materials/intermediate/02-sales/" class="cat-card">
+      <div class="cat-header">
+        <div class="cat-icon">💼</div>
+        <div class="cat-name">営業</div>
+        <div class="cat-count">5手法</div>
+      </div>
+      <div class="cat-desc">提案書自動生成・見積PDF・商談サマリー・CRM自動入力・競合レポート</div>
+      <div class="cat-tags">
+        <span class="tag">HubSpot API</span>
+        <span class="tag">Slack</span>
+        <span class="tag">PDF生成</span>
+      </div>
+    </a>
+
+    <a href="materials/intermediate/03-legal/" class="cat-card">
+      <div class="cat-header">
+        <div class="cat-icon">⚖️</div>
+        <div class="cat-name">法務</div>
+        <div class="cat-count">3手法</div>
+      </div>
+      <div class="cat-desc">NDA自動生成・契約書リスクレビュー・契約更新アラート</div>
+      <div class="cat-tags">
+        <span class="tag">Claude API</span>
+        <span class="tag">Google Drive</span>
+        <span class="tag">Calendar API</span>
+      </div>
+    </a>
+
+    <a href="materials/intermediate/04-accounting/" class="cat-card">
+      <div class="cat-header">
+        <div class="cat-icon">🧾</div>
+        <div class="cat-name">経理・バックオフィス</div>
+        <div class="cat-count">6手法</div>
+      </div>
+      <div class="cat-desc">請求書下書き・仕訳異常検知・月次決算・発注照合・インボイス番号確認</div>
+      <div class="cat-tags">
+        <span class="tag">freee API</span>
+        <span class="tag">国税庁API</span>
+        <span class="tag">BigQuery</span>
+      </div>
+    </a>
+
+    <a href="materials/intermediate/05-support/" class="cat-card">
+      <div class="cat-header">
+        <div class="cat-icon">🎧</div>
+        <div class="cat-name">カスタマーサポート</div>
+        <div class="cat-count">3手法</div>
+      </div>
+      <div class="cat-desc">メール返信自動生成・SlackFAQボット・LINEパーソナライズ返信</div>
+      <div class="cat-tags">
+        <span class="tag">Claude.ai</span>
+        <span class="tag">Slack Bolt</span>
+        <span class="tag">LINE API</span>
+      </div>
+    </a>
+
+    <a href="materials/intermediate/06-hr/" class="cat-card">
+      <div class="cat-header">
+        <div class="cat-icon">👥</div>
+        <div class="cat-name">総務・人事</div>
+        <div class="cat-count">5手法</div>
+      </div>
+      <div class="cat-desc">AI面接補助・Zoom議事録Slack投稿・スラッシュコマンド議事録・マニュアル生成・FAQ更新</div>
+      <div class="cat-tags">
+        <span class="tag">Zoom API</span>
+        <span class="tag">Whisper</span>
+        <span class="tag">Slack</span>
+      </div>
+    </a>
+
+    <a href="materials/intermediate/07-engineering/" class="cat-card">
+      <div class="cat-header">
+        <div class="cat-icon">⚙️</div>
+        <div class="cat-name">開発・エンジニアリング</div>
+        <div class="cat-count">5手法</div>
+      </div>
+      <div class="cat-desc">PRレビュー自動化・Issue→PR作成・n8nワークフロー・UI回帰チェック・ドキュメント生成</div>
+      <div class="cat-tags">
+        <span class="tag">GitHub Actions</span>
+        <span class="tag">n8n</span>
+        <span class="tag">Playwright</span>
+      </div>
+    </a>
+
+    <a href="materials/intermediate/08-content/" class="cat-card">
+      <div class="cat-header">
+        <div class="cat-icon">🎬</div>
+        <div class="cat-name">コンテンツ制作</div>
+        <div class="cat-count">4手法</div>
+      </div>
+      <div class="cat-desc">動画自動生成・スクリーンキャプション・記事一貫性チェック・社内文書下書き</div>
+      <div class="cat-tags">
+        <span class="tag">Remotion</span>
+        <span class="tag">FFmpeg</span>
+        <span class="tag">Claude API</span>
+      </div>
+    </a>
+
+    <a href="materials/intermediate/09-management/" class="cat-card">
+      <div class="cat-header">
+        <div class="cat-icon">🏢</div>
+        <div class="cat-name">経営・全社横断</div>
+        <div class="cat-count">3手法</div>
+      </div>
+      <div class="cat-desc">57スキルAIエージェント・業務一元管理モノレポ・VPSエージェント常駐</div>
+      <div class="cat-tags">
+        <span class="tag">Claude API</span>
+        <span class="tag">LINE WORKS</span>
+        <span class="tag">VPS</span>
+      </div>
+    </a>
+
+  </div>
+
+  <p class="section-label">難易度レベルについて</p>
+
+  <div class="legend">
+    <div class="legend-title">各手法には習得コストに応じた難易度を表示しています</div>
+    <span class="badge lv1">★ 入門 — Claude.aiの設定変更のみ</span>
+    <span class="badge lv2">★★ 初級 — 無料ツール連携・簡単なスクリプト</span>
+    <span class="badge lv3">★★★ 中級 — API利用・プログラミング基礎が必要</span>
+    <span class="badge lv4">★★★★ 上級 — インフラ構築・本格開発が必要</span>
+  </div>
+
+  <div class="cta">
+    <h2>全41手法を検索・フィルターで探す</h2>
+    <p>キーワード検索・難易度タブで目的の手法をすばやく絞り込めます</p>
+    <a href="materials/intermediate/" class="cta-btn">一覧ページを開く →</a>
+  </div>
+
+</div>
+
+<footer>AI活用実践研修 中級編 — 自動化設定ガイド</footer>
+
+</body>
+</html>
