@@ -39,6 +39,28 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -60,6 +82,34 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       Google Ads・Meta AdsのデータをエクスポートしたCSVをClaude Codeに渡し、190項目の広告監査チェックリストを自動実行する。手動で4〜8時間かかる作業を5分に短縮。チェック結果はGoogle Sheetsに整形出力され、改善優先度順にソートされる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 監査スクリプトを実行した際のExcel出力の一部イメージ</p>
+    <div class="output-example">
+      <div class="output-header">audit_result.xlsx — 改善優先度順の出力サンプル</div>
+      <div class="output-body">
+        <pre>【改善優先度：高】
+┌──────────────────────────────────┬──────┬──────────┬──────────────┬──────┐
+│ チェック項目                      │ 合否 │ 現在値   │ 推奨値       │ 優先度│
+├──────────────────────────────────┼──────┼──────────┼──────────────┼──────┤
+│ 品質スコア3以下のKWが存在する     │  ×  │ 8件該当  │ 0件          │ 高   │
+│ 予算の消化率が80%未満のキャンペーン│  ×  │ 62%      │ 80〜100%     │ 高   │
+│ 除外KWが設定されていないキャンペーン│ ×  │ 3件該当  │ すべて設定   │ 高   │
+│ 広告表示オプションが未設定         │  △  │ 2種類    │ 5種類以上    │ 高   │
+├──────────────────────────────────┼──────┼──────────┼──────────────┼──────┤
+【改善優先度：中】
+│ CTRが1%未満のキャンペーン         │  △  │ 0.7%     │ 1%以上       │ 中   │
+│ A/Bテスト未実施の広告グループ      │  △  │ 12件     │ すべて実施   │ 中   │
+│ コンバージョントラッキング未設定   │  ○  │ 設定済み │ 設定済み     │ ー   │
+└──────────────────────────────────┴──────┴──────────┴──────────────┴──────┘
+
+合計: ×18件 / △27件 / ○145件
+緊急改善対象: 18項目（優先度高）
+推定改善効果: CPA 約15〜20%改善の見込み</pre>
+      </div>
     </div>
   </div>
 
@@ -142,6 +192,81 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
   </div>
 
   <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('google-only', this)">Google広告のみ</button>
+      <button class="stab" onclick="showScenario('meta-only', this)">Meta広告のみ</button>
+      <button class="stab" onclick="showScenario('both', this)">Google+Meta両方</button>
+    </div>
+
+    <div id="scenario-google-only" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">Google広告のみ — 監査プロンプト</div>
+        <pre>google_ads_report.csvとaudit-rules.mdを使ってGoogle Ads専用の監査スクリプトを作成してください。
+
+対象プラットフォーム：Google Ads のみ
+重点チェック項目：
+・品質スコア（全KW）
+・キャンペーン別CPA・ROAS
+・除外キーワードの設定状況
+・広告表示オプション（サイトリンク・コールアウト等）
+・スマート自動入札戦略の適切な設定
+
+出力：audit_google_YYYYMMDD.xlsx（優先度高→低の順）</pre>
+      </div>
+    </div>
+
+    <div id="scenario-meta-only" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">Meta広告のみ — 監査プロンプト</div>
+        <pre>meta_ads_report.csvとaudit-rules.mdを使ってMeta Ads専用の監査スクリプトを作成してください。
+
+対象プラットフォーム：Meta Ads（Facebook・Instagram）のみ
+重点チェック項目：
+・クリエイティブの疲弊度（同一広告の掲載期間）
+・オーディエンスの重複率
+・配置別（フィード/ストーリー/リール）パフォーマンス差
+・コンバージョンイベントの設定状況
+・フリークエンシー（平均表示回数）
+
+出力：audit_meta_YYYYMMDD.xlsx（優先度高→低の順）</pre>
+      </div>
+    </div>
+
+    <div id="scenario-both" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">Google+Meta両方 — 統合監査プロンプト</div>
+        <pre>google_ads_report.csvとmeta_ads_report.csvとaudit-rules.mdを使って
+Google・Meta両プラットフォームの統合監査スクリプトを作成してください。
+
+出力形式：
+・シート1：統合サマリー（全190項目の合否サマリー）
+・シート2：Google Ads詳細（優先度順）
+・シート3：Meta Ads詳細（優先度順）
+・シート4：プラットフォーム横断比較（CPA・ROAS・CTRの比較）
+・シート5：AI改善提案（Claude Codeが生成したコメント）
+
+優先度の高い指摘事項はシート1の冒頭に赤字でまとめること。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>CSVのヘッダー行をClaude Codeに確認させてから監査スクリプトを生成したか</li>
+        <li>エクスポート期間（直近7日・30日・90日など）を明示してCSVを取得したか</li>
+        <li>Google AdsとMeta Adsで列名の違いを把握してスクリプトに反映させたか</li>
+        <li>自動判定できない項目（目視確認が必要な項目）に「要確認」フラグを立てたか</li>
+        <li>出力されたExcelファイルを開いて数値が正しく読み込まれているか確認したか</li>
+        <li>cronの定期実行を設定した場合、テスト実行で正常に動作したか確認したか</li>
+        <li>監査結果に入札金額や個人情報が含まれる場合、共有範囲を限定したか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -152,7 +277,34 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-ads-automation.html">Google/Meta広告 入札・除外KW自動化</a>
+        <span>★★★ 監査後の改善を自動化する</span>
+      </div>
+      <div class="related-card">
+        <a href="06-ga4-report.html">GA4×BigQuery 週次・月次レポート</a>
+        <span>★★★ 広告効果をGA4で定期レポート</span>
+      </div>
+      <div class="related-card">
+        <a href="../02-sales/05-competitor-report.html">競合調査レポート</a>
+        <span>★★ 競合の広告戦略と比較する</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — マーケティング・広告</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

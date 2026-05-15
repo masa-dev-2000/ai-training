@@ -37,6 +37,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -57,6 +75,50 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       顧客情報・課題・予算・決裁者タイプを入力フォーム形式で渡すだけで、自社サービスの提案書ドラフトを自動生成するスキルコマンドを構築する。毎回ゼロから書いていた提案書作成をテンプレート起点に変え、人間は仕上げと確認に集中できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ /proposalコマンド実行後に生成される提案書ドラフトの例（製造業・経営者向け）</p>
+    <div class="output-example">
+      <div class="output-header">Claude の出力（提案書ドラフト）</div>
+      <div class="output-body">
+        <pre># 業務効率化ソリューション 導入提案書
+株式会社〇〇 田中社長 様
+提案者：〇〇株式会社 営業部 山田
+
+---
+
+## エグゼクティブサマリー
+現在、在庫管理業務において月次集計に毎月3日間（年間36日相当）を消費されています。
+本提案では、当社の在庫管理AIシステムを導入することで、この作業を自動化し、
+**年間削減効果：人件費換算で約360万円**（社内試算）を実現します。
+初期投資回収期間の目安は**導入後8〜10ヶ月**を見込んでいます。
+
+---
+
+## 1. 現状の課題認識
+- 在庫管理が手作業・Excel依存で属人化している
+- 月次集計に丸3日かかり、リアルタイムの在庫状況が把握できない
+- 担当者が不在の場合に業務が止まるリスクがある
+- 〇〇社との比較検討中であり、導入判断を急いでいる
+
+## 2. 解決策：〇〇在庫管理AIシステム
+（各機能の説明…）
+
+## 3. 導入効果
+- 月次集計：3日 → 30分に短縮（95%削減）
+- 在庫精度：リアルタイム更新で欠品・過剰在庫を防止
+- 担当者不在リスク：ゼロに
+
+## 4. 費用・スケジュール
+初期費用：〇〇万円 / 月額：〇〇万円
+導入スケジュール：契約後6週間で本番稼働
+
+## 5. 次のステップ
+1週間以内にデモ環境をご用意します。ご都合の良い日程をご連絡ください。</pre>
+      </div>
     </div>
   </div>
 
@@ -140,6 +202,88 @@ company-info.mdとdecision-makers.mdを参照し、
   </div>
 
   <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('new',this)">新規顧客向け</button>
+      <button class="stab" onclick="showScenario('upsell',this)">既存顧客アップセル</button>
+      <button class="stab" onclick="showScenario('switch',this)">競合乗り換え提案</button>
+    </div>
+
+    <div id="scenario-new" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">新規顧客向け — そのままコピーして使えるプロンプト</div>
+        <pre>/proposal
+
+顧客名：〇〇株式会社（業種：　、従業員：　名）
+担当者：　部長 / 決裁者タイプ：経営者（ROI重視）
+課題：（商談で聞いた課題を箇条書きで）
+予算感：年間　〜　万円
+商談フェーズ：初回提案
+競合：（比較検討中の他社があれば記載）
+特記事項：（納期・社内事情など）
+
+---
+company-info.mdとdecision-makers.mdを参照し、
+ROIを前面に出した提案書を作成してください。
+エグゼクティブサマリーに「投資回収期間の目安」を必ず含めること。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-upsell" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">既存顧客アップセル — 継続関係を活かした提案</div>
+        <pre>/proposal
+
+顧客名：〇〇株式会社（既存顧客・導入から2年）
+現在利用中のプラン：スタンダードプラン（月額〇万円）
+提案内容：プレミアムプランへのアップグレード
+アップセル理由：（現在の課題・新機能で解決できる点）
+担当者：　課長 / 決裁者タイプ：現場責任者（実務重視）
+
+---
+既存利用実績（導入前後の改善効果）を冒頭で振り返り、
+「次のステップ」として追加機能の価値を訴求する提案書を作成してください。
+既存データの移行不要・追加設定最小限であることを強調すること。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-switch" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">競合乗り換え提案 — 現在の不満を起点にした提案</div>
+        <pre>/proposal
+
+顧客名：〇〇株式会社（現在〇〇社製品を利用中）
+乗り換え理由（先方が語った不満）：
+  - サポート対応が遅い
+  - 価格が高い割に機能が不足している
+担当者：　部長 / 決裁者タイプ：経営者（ROI重視）
+予算感：現在より20%以内のコスト削減を希望
+
+---
+競合製品を名指しせずに自社の優位性を示す提案書を作成してください。
+「乗り換えコスト（初期設定・データ移行）の最小化」と
+「サポート体制の充実」を重点的に訴求すること。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>送付前チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>顧客名・担当者名・会社名の表記が正確か（誤字・敬称の誤り）</li>
+        <li>提案金額・ROI試算の数値に根拠があり、誇大表現になっていないか</li>
+        <li>競合他社を名指しで批判する表現が含まれていないか</li>
+        <li>自社の実績・事例数値が最新の情報と一致しているか</li>
+        <li>「〇〇」「（担当者名）」などの仮置き文字列が残っていないか</li>
+        <li>決裁者タイプに合わせた訴求になっているか（ROI重視 / 実務重視 / 技術重視）</li>
+        <li>次のステップ（デモ・見積もり・再訪問など）が具体的に記載されているか</li>
+        <li>社内のコンプライアンス確認（利用規約・保証の表現）が済んでいるか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -149,7 +293,34 @@ company-info.mdとdecision-makers.mdを参照し、
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-quote-pdf.html">PDF見積書の自動生成</a>
+        <span>★★ 提案書と合わせて見積書も自動化</span>
+      </div>
+      <div class="related-card">
+        <a href="05-competitor-report.html">競合調査レポートの自動生成</a>
+        <span>★★ 提案前の競合情報収集に</span>
+      </div>
+      <div class="related-card">
+        <a href="../01-marketing/05-youtube-to-content.html">マーケティングコンテンツ自動生成</a>
+        <span>★★ 提案書の事例・実績素材に</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 営業</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>
