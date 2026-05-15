@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>57個のカスタムスキルで6部門業務を1人でカバー — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv4 { background: #f3e8ff; color: #6b21a8; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.table-wrap { overflow-x: auto; margin: 10px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #f1f5f9; color: #334155; font-weight: 700; padding: 8px 12px; text-align: left; border: 1px solid #e2e8f0; }
+td { padding: 8px 12px; border: 1px solid #e2e8f0; color: #475569; }
+td code { background: #f1f5f9; padding: 1px 6px; border-radius: 4px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 12px; color: #0f172a; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 経営・全社横断</div>
+  <h1>57個のカスタムスキルで6部門（CEO・CFO・CMO等）相当の業務を1人でカバー</h1>
+  <div class="meta">
+    <span class="badge lv4">★★★★ エンジニア向け</span>
+    <span class="time-b">1日実働60分化の事例あり</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">Skills</span>
+    <span class="tool-b">MCP</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      CEO・CFO・CMO・CHO・CTO・COO の6役割に対応したカスタムスキルをClaude Codeに登録し、各部門の定型業務をコマンド1発で処理する体制を構築する。スキルごとに役割・ガイドライン・テンプレートを持たせることで、1人でも6部門の業務クオリティを維持できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ /monthly-pl コマンドを実行した場合に生成される月次PL分析レポートの冒頭例</p>
+    <div class="output-example">
+      <div class="output-header">/monthly-pl の出力（抜粋）</div>
+      <div class="output-body">
+        <pre>【月次PL分析レポート】2026年4月度
+生成日：2026-05-01　参照ファイル：context/financials/2026-04-pl.csv
+
+━━ エグゼクティブサマリー ━━
+売上：1,240万円（前月比 +8.7% ／ 予算比 +3.3%）
+営業利益：186万円（前月比 +12.4% ／ 利益率 15.0%）
+注目点：人件費が前月比 +18%（採用2名）、広告費が予算比 −15%（施策見直し中）
+
+━━ 部門別詳細 ━━
+┌─────────┬──────┬──────┬──────┐
+│ 項目          │ 実績     │ 前月     │ 予算     │
+├─────────┼──────┼──────┼──────┤
+│ 売上          │ 1,240万  │ 1,141万  │ 1,200万  │
+│ 売上原価      │   620万  │   582万  │   600万  │
+│ 粗利          │   620万  │   559万  │   600万  │
+│ 人件費        │   248万  │   210万  │   240万  │
+│ 広告費        │    85万  │    88万  │   100万  │
+│ その他費用    │   101万  │    98万  │    95万  │
+│ 営業利益      │   186万  │   163万  │   165万  │
+└─────────┴──────┴──────┴──────┘
+
+━━ アクション推奨リスト ━━
+1. [高] 人件費増加（+38万）の内訳を人事に確認し、翌月予算を修正する
+2. [中] 広告費の未消化（−15万）の原因を確認。施策再開または予算削減を検討
+3. [低] 売上好調のため、5月のキャッシュ予測を更新する（/cash-forecast を実行）</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>部門別スキル一覧（例）</h2>
+    <div class="table-wrap">
+      <table>
+        <tr><th>部門</th><th>スキル例</th><th>用途</th></tr>
+        <tr><td>CEO（経営）</td><td><code>/board-report</code> <code>/okr-review</code> <code>/investor-update</code></td><td>取締役会資料・OKR進捗・投資家向け報告</td></tr>
+        <tr><td>CFO（財務）</td><td><code>/monthly-pl</code> <code>/cash-forecast</code> <code>/budget-variance</code></td><td>月次PL分析・キャッシュ予測・予実差異レポート</td></tr>
+        <tr><td>CMO（マーケ）</td><td><code>/campaign-brief</code> <code>/content-calendar</code> <code>/ad-report</code></td><td>施策ブリーフ・コンテンツ計画・広告レポート</td></tr>
+        <tr><td>CHO（人事）</td><td><code>/jd-draft</code> <code>/eval-summary</code> <code>/onboarding-plan</code></td><td>求人票・評価まとめ・入社オンボーディング</td></tr>
+        <tr><td>CTO（技術）</td><td><code>/pr-review</code> <code>/arch-review</code> <code>/incident-report</code></td><td>PRレビュー・設計評価・インシデントレポート</td></tr>
+        <tr><td>COO（オペレーション）</td><td><code>/sop-draft</code> <code>/kpi-dashboard</code> <code>/vendor-eval</code></td><td>業務手順書・KPI整理・ベンダー評価</td></tr>
+      </table>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('ceo',this)">CEO業務（経営判断）</button>
+      <button class="stab" onclick="showScenario('cfo',this)">CFO業務（財務分析）</button>
+      <button class="stab" onclick="showScenario('cmo',this)">CMO業務（マーケ）</button>
+    </div>
+    <div id="scenario-ceo" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">CEO業務 — スキルファイル例（.claude/skills/ceo/board-report.md）</div>
+        <pre>---
+name: board-report
+description: 取締役会向けの月次報告資料を生成する
+---
+
+あなたはCEOとして取締役会向けの月次報告を作成します。
+
+参照ファイル：
+- context/financials/latest-pl.csv（最新PL）
+- context/okr/current-okr.md（OKR進捗）
+- context/company-overview.md（会社概要）
+
+出力内容：
+1. 経営サマリー（3行）
+2. 重点KPIの進捗（達成率・色分け）
+3. 今月の主要トピック（3〜5件）
+4. 次月の重点施策と判断が必要な事項</pre>
+      </div>
+    </div>
+    <div id="scenario-cfo" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">CFO業務 — スキルファイル例（.claude/skills/cfo/cash-forecast.md）</div>
+        <pre">---
+name: cash-forecast
+description: 3ヶ月先のキャッシュフロー予測を生成する
+---
+
+あなたはCFOとしてキャッシュフロー予測を作成します。
+
+参照ファイル：
+- context/financials/latest-pl.csv（直近実績）
+- context/financials/budget-fy26.csv（年間予算）
+- context/financials/receivables.csv（売掛金一覧）
+
+予測対象：今月含む3ヶ月（月次）
+出力：月別キャッシュイン・アウト・残高、資金ショートリスクの有無と対応策</pre>
+      </div>
+    </div>
+    <div id="scenario-cmo" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">CMO業務 — スキルファイル例（.claude/skills/cmo/content-calendar.md）</div>
+        <pre">---
+name: content-calendar
+description: 翌月のコンテンツカレンダーを生成する
+---
+
+あなたはCMOとしてコンテンツ計画を立案します。
+
+参照ファイル：
+- context/marketing/brand-guideline.md（ブランドガイド）
+- context/marketing/past-campaigns.md（過去施策）
+
+出力内容：
+1. 翌月の主要テーマ（2〜3テーマ）
+2. SNS投稿カレンダー（Twitter/X・LinkedIn：週3回）
+3. ブログ記事候補（月2本のタイトルと概要）
+4. メールマガジンの配信タイミングと主題</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>フォルダ構成を用意する</strong>
+          <div class="code"><span class="c"># スキルと業務コンテキストのフォルダ構成</span>
+.claude/
+  skills/
+    ceo/
+      board-report.md
+      okr-review.md
+      investor-update.md
+    cfo/
+      monthly-pl.md
+      cash-forecast.md
+    cmo/
+      campaign-brief.md
+      ...（部門ごとにフォルダ分け）
+context/
+  company-overview.md       ← 会社概要・事業説明
+  financials/
+    latest-pl.csv           ← 最新PL
+    budget-fy26.csv         ← 予算
+  hr/
+    org-chart.md            ← 組織図
+  marketing/
+    brand-guideline.md      ← ブランドガイド</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>スキルファイルの書き方（CFO例）</strong>
+          <div class="prompt">
+            <div class="prompt-label">.claude/skills/cfo/monthly-pl.md</div>
+            <pre>---
+name: monthly-pl
+description: 月次PL分析レポートを生成する
+---
+
+あなたはCFOとして月次PL分析を行います。
+
+context/financials/latest-pl.csv を読み込み、
+以下の観点で分析レポートを作成してください：
+
+1. 売上・利益の前月比・予算比（差額と率）
+2. 費用項目の増減トップ3の原因仮説
+3. 注目すべき異常値・アラート項目
+4. 翌月の着地見込みと施策提案
+
+出力形式：
+- エグゼクティブサマリー（3行）
+- 部門別詳細テーブル
+- アクション推奨リスト（優先度付き）</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>MCPサーバーを接続して実データを参照できるようにする</strong>
+          <div class="code"><span class="c"># .claude/settings.json（主要MCPの接続例）</span>
+{
+  "mcpServers": {
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@notionhq/notion-mcp-server"],
+      "env": { "NOTION_API_KEY": "secret_xxx" }
+    },
+    "github": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-github"],
+      "env": { "GITHUB_TOKEN": "ghp_xxx" }
+    },
+    "google-drive": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-gdrive"],
+      "env": { "GDRIVE_CREDENTIALS": "./gdrive-creds.json" }
+    }
+  }
+}</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>CLAUDE.mdでグローバルコンテキストを設定する</strong>
+          <div class="prompt">
+            <div class="prompt-label">CLAUDE.md（プロジェクトルート）</div>
+            <pre>## 会社コンテキスト
+- 会社名：株式会社〇〇
+- 事業：〇〇SaaS（B2B）
+- 期末：3月末
+- 使用ツール：Notion（ナレッジ）/ freee（会計）/ GitHub（開発）
+
+## スキル使用の原則
+- 財務データは context/financials/ の最新ファイルを参照する
+- 社外提出資料は必ず「ドラフト」と明記する
+- 個人情報を含む資料はローカル保存のみ。外部送信禁止</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <strong>スキルを実行する</strong>
+          <div class="code"><span class="c"># 月次PL分析を実行</span>
+/monthly-pl
+
+<span class="c"># OKR進捗レビュー（四半期ごと）</span>
+/okr-review Q1 2026
+
+<span class="c"># 求人票を生成</span>
+/jd-draft
+職種：バックエンドエンジニア
+必須：Python 3年以上、REST API設計経験
+歓迎：FastAPI、クラウドインフラ（AWS/GCP）</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>スキルファイル（.claude/skills/）のフォルダ構成が部門別に整理されているか</li>
+        <li>context/ フォルダの財務データ・組織情報が最新版に更新されているか</li>
+        <li>CLAUDE.mdに会社コンテキスト・スキル使用の原則が記載されているか</li>
+        <li>MCPサーバーに接続する権限が必要最小限のスコープに絞られているか</li>
+        <li>財務・人事の機密データがローカルのみで管理され、外部リポジトリに含まれていないか</li>
+        <li>AIが生成した経営判断・財務分析を人間が最終確認してから意思決定に使っているか</li>
+        <li>対外資料（投資家向け・融資申請等）は専門家のレビューを受けているか</li>
+        <li>スキルの数が増えすぎていないか（最初は各部門3個程度が推奨）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>スキルが多くなるほど管理コストが増える。最初は各部門3個程度に絞り、実際に使いながら増やすのが効率的。</li>
+        <li>財務・人事データは機密性が高い。MCPで外部サービスに接続する際は、必要最小限のスコープのみ付与する。</li>
+        <li>スキルの品質はコンテキストファイルの鮮度に依存する。月次・四半期ごとに context/ フォルダのデータを更新する運用ルールを設ける。</li>
+        <li>AIが生成した経営判断・財務分析は最終的に人間が確認・承認する。特に対外的な資料（投資家向け等）は専門家レビューを経ること。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-business-monorepo.html">業務モノレポ：経費精算・稼働報告等を1リポジトリで管理</a>
+        <span>スキルとデータを一元管理する</span>
+      </div>
+      <div class="related-card">
+        <a href="03-vps-agent.html">VPS常駐エージェント：LINE WORKSから横断操作</a>
+        <span>スマホからスキルを呼び出す</span>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 経営・全社横断</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

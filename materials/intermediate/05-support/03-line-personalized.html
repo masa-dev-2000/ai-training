@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LINE MCPでパーソナライズメッセージ自動送信 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv4 { background: #f3e8ff; color: #6b21a8; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › カスタマーサポート</div>
+  <h1>LINE MCPでユーザーごとにパーソナライズしたメッセージ自動送信</h1>
+  <div class="meta">
+    <span class="badge lv4">★★★★ エンジニア向け</span>
+    <span class="time-b">構築数日〜</span>
+    <span class="tool-b">LINE Messaging API</span>
+    <span class="tool-b">MCP</span>
+    <span class="tool-b">ユーザーDB</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      LINE Messaging APIをMCP経由でClaude Codeから操作できるようにし、ユーザーデータベース（購買履歴・属性・行動ログ）に基づいてパーソナライズされたメッセージを自動生成・送信するシステムを構築する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ ユーザーデータに基づいてClaudeが生成したLINEメッセージの例</p>
+    <div class="output-example">
+      <div class="output-header">生成されたLINEメッセージ（3名分）</div>
+      <div class="output-body">
+        <pre><strong>【田中 美咲 さん向け — 購入後フォロー】</strong>
+田中さん、こんにちは！
+先日はオーガニックスキンケアセットをご購入いただきありがとうございました。
+使い心地はいかがでしょうか？
+
+乾燥が気になる季節にぴったりの保湿クリームが今週20%OFFです。
+セットでお使いいただくと効果がさらに高まりますよ 😊
+
+▶ 詳細はこちら → https://example.com/cream
+
+---
+
+<strong>【山本 健太 さん向け — 休眠顧客への再接触（最終購入から127日）】</strong>
+山本さん、ご無沙汰しております。
+以前ご購入いただいたプロテインシリーズ、いかがでしたか？
+
+長らくお会いできていなかったので、特別クーポンをお届けします。
+次回ご購入時に使える <strong>15%OFFクーポン</strong> です（有効期限：7日間）。
+
+クーポンコード：YAMAMOTO15
+▶ ショップはこちら → https://example.com/shop
+
+---
+
+<strong>【佐藤 令奈 さん向け — 誕生日メッセージ（5月20日が誕生日）】</strong>
+佐藤さん、お誕生日おめでとうございます🎂
+いつもご愛顧いただきありがとうございます。
+
+特別に <strong>誕生日限定20%OFFクーポン</strong> をプレゼントします！
+お好きな商品にご利用ください（今月末まで有効）。
+
+クーポンコード：BIRTHDAY_SATO
+▶ ショップはこちら → https://example.com/birthday</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">LINE Developersアカウント</span>
+      <span class="tool-chip">LINE Messaging APIチャンネル（チャンネルアクセストークン）</span>
+      <span class="tool-chip">ユーザーデータベース（購買履歴・属性等）</span>
+      <span class="tool-chip">Python（line-bot-sdk）</span>
+      <span class="tool-chip">Claude Code</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>LINE Messaging APIチャンネルを作成</strong>
+          <p>LINE Developers → プロバイダー作成 → Messaging APIチャンネル作成。チャンネルアクセストークン（長期）を発行して保存する。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>LINE送信MCPサーバーを実装</strong>
+          <div class="code"><span class="c"># mcp-line-server.py（抜粋）</span>
+from mcp.server import Server
+from linebot.v3.messaging import ApiClient, Configuration, MessagingApi, TextMessage, PushMessageRequest
+
+app = Server("line-messaging")
+
+@app.tool()
+async def send_personalized_message(user_id: str, message: str):
+    """LINEユーザーにメッセージを送信する"""
+    config = Configuration(access_token=LINE_CHANNEL_ACCESS_TOKEN)
+    with ApiClient(config) as api_client:
+        api = MessagingApi(api_client)
+        api.push_message(PushMessageRequest(
+            to=user_id,
+            messages=[TextMessage(type="text", text=message)]
+        ))
+    return f"送信完了: {user_id}"</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>ユーザーデータと組み合わせたメッセージ生成</strong>
+          <div class="code"><span class="c"># パーソナライズロジック例</span>
+for user in users:
+    profile = get_user_profile(user['line_id'])
+    message = claude.generate(f"""
+        以下のユーザープロファイルに合わせた
+        セグメント配信メッセージを生成してください：
+        名前：{profile['name']}
+        最終購入：{profile['last_purchase']}
+        購入カテゴリ：{profile['categories']}
+        休眠日数：{profile['days_since_purchase']}
+        目標：再購入促進
+    """)
+    send_line_message(user['line_id'], message)</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>送信ログと効果測定の設定</strong>
+          <p>送信したメッセージ・開封率・クリック率をDBに記録し、Claude Codeで効果分析レポートを定期生成する。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('birthday',this)">誕生日メッセージ</button>
+      <button class="stab" onclick="showScenario('post-purchase',this)">購入後フォロー</button>
+      <button class="stab" onclick="showScenario('reactivate',this)">休眠顧客への再接触</button>
+    </div>
+    <div id="scenario-birthday" class="scenario-content active">
+      <div class="output-example">
+        <div class="output-header">誕生日メッセージ — プロンプト設定例</div>
+        <div class="output-body">
+          <pre>以下のユーザー情報をもとに誕生日メッセージを作成してください。
+
+【ユーザー情報】
+名前：{name}
+誕生日：{birthday}
+過去の購入カテゴリ：{categories}
+会員ランク：{rank}
+
+【メッセージの条件】
+- 150文字以内で温かみのある文体
+- 購入カテゴリに関連した商品ヒントを1つ含める
+- 誕生日限定クーポンコード（{coupon_code}）を記載
+- 絵文字は1〜2個まで
+- ショップURLを末尾に記載する</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-post-purchase" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">購入後フォロー — プロンプト設定例（購入3日後）</div>
+        <div class="output-body">
+          <pre>以下のユーザー情報をもとに購入後フォローメッセージを作成してください。
+
+【ユーザー情報】
+名前：{name}
+購入商品：{last_product}
+購入日：{purchase_date}（{days_since}日前）
+関連おすすめ商品：{recommended_product}
+
+【メッセージの条件】
+- 購入へのお礼から始める
+- 使い心地を気にかける一言を入れる
+- 関連商品を自然な流れで案内する（強引な売り込みはNG）
+- 200文字以内
+- 問い合わせ先を末尾に記載する</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-reactivate" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">休眠顧客への再接触 — プロンプト設定例（90日以上未購入）</div>
+        <div class="output-body">
+          <pre>以下のユーザー情報をもとに再接触メッセージを作成してください。
+
+【ユーザー情報】
+名前：{name}
+最終購入：{last_purchase_product}（{days_since}日前）
+購入カテゴリ：{categories}
+特別クーポン：{coupon_code}（割引率：{discount}%）
+
+【メッセージの条件】
+- ご無沙汰していることを自然に伝える（責める表現はNG）
+- 最後の購入を覚えているか軽く触れる
+- 特別クーポンを「限定感」を持たせて案内する
+- 有効期限（7日間）を明記する
+- 200文字以内・絵文字は控えめに</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>送信対象ユーザーのLINE友だち登録状況・ブロック状態を事前に確認しているか</li>
+        <li>メッセージ送信数がLINE公式アカウントの月次プラン上限内に収まっているか</li>
+        <li>個人情報（名前・購入履歴）の利用についてプライバシーポリシーに明記し、ユーザーの同意を得ているか</li>
+        <li>配信前にテスト送信（自分のLINEアカウントへ）を行い、文字化けや変数未置換がないか確認しているか</li>
+        <li>同一ユーザーへの送信頻度が週1〜2回を超えていないか</li>
+        <li>クーポンコードの有効期限・使用条件が正確に反映されているか</li>
+        <li>送信ログをDBに記録し、配信停止要求に即対応できる体制があるか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>LINE公式アカウントのメッセージ送信はプラン制限がある。大量配信はコスト計算を事前に確認する。</li>
+        <li>個人に特化したメッセージ生成は個人情報保護法の対象。プライバシーポリシーを更新し、ユーザーの同意を取得すること。</li>
+        <li>配信停止（ブロック）ユーザーへの送信はAPIレベルでエラーになる。エラーハンドリングとブロックリスト管理を実装する。</li>
+        <li>スパムと認識されるメッセージ頻度（週1〜2回が上限目安）に注意する。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-email-reply.html">問い合わせメール→トーン別返信案自動生成</a>
+        <span>★ 今日から — メール対応を効率化</span>
+      </div>
+      <div class="related-card">
+        <a href="02-slack-bot.html">Slack自動返信ボット FAQ一次対応</a>
+        <span>★★★ Slackでも自動返信する場合</span>
+      </div>
+      <div class="related-card">
+        <a href="../06-hr/05-faq-update.html">社内FAQ・ナレッジベースの自動更新</a>
+        <span>★★★ よくある問い合わせをFAQ化する</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer>中級編 設定ガイド — カスタマーサポート</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>/ui-reviewコマンドでブラウザ遷移→スクショ→AI分析 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv4 { background: #f3e8ff; color: #6b21a8; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 開発・エンジニアリング</div>
+  <h1>/ui-reviewコマンドでブラウザ自動遷移・スクリーンショット・AI分析レポートまで完結（35分→コマンド1発）</h1>
+  <div class="meta">
+    <span class="badge lv4">★★★★ エンジニア向け</span>
+    <span class="time-b">35分→コマンド1発</span>
+    <span class="tool-b">Playwright</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">Skills</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      <code>/ui-review [URL]</code> を実行すると、Playwrightが指定URLのブラウザ操作を自動実行・スクリーンショットを撮影し、Claudeがデザイン品質・UX問題・アクセシビリティ・モバイル対応をAI分析したレポートを生成する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ <code>/ui-review https://app.example.com/login</code> を実行した際のAI分析レポートの例</p>
+    <div class="output-example">
+      <div class="output-header">Claude のUIレビューレポート出力</div>
+      <div class="output-body">
+        <pre><strong>## UIレビューレポート</strong>
+対象URL: https://app.example.com/login
+撮影日時: 2026-05-15 14:32:07
+デスクトップ（1280×800）・モバイル（390×844）で分析
+
+---
+
+<strong>【スコア評価】</strong>
+視覚的な一貫性・デザイン品質  ★★★★☆ 4/5
+情報設計・ナビゲーション      ★★★☆☆ 3/5
+モバイル対応                  ★★☆☆☆ 2/5
+アクセシビリティ（推定）      ★★★☆☆ 3/5
+CTAの明確さ                  ★★★★☆ 4/5
+
+---
+
+<strong>【優先度：高】改善提案</strong>
+1. モバイル画面でログインボタンがビューポートの下に隠れている
+   → ボタンを画面上部に移動するか、スクロール不要なレイアウトに変更を推奨
+2. パスワード入力欄にラベルがなく、プレースホルダーのみ
+   → スクリーンリーダーがラベルを読み上げられない。&lt;label&gt;要素を追加すること
+
+<strong>【優先度：中】改善提案</strong>
+3. フォームの背景色（#F5F5F5）とテキスト色（#767676）のコントラスト比が3.2:1
+   → WCAG AA基準（4.5:1）を満たしていない。テキスト色を #595959 以上の濃さに変更推奨
+4. ソーシャルログインボタン（Google・GitHub）とメールログインフォームの区別が不明確
+   → 「または」などの区切りテキストと水平線で視覚的に分離することを推奨
+
+<strong>【優先度：低】改善提案</strong>
+5. ページタイトルが「ログイン」のみで会社名が含まれていない
+   → 「ログイン | サービス名」の形式に変更推奨（SEO・ブックマーク識別のため）
+
+レポート保存: reports/ui-review-login-20260515.md</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('desktop',this)">デスクトップ確認</button>
+      <button class="stab" onclick="showScenario('mobile',this)">モバイル確認</button>
+      <button class="stab" onclick="showScenario('a11y',this)">アクセシビリティ確認</button>
+    </div>
+
+    <div id="scenario-desktop" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">デスクトップ確認 — スキル設定例（ui-review.md）</div>
+        <pre>---
+name: ui-review
+description: URLのUIをPlaywrightでスクショしてAI分析レポートを生成する
+---
+
+1. 引数のURLをui_screenshotter.jsに渡す
+   - デスクトップ: 1280×800, 1920×1080 の2サイズ
+2. analyze_ui.py で以下を分析：
+   - 視覚的な一貫性（カラーパレット・フォント・余白）
+   - 情報設計（コンテンツの優先度・視線の流れ）
+   - CTAボタンの明確さ・視認性
+   - フォーム設計（ラベル・エラー表示・入力ガイド）
+3. レポートを reports/ui-review-[ページ名]-[日付].md に保存</pre>
+      </div>
+    </div>
+
+    <div id="scenario-mobile" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">モバイル確認 — スキル設定例（ui-review-mobile.md）</div>
+        <pre>---
+name: ui-review-mobile
+description: モバイル表示に特化したUIレビューを実施する
+---
+
+1. 引数のURLを以下の3デバイスサイズでスクショ撮影：
+   - iPhone 15 Pro: 393×852
+   - Galaxy S24: 360×800
+   - iPad: 820×1180
+2. モバイル特有の観点で分析：
+   - タップターゲットのサイズ（最低44×44px）
+   - ビューポート内に主要なCTAが収まっているか
+   - 横スクロールが発生していないか
+   - フォント・ボタンの文字が読みやすいか（最低14px相当）
+   - ナビゲーションがモバイルに最適化されているか（ハンバーガーメニュー等）
+3. レポートを reports/ui-review-mobile-[日付].md に保存</pre>
+      </div>
+    </div>
+
+    <div id="scenario-a11y" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">アクセシビリティ確認 — スキル設定例（ui-review-a11y.md）</div>
+        <pre>---
+name: ui-review-a11y
+description: アクセシビリティ観点に特化したUIレビューを実施する
+---
+
+1. 引数のURLをPlaywrightで開き、以下を実行：
+   - スクリーンショット撮影（通常表示）
+   - axe-core ライブラリでアクセシビリティ自動検査を実行
+2. Claude で以下の観点で分析：
+   - カラーコントラスト比（WCAG AA基準: 4.5:1以上）
+   - 画像のalt属性の適切な記述
+   - フォームの&lt;label&gt;要素の存在
+   - キーボードナビゲーションの可否（視覚的フォーカスインジケータ）
+   - ARIAランドマーク（header/main/footer）の設定
+3. WCAG 2.1 AA 基準に対する適合状況をスコア化してレポート出力</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Playwrightをインストール</strong>
+          <div class="code">npm install playwright
+npx playwright install chromium</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>スクリーンショット撮影スクリプトをClaude Codeで生成</strong>
+          <div class="code"><span class="c"># ui_screenshotter.js（Claude Codeで生成）</span>
+const { chromium } = require('playwright');
+
+async function captureScreenshots(url, outputDir) {
+    const browser = await chromium.launch();
+    const context = await browser.newContext();
+
+    <span class="c">// デスクトップ</span>
+    const desktopPage = await context.newPage();
+    await desktopPage.setViewportSize({ width: 1280, height: 800 });
+    await desktopPage.goto(url, { waitUntil: 'networkidle' });
+    await desktopPage.screenshot({ path: `${outputDir}/desktop.png`, fullPage: true });
+
+    <span class="c">// モバイル</span>
+    const mobilePage = await context.newPage();
+    await mobilePage.setViewportSize({ width: 390, height: 844 });
+    await mobilePage.goto(url);
+    await mobilePage.screenshot({ path: `${outputDir}/mobile.png`, fullPage: true });
+
+    await browser.close();
+}</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>AI分析レポート生成スクリプトを追加</strong>
+          <div class="code"><span class="c"># analyze_ui.py（Claude Codeで生成・抜粋）</span>
+import anthropic, base64
+
+def analyze_screenshots(desktop_path: str, mobile_path: str, url: str) -> str:
+    with open(desktop_path, "rb") as f:
+        desktop_b64 = base64.b64encode(f.read()).decode()
+    with open(mobile_path, "rb") as f:
+        mobile_b64 = base64.b64encode(f.read()).decode()
+
+    client = anthropic.Anthropic()
+    response = client.messages.create(
+        model="claude-opus-4-7",
+        max_tokens=2000,
+        messages=[{"role": "user", "content": [
+            {"type": "text", "text": f"以下のWebページ（{url}）のUI/UXレビューを実施してください。"},
+            {"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": desktop_b64}},
+            {"type": "image", "source": {"type": "base64", "media_type": "image/png", "data": mobile_b64}},
+            {"type": "text", "text": """
+評価観点：
+1. 視覚的な一貫性とデザイン品質（スコア/5点）
+2. 情報設計・ナビゲーション（スコア/5点）
+3. モバイル対応（スコア/5点）
+4. アクセシビリティ（推定スコア/5点）
+5. CTAの明確さ（スコア/5点）
+
+優先度別の改善提案（高/中/低）を箇条書きで出力してください。
+"""}
+        ]}]
+    )
+    return response.content[0].text</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>スキルコマンドとして登録</strong>
+          <div class="code"><span class="c"># .claude/skills/ui-review.md</span>
+---
+name: ui-review
+description: URLのUIをPlaywrightでスクショしてAI分析レポートを生成する
+---
+1. 引数のURLをui_screenshotter.jsに渡してスクショ撮影
+2. analyze_ui.pyで分析レポートを生成
+3. レポートをMarkdownファイルに保存</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>スクリーンショット撮影対象のURLに誤りがないか（本番URLを誤って含めていないか）</li>
+        <li>ログインが必要なページは認証情報をPlaywrightに正しく渡せているか</li>
+        <li>分析レポートのスコア・指摘事項をデザイナー・フロントエンド担当が確認したか</li>
+        <li>「優先度：高」の指摘に対してチケット（Issue・Jiraタスク）を起票したか</li>
+        <li>Claude APIのビジョン機能の利用コストを確認し、分析ページ数が適切か</li>
+        <li>アクセシビリティ指摘については自動検査（axe-core等）と目視確認の両方で検証したか</li>
+        <li>AIのUI評価はあくまで参考情報として扱い、最終判断はデザイナーが行ったか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>ログインが必要なページは認証情報をPlaywrightに渡す処理が別途必要。</li>
+        <li>Claude APIのビジョン機能（画像解析）はコストが高め。大量のページを一度に分析すると費用がかさむ。</li>
+        <li>AIのUI評価は主観的な要素を含む。あくまで改善のヒントとして使い、最終判断はデザイナー・担当者が行う。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="05-doc-screenshot.html">ドキュメントのスクリーンショット全自動更新</a>
+        <span>★★★ UIレビューで撮影した画像をドキュメントに活用</span>
+      </div>
+      <div class="related-card">
+        <a href="01-pr-review.html">PRのURL渡すだけでコードレビュー</a>
+        <span>★★★ UIのコード変更時のレビューと組み合わせて</span>
+      </div>
+      <div class="related-card">
+        <a href="../08-content/04-document-draft.html">ビジネス文書の自動ドラフト</a>
+        <span>★★ UIレビュー結果をデザイン改善提案書に</span>
+      </div>
+    </div>
+  </div>
+</div>
+<footer>中級編 設定ガイド — 開発・エンジニアリング</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

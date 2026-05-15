@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>「見積書作って」でPDF見積書を出力（スキルコマンド化） — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv2 { background: #fef9c3; color: #854d0e; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+.quote-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.quote-table th { background: #f1f5f9; color: #475569; font-weight: 700; padding: 8px 10px; border: 1px solid #e2e8f0; text-align: left; font-size: 12px; }
+.quote-table td { padding: 8px 10px; border: 1px solid #e2e8f0; color: #334155; }
+.quote-table tr:nth-child(even) { background: #f8fafc; }
+.quote-table .total-row { background: #eff6ff; font-weight: 700; }
+.quote-table .grand-total { background: #1e40af; color: #fff; font-weight: 700; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 営業</div>
+  <h1>「見積書作って」でPDF見積書を出力（スキルコマンド化）</h1>
+  <div class="meta">
+    <span class="badge lv2">★★ 設定1〜2時間</span>
+    <span class="time-b">見積書作成を自然言語で</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">Skills</span>
+    <span class="tool-b">WeasyPrint / Puppeteer</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      「A社にコンサル料50万円の見積書を作って」という自然言語の指示だけで、正式な体裁のPDF見積書を自動生成するスキルコマンドを構築する。消費税計算・見積番号の自動採番・会社印影の埋め込みまで自動化できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ /quoteコマンド実行後に生成されるPDF見積書の内容例</p>
+    <div class="output-example">
+      <div class="output-header">生成される PDF 見積書の内容</div>
+      <div class="output-body">
+        <p style="font-size:12px;color:#64748b;margin-bottom:12px;">御見積書　　見積番号：Q20260515-007　　発行日：2026年5月15日　　有効期限：2026年6月14日</p>
+        <p style="font-size:13px;font-weight:700;margin-bottom:8px;">株式会社〇〇 御中</p>
+        <table class="quote-table" style="margin-bottom:12px;">
+          <thead>
+            <tr>
+              <th>品目</th>
+              <th>数量</th>
+              <th>単価</th>
+              <th>金額</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>システム導入コンサルティング</td>
+              <td>1式</td>
+              <td>500,000円</td>
+              <td>500,000円</td>
+            </tr>
+            <tr>
+              <td>月次保守・サポート料</td>
+              <td>3ヶ月</td>
+              <td>50,000円</td>
+              <td>150,000円</td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="3" style="text-align:right;">小計</td>
+              <td>650,000円</td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="3" style="text-align:right;">消費税（10%）</td>
+              <td>65,000円</td>
+            </tr>
+            <tr class="grand-total">
+              <td colspan="3" style="text-align:right;">合計（税込）</td>
+              <td>715,000円</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:12px;color:#64748b;">振込先：〇〇銀行 〇〇支店 普通 1234567 〇〇株式会社<br>備考：上記金額は見積書発行から30日以内にご入金ください。</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">Claude Code</span>
+      <span class="tool-chip">Python（weasyprint または jinja2）</span>
+      <span class="tool-chip">自社ロゴ・印影画像（PNG）</span>
+      <span class="tool-chip">会社情報・振込先情報</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>HTMLベースの見積書テンプレートを作成</strong>
+          <p>Jinja2テンプレートで見積書HTMLを作成。変数部分（顧客名・品目・金額等）をプレースホルダーにしておく。</p>
+          <div class="code"><span class="c">&lt;!-- quote_template.html（抜粋） --&gt;</span>
+&lt;div class="header"&gt;
+  &lt;img src="logo.png" alt="会社ロゴ"&gt;
+  &lt;h1&gt;御見積書&lt;/h1&gt;
+&lt;/div&gt;
+&lt;div class="client"&gt;{{ client_name }} 御中&lt;/div&gt;
+&lt;div class="quote-number"&gt;見積番号：{{ quote_number }}&lt;/div&gt;
+&lt;table&gt;
+  {% for item in items %}
+  &lt;tr&gt;
+    &lt;td&gt;{{ item.name }}&lt;/td&gt;
+    &lt;td&gt;{{ item.quantity }}&lt;/td&gt;
+    &lt;td&gt;{{ item.unit_price | yen }}&lt;/td&gt;
+    &lt;td&gt;{{ item.total | yen }}&lt;/td&gt;
+  &lt;/tr&gt;
+  {% endfor %}
+&lt;/table&gt;
+&lt;div class="total"&gt;消費税（10%）：{{ tax | yen }}&lt;/div&gt;
+&lt;div class="total"&gt;合計：{{ grand_total | yen }}&lt;/div&gt;</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>PDF変換スクリプトを作成（Claude Codeで生成）</strong>
+          <div class="code">pip install weasyprint jinja2</div>
+          <div class="code"><span class="c"># generate_quote.py（抜粋）</span>
+from jinja2 import Template
+from weasyprint import HTML
+import json, datetime
+
+def generate_quote(client_name, items, output_path):
+    quote_number = f"Q{datetime.date.today().strftime('%Y%m%d')}-{get_next_seq()}"
+    tax = sum(i['total'] for i in items) * 0.1
+    grand_total = sum(i['total'] for i in items) + tax
+    html = template.render(
+        client_name=client_name,
+        items=items,
+        quote_number=quote_number,
+        tax=tax,
+        grand_total=grand_total,
+        issue_date=datetime.date.today()
+    )
+    HTML(string=html).write_pdf(output_path)</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>スキルファイルを作成する</strong>
+          <div class="code"><span class="c"># .claude/skills/quote.md</span>
+---
+name: quote
+description: 見積書をPDFで生成する
+---
+ユーザーの指示から見積書に必要な情報（顧客名・品目・単価・数量）を抽出し、
+generate_quote.pyを実行してPDFを生成してください。
+品目情報が不完全な場合は確認を求めてください。</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>実行例</strong>
+          <div class="prompt">
+            <div class="prompt-label">使い方</div>
+            <pre>/quote A社にシステム導入コンサル料50万円、月次保守料5万円×3ヶ月の見積書を作って</pre>
+          </div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('single',this)">単一品目</button>
+      <button class="stab" onclick="showScenario('multi',this)">複数品目＋値引き</button>
+      <button class="stab" onclick="showScenario('saas',this)">月額SaaS型</button>
+    </div>
+
+    <div id="scenario-single" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">単一品目 — シンプルな見積書</div>
+        <pre>/quote
+
+顧客名：株式会社〇〇
+品目：業務改善コンサルティング
+単価：800,000円
+数量：1式
+有効期限：30日
+備考：（特記事項があれば）
+
+消費税10%を自動計算して見積書PDFを生成してください。
+ファイル名：quote_〇〇_20260515.pdf</pre>
+      </div>
+    </div>
+
+    <div id="scenario-multi" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">複数品目＋値引き — 値引き額を明示した見積書</div>
+        <pre>/quote
+
+顧客名：〇〇工業株式会社
+品目一覧：
+  1. システム設計・要件定義　　500,000円 × 1式
+  2. 開発・実装（基本機能）　　1,200,000円 × 1式
+  3. テスト・品質検証　　　　　300,000円 × 1式
+  4. 導入支援・操作研修　　　　150,000円 × 1式
+
+値引き：上記合計から10%割引（長期取引割引）
+有効期限：2026年6月30日
+
+値引き行を小計の前に明示し、
+税抜小計→値引き額→値引き後小計→消費税→税込合計の順で表示してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-saas" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">月額SaaS型 — 初期費用＋月額料金の見積書</div>
+        <pre>/quote
+
+顧客名：〇〇株式会社
+契約形態：月額サブスクリプション（1年契約）
+品目一覧：
+  1. 初期導入費用（設定・データ移行）　200,000円 × 1式
+  2. 月額利用料（プレミアムプラン）　　 50,000円 × 12ヶ月
+
+契約期間：2026年6月1日〜2027年5月31日
+支払い条件：初期費用は契約時一括、月額は毎月月末払い
+
+月額と年間合計を分けて表示し、
+「1年間の総費用：〇〇円（税込）」を備考欄に記載してください。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>送付前チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>顧客名（会社名・御中の表記）に誤りがないか</li>
+        <li>見積番号が連番で管理されており、重複がないか</li>
+        <li>品目名・単価・数量・合計の計算が正しいか（特に消費税率）</li>
+        <li>値引きがある場合、値引き後の金額が正しく反映されているか</li>
+        <li>有効期限が設定されており、過去の日付になっていないか</li>
+        <li>振込先情報（銀行名・支店名・口座番号・名義）に誤りがないか</li>
+        <li>ロゴ・印影が正しく表示されているか（PDF表示で確認）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>見積番号の採番はファイルまたはDBで管理し、重複しないよう連番管理を実装する。</li>
+        <li>WeasyPrintは日本語フォントの設定が必要。システムにNoto Sansや源ノ角ゴシックをインストールしておく。</li>
+        <li>生成されたPDFは送付前に必ず金額・顧客名・有効期限を目視確認する。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-proposal-draft.html">提案書ドラフト自動生成</a>
+        <span>★★ 見積書と合わせて提案書も自動化</span>
+      </div>
+      <div class="related-card">
+        <a href="04-crm-auto-input.html">CRM自動入力＋次アクション提案</a>
+        <span>★★★ 商談後の記録も自動化</span>
+      </div>
+      <div class="related-card">
+        <a href="../03-finance/02-invoice-matching.html">請求書・領収書の自動照合</a>
+        <span>★★ 見積→請求のワークフロー連携</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer>中級編 設定ガイド — 営業</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

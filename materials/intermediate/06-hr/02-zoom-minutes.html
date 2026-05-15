@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Zoom録画→構造化議事録→Slack/Notion自動投稿 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 総務・人事</div>
+  <h1>Zoom録画 → 構造化議事録 → Slack/Notion自動投稿</h1>
+  <div class="meta">
+    <span class="badge lv3">★★★ 設定半日〜</span>
+    <span class="time-b">会議後の議事録作成を自動化</span>
+    <span class="tool-b">Zoom API</span>
+    <span class="tool-b">Whisper / AssemblyAI</span>
+    <span class="tool-b">Notion MCP</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      Zoomのクラウド録画が完了すると自動でZoom APIから音声ファイルを取得、文字起こしを行い、Claudeが構造化議事録を生成してSlackとNotionに自動投稿するパイプラインを構築する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ Zoom録画から自動生成された議事録がSlackに投稿される例</p>
+    <div class="output-example">
+      <div class="output-header">生成された構造化議事録（Slack投稿文）</div>
+      <div class="output-body">
+        <pre>📋 *【議事録】週次プロジェクト進捗会議*
+日時：2026年5月15日（木）10:00〜10:45
+参加者：田中（進行）、山田、佐藤、鈴木、石井
+
+---
+
+*■ 議題*
+1. 新機能開発の進捗確認
+2. 不具合対応の状況
+3. 来月リリース日程の確認
+
+*■ 決定事項*
+• 新機能のリリース日を5月30日に確定
+• 不具合#142はv1.3.2に含める（山田さん担当）
+• 来週の進捗会議を1時間早め、9:00開始に変更
+
+*■ アクションアイテム*
+| 担当者 | タスク | 期限 |
+|--------|--------|------|
+| 山田さん | 不具合#142の修正・テスト | 5/22（金） |
+| 佐藤さん | リリースノートの初稿作成 | 5/27（火） |
+| 鈴木さん | ステージング環境の確認 | 5/28（水） |
+| 石井さん | 顧客への事前告知メール送信 | 5/29（木） |
+
+*■ 次回会議*
+5月22日（木）9:00〜 / Zoom（同URLを使用）
+
+*■ 補足メモ*
+• 山田さんより：外部ライブラリの更新が必要（互換性確認済）
+• 鈴木さんより：ステージング環境が現在不安定なためバックアップ確保を提案
+
+_Notion議事録DB → https://notion.so/xxx_</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">Zoom Pro以上のアカウント（クラウド録画有効）</span>
+      <span class="tool-chip">Zoom OAuth App（recordings:read スコープ）</span>
+      <span class="tool-chip">AssemblyAI または OpenAI Whisper APIキー</span>
+      <span class="tool-chip">Slack Webhook / Notion MCP</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Zoom Webhookを設定して録画完了イベントを受信</strong>
+          <p>Zoom Apps Marketplace → Webhook Only App作成 → <code>recording.completed</code> イベントを購読。録画完了時に自動でパイプラインが起動する。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>音声ファイルを取得して文字起こし</strong>
+          <div class="code"><span class="c"># transcriber.py（抜粋）</span>
+import assemblyai as aai
+
+def transcribe_audio(audio_url: str) -> str:
+    aai.settings.api_key = ASSEMBLYAI_API_KEY
+    config = aai.TranscriptionConfig(
+        speaker_labels=True,  <span class="c"># 話者識別</span>
+        language_code="ja"
+    )
+    transcript = aai.Transcriber().transcribe(audio_url, config)
+    <span class="c"># 話者ラベル付きテキストを整形</span>
+    return format_transcript(transcript.utterances)</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Claudeで構造化議事録を生成</strong>
+          <div class="prompt">
+            <div class="prompt-label">議事録生成プロンプト</div>
+            <pre>以下の会議の文字起こしから構造化議事録を作成してください。
+
+## 〇〇会議 議事録（YYYY/MM/DD）
+
+### 参加者
+（文字起こしから推定）
+
+### 議題
+（会議冒頭から推定）
+
+### 決定事項
+（明確に決まったこと）
+
+### アクションアイテム
+| 担当者 | タスク | 期限 |
+|--------|--------|------|
+
+### 次回会議
+（言及があれば）
+
+### 補足メモ
+（重要な発言・背景情報）</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>Slack/Notionに自動投稿</strong>
+          <p>生成した議事録をSlack Incoming Webhookで該当チャンネルに投稿し、Notion MCPで議事録データベースに追加する。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('regular',this)">定例会議</button>
+      <button class="stab" onclick="showScenario('project',this)">プロジェクト進捗会議</button>
+      <button class="stab" onclick="showScenario('executive',this)">経営会議（機密レベル高）</button>
+    </div>
+    <div id="scenario-regular" class="scenario-content active">
+      <div class="output-example">
+        <div class="output-header">定例会議 — 議事録プロンプト設定例</div>
+        <div class="output-body">
+          <pre>以下の文字起こしから週次定例会議の議事録を作成してください。
+
+【出力形式】
+- 参加者一覧（文字起こしから推定）
+- 前回アクションアイテムの消化状況
+- 今回の報告事項（部門別に整理）
+- 決定事項（箇条書き）
+- 新規アクションアイテム（担当者・期限付き表）
+- 次回会議日時
+
+【投稿先】Slack #weekly-meeting、Notion 週次定例DB
+【機密レベル】低（全社共有可）</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-project" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">プロジェクト進捗会議 — 議事録プロンプト設定例</div>
+        <div class="output-body">
+          <pre>以下の文字起こしからプロジェクト進捗会議の議事録を作成してください。
+
+【出力形式】
+- 参加者一覧・プロジェクト名
+- マイルストーン進捗（赤/黄/緑でステータス表示）
+- 課題・リスク一覧（発生日・影響度・担当者・解決策）
+- 決定事項（箇条書き）
+- アクションアイテム（担当者・期限・優先度付き表）
+- 次回会議日時
+
+【投稿先】Slack #project-xxx、Notion プロジェクトDB
+【機密レベル】中（プロジェクトメンバーのみ共有）</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-executive" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">経営会議（機密レベル高）— 設定例</div>
+        <div class="output-body">
+          <pre>【機密対応設定】
+- 文字起こしデータは暗号化ストレージにのみ保存
+- 外部AIサービス（AssemblyAI等）への送信は禁止
+  → Whisperをオンプレミス・ローカル実行に切り替え
+- 議事録の投稿先はSlack ではなく 社内の権限付きNotionページのみ
+- 閲覧権限は参加者と指定役員のみ
+
+【出力形式】
+- 参加者（役職付き）
+- 経営上の決定事項（箇条書き）
+- 対外秘項目の明示（⚠️ 機密マーク付き）
+- アクションアイテム（担当役員・期限）
+- 次回経営会議日時
+
+【注意】議事録の承認は社長が行ってから配布する</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>会議開始時に参加者全員に録画・AI文字起こしの実施を告知しているか</li>
+        <li>アクションアイテムの担当者名と期限が正確に記録されているか（AIが推測したものは要確認）</li>
+        <li>固有名詞（社名・製品名・人名）の誤変換がないか目視確認しているか</li>
+        <li>機密情報を含む会議の議事録を外部サービスに送信していないか</li>
+        <li>議事録の共有範囲が会議の機密レベルに合っているか（全社共有か、参加者のみか）</li>
+        <li>Notionへの投稿が正常に完了しているか（リンク切れ・権限エラーがないか）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>会議の録画・文字起こしには参加者の同意が必要。会議開始時に「録画・AI文字起こしを行う」旨を案内する。</li>
+        <li>AssemblyAIの日本語対応は良好だが、専門用語・固有名詞の精度は低い。固有名詞辞書の設定（Custom Vocabulary）で改善できる。</li>
+        <li>Zoomのクラウド録画は長時間・高頻度の会議が多い場合、ストレージ費用がかかる。ローカル録画との使い分けを検討する。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="03-minutes-command.html">「議事録まとめて」スラッシュコマンド化</a>
+        <span>★★ テキストを貼って1コマンドで完結</span>
+      </div>
+      <div class="related-card">
+        <a href="05-faq-update.html">社内FAQ・ナレッジベースの自動更新</a>
+        <span>★★★ 議事録からFAQを自動生成する</span>
+      </div>
+      <div class="related-card">
+        <a href="../05-support/01-email-reply.html">問い合わせメール→トーン別返信案自動生成</a>
+        <span>★ 今日から — 会議後のメール対応も効率化</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer>中級編 設定ガイド — 総務・人事</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

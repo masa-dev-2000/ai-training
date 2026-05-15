@@ -1,0 +1,335 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>先週のsalesチャンネル議論を自動要約 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv2 { background: #fef9c3; color: #854d0e; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 営業</div>
+  <h1>Slack MCP経由で先週のsalesチャンネル議論を自動要約</h1>
+  <div class="meta">
+    <span class="badge lv2">★★ 設定1〜2時間</span>
+    <span class="time-b">週次営業サマリーを自動化</span>
+    <span class="tool-b">Slack MCP</span>
+    <span class="tool-b">Claude Code</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      Slack MCPを通じてsalesチャンネルの過去1週間のメッセージを取得し、Claudeが自動要約。商談進捗・課題・決定事項・次週のアクションをまとめた週次営業レポートをSlackに自動投稿する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 毎週月曜朝に#sales-reportチャンネルに自動投稿されるサマリーの例</p>
+    <div class="output-example">
+      <div class="output-header">Claude が生成する週次営業サマリー（Slack 投稿内容）</div>
+      <div class="output-body">
+        <pre>📊 *今週の営業サマリー（5/8〜5/14）*
+
+*🔷 商談進捗*
+• 新規商談：4件（山田：2件、鈴木：1件、佐藤：1件）
+• 受注：1件（株式会社△△ / 年額180万円）
+• 失注：1件（〇〇工業 / 競合他社で決定）
+• 継続フォロー中：8件
+
+*📋 主要な議論・決定事項*
+• □□株式会社との次回デモを5/20に設定（担当：山田）
+• 価格改定に伴い見積もりテンプレートを更新済み（鈴木が共有）
+• 製造業向けの新しい事例資料が完成、来週から活用開始
+• 失注案件の振り返り：価格競争力の課題をマネージャーに共有
+
+*✅ 来週のアクション*
+• 山田：□□株式会社デモ準備（5/19までに資料更新）
+• 鈴木：〇〇商事 追加ヒアリング（5/16 14:00）
+• 佐藤：新規リード3件への初回メール送信
+• 全員：新事例資料を今週の商談に組み込む
+
+_#sales より自動生成 | 詳細は元スレを確認_</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">Slack ワークスペースの管理権限</span>
+      <span class="tool-chip">Slack APIトークン（channels:history スコープ）</span>
+      <span class="tool-chip">Claude Code</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Slack APIトークンを取得する</strong>
+          <p>api.slack.com → Your Apps → アプリ作成 → OAuth & Permissions で以下のスコープを追加：<code>channels:history</code>、<code>chat:write</code>、<code>users:read</code></p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Slack MCPをClaude Codeに追加</strong>
+          <div class="code"><span class="c"># .claude/settings.json</span>
+{
+  "mcpServers": {
+    "slack": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-slack"],
+      "env": {
+        "SLACK_BOT_TOKEN": "xoxb-your-token",
+        "SLACK_TEAM_ID": "T0000000"
+      }
+    }
+  }
+}</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>週次サマリースキルを作成</strong>
+          <div class="code"><span class="c"># .claude/skills/weekly-sales-summary.md</span>
+---
+name: weekly-sales-summary
+description: salesチャンネルの先週の議論を要約してレポートを投稿する
+---
+
+Slack MCPを使って#salesチャンネルの過去7日間のメッセージを取得し、
+以下の形式で要約して#sales-reportチャンネルに投稿してください。
+
+## 今週の営業サマリー（〇月〇日〜〇日）
+
+### 商談進捗
+- 新規商談：〇件
+- 受注：〇件（〇〇万円）
+- 失注：〇件
+
+### 主要な議論・決定事項
+（箇条書き3〜5点）
+
+### 来週のアクション
+（担当者名付きで箇条書き）</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>毎週月曜朝に自動実行する設定</strong>
+          <div class="code"><span class="c"># crontab（毎週月曜AM9時に実行）</span>
+0 9 * * 1 claude --skill weekly-sales-summary</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('weekly',this)">週次サマリー</button>
+      <button class="stab" onclick="showScenario('monthly',this)">月次まとめ</button>
+      <button class="stab" onclick="showScenario('deal',this)">特定案件の深掘り</button>
+    </div>
+
+    <div id="scenario-weekly" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">週次サマリー — 毎週月曜の定例レポート</div>
+        <pre>Slack MCPを使って#salesチャンネルの過去7日間のメッセージとスレッドをすべて取得してください。
+
+取得後、以下の形式で週次営業サマリーを作成し、#sales-reportに投稿してください。
+
+【フォーマット】
+📊 今週の営業サマリー（M/D〜M/D）
+
+🔷 商談進捗
+・新規商談：〇件
+・受注：〇件（合計〇〇万円）
+・失注：〇件
+・継続フォロー中：〇件
+
+📋 主要な議論・決定事項
+・（3〜5点を箇条書き）
+
+✅ 来週のアクション
+・担当者名：アクション内容（期日）
+
+---
+個人名や顧客の機密情報は要約時に概要のみ残すこと。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-monthly" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">月次まとめ — 月初に前月全体を振り返るレポート</div>
+        <pre>Slack MCPを使って#salesチャンネルの過去30日間のメッセージを取得し、
+月次営業レポートを作成してください。
+
+【フォーマット】
+📈 〇月 営業月次まとめ
+
+■ 数値サマリー
+・月間受注件数：〇件 / 受注金額：〇〇万円
+・新規リード獲得：〇件
+・商談化率：〇%（リード→商談）
+
+■ 今月の主なトピック
+（重要な商談・プロジェクト・課題を3〜5点）
+
+■ 課題と改善アクション
+（繰り返し出てきた課題と次月の対応策）
+
+■ 来月の重点案件（受注見込み上位3件）
+・顧客名・フェーズ・金額・次のアクション
+
+---
+具体的な顧客名は「A社」「B社」のように匿名化してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-deal" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">特定案件の深掘り — 1件の商談に関する議論をまとめる</div>
+        <pre>Slack MCPを使って#salesチャンネルで「〇〇株式会社」に関するメッセージを
+過去60日間分すべて取得してください。
+
+取得後、以下の形式でこの案件の経緯をまとめてください。
+
+【案件名：〇〇株式会社】
+
+■ 案件概要
+・初回接触日・きっかけ
+・提案内容・金額
+・現在のフェーズ
+
+■ これまでの経緯（時系列）
+（日付付きで主要なやり取りを箇条書き）
+
+■ 現在の課題・懸念点
+（先方の懸念、社内での議論）
+
+■ 次のアクションと期限
+（具体的なタスクと担当者）
+
+---
+これを次の商談準備資料として使えるようにまとめてください。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>Slackボットが#salesチャンネルに招待されているか</li>
+        <li>スレッド内のメッセージも取得できているか（重要な議論がスレッドに埋まりやすい）</li>
+        <li>サマリーに含まれる顧客名・金額が実際の会話内容と一致しているか</li>
+        <li>AIが事実として誤解しやすい「検討中」「予定」の表現が断言になっていないか</li>
+        <li>担当者名の表記が正しいか（ニックネーム→氏名の変換ミスに注意）</li>
+        <li>共有先（#sales-report）の閲覧範囲が適切か（社外に漏れないか）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>プライベートチャンネルのメッセージを取得するには、ボットをチャンネルに招待する必要がある。</li>
+        <li>Slackメッセージには顧客名・金額・個人情報が含まれることがある。要約結果の共有範囲を限定する。</li>
+        <li>スレッド内のメッセージは別途取得が必要。重要な議論がスレッドに流れやすいため、スレッド取得も追加するとよい。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="04-crm-auto-input.html">CRM自動入力＋次アクション提案</a>
+        <span>★★★ 商談メモをCRMに自動反映</span>
+      </div>
+      <div class="related-card">
+        <a href="../05-support/02-slack-bot.html">Slack自動返信ボット</a>
+        <span>★★★ Slackをさらに活用する</span>
+      </div>
+      <div class="related-card">
+        <a href="01-proposal-draft.html">提案書ドラフト自動生成</a>
+        <span>★★ サマリーから提案書へ展開</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer>中級編 設定ガイド — 営業</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SNSブランド評判監視→Slack緊急通知 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › マーケティング・広告</div>
+  <h1>SNSブランド評判監視 → ネガティブ急増でSlack緊急通知</h1>
+  <div class="meta">
+    <span class="badge lv3">★★★ 設定半日〜</span>
+    <span class="time-b">24時間監視の自動化</span>
+    <span class="tool-b">X API v2</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">Slack MCP</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      X（旧Twitter）等のSNSでブランド名・商品名への言及を定期監視し、Claudeが感情分析（ポジティブ・ネガティブ・中立）を実施。ネガティブ投稿が急増した際にSlackの緊急チャンネルへ即座に通知する炎上検知システム。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ ネガティブ投稿が閾値を超えた際のSlack通知メッセージ例</p>
+    <div class="output-example">
+      <div class="output-header">Slack #緊急-炎上対応 チャンネルへの通知メッセージ</div>
+      <div class="output-body">
+        <pre>🚨 【ブランド監視アラート】ネガティブ急増を検知
+
+監視キーワード：「〇〇サービス」「#〇〇不具合」
+検知時刻：2026-05-15 14:32
+
+■ 直近30分の集計
+・取得ツイート数：47件
+・ポジティブ：8件（17%）
+・ネガティブ：31件（66%）← 閾値5件を超過（31件）
+・中立：8件（17%）
+
+■ 主な批判内容（Claudeによる要約）
+過去30分に急増したネガティブ投稿の主な内容：
+1. ログインできないという報告が多数（19件）
+2. アプリが落ちるという声（8件）
+3. 対応が遅いとの不満（4件）
+
+■ 代表的な投稿（上位3件）
+・「〇〇サービスまた落ちてる…仕事にならない」（RT: 42）
+・「ログイン画面から先に進めない。サポートに連絡したが繋がらない」（RT: 28）
+・「〇〇の障害、もう3回目。さすがに解約考える」（RT: 15）
+
+対応担当：@marketing-team @support-team
+エスカレーション：10件超過で電話連絡を発動予定</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">X Developer Portal（Basic以上のプラン）</span>
+      <span class="tool-chip">X API v2 Bearerトークン</span>
+      <span class="tool-chip">Slack Incoming Webhook URL</span>
+      <span class="tool-chip">Python（tweepy, anthropic）</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>X APIの認証情報を設定</strong>
+          <div class="code">X_BEARER_TOKEN=your_bearer_token
+SLACK_WEBHOOK_URL=https://hooks.slack.com/services/xxx/yyy/zzz
+ANTHROPIC_API_KEY=your_api_key</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>監視キーワードを定義する</strong>
+          <div class="code"><span class="c"># keywords.json</span>
+{
+  "brand_keywords": ["会社名", "商品名A", "商品名B", "#ブランドハッシュタグ"],
+  "alert_threshold": 5,
+  "check_interval_minutes": 30,
+  "alert_channel": "#緊急-炎上対応"
+}</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>感情分析スクリプトを作成（Claude Codeで生成）</strong>
+          <div class="code"><span class="c"># brand_monitor.py（抜粋）</span>
+import tweepy, anthropic, json, requests
+
+def analyze_sentiment(tweets: list[str]) -> dict:
+    client = anthropic.Anthropic()
+    text = "\n".join([f"- {t}" for t in tweets])
+    response = client.messages.create(
+        model="claude-haiku-4-5-20251001",
+        max_tokens=300,
+        messages=[{"role": "user", "content":
+            f"以下のツイートを感情分析してください。ポジティブ/ネガティブ/中立の件数と、\n"
+            f"ネガティブが多い場合は主な批判内容をまとめてください。\n\n{text}"}]
+    )
+    return response.content[0].text
+
+def alert_slack(message: str, channel: str):
+    requests.post(SLACK_WEBHOOK_URL, json={"text": message, "channel": channel})</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>閾値と通知条件を設定する</strong>
+          <p>30分以内にネガティブ投稿が5件を超えたら緊急通知、1時間で10件超えたらエスカレーション（電話・SMS）を発動するロジックを設定。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">5</div>
+        <div class="step-body">
+          <strong>cronまたはCloud Schedulerで定期実行</strong>
+          <div class="code"><span class="c"># 30分ごとに実行</span>
+*/30 * * * * python brand_monitor.py</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('brand', this)">ブランド名監視</button>
+      <button class="stab" onclick="showScenario('competitor', this)">競合監視</button>
+      <button class="stab" onclick="showScenario('keyword', this)">キーワード監視</button>
+    </div>
+
+    <div id="scenario-brand" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">ブランド名監視 — 感情分析プロンプト</div>
+        <pre>以下のX投稿リストを感情分析してください。
+
+【投稿リスト】
+（tweepyで取得したツイートテキストを貼り付け）
+
+分析してほしいこと：
+1. ポジティブ・ネガティブ・中立の件数と割合
+2. ネガティブ投稿の主な批判内容（上位3つのテーマにまとめる）
+3. 緊急度の判定（低/中/高/緊急）
+   ・緊急：製品不具合・サービス障害・法的リスク
+   ・高：大量クレーム・インフルエンサーによる批判
+   ・中：一般的な不満
+   ・低：軽微なネガティブ
+4. 推奨する初動対応（1〜2文で）
+
+JSON形式で出力してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-competitor" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">競合監視 — 競合への評価収集プロンプト</div>
+        <pre>以下の競合ブランドに関するX投稿を分析してください。
+
+監視対象：「競合社名A」「競合商品B」
+
+分析内容：
+1. 競合への感情傾向（ポジティブ/ネガティブ/中立の割合）
+2. よく挙げられている競合の強み（ポジティブ投稿から）
+3. よく挙げられている競合の弱点・不満（ネガティブ投稿から）
+4. 自社が差別化できるチャンスポイント
+5. 注目すべき投稿（RT数の多いもの上位3件）
+
+競合の弱点は自社の強みとして訴求できる可能性があるため、
+具体的な改善提案も含めてください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-keyword" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">キーワード監視 — 業界トレンド把握プロンプト</div>
+        <pre>以下のキーワードに関するX投稿を分析して業界トレンドをまとめてください。
+
+監視キーワード：「〇〇業界」「〇〇の課題」「〇〇 困った」
+
+分析内容：
+1. 最も多く言及されているトピックのランキング（上位10個）
+2. ユーザーが抱えている悩み・課題（自社製品のヒントになるもの）
+3. 急上昇中のトピック（先週比で急増しているワード）
+4. インフルエンサー（フォロワー5000以上）の主な発言傾向
+5. 自社コンテンツ・製品開発へのヒント（3点）
+
+週次でこの分析を実施し、Google Sheetsに蓄積してトレンド変化を追跡します。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>X API Bearerトークン・Slack Webhook URLなどの認証情報を .env ファイルに保存し、Gitに含まれないよう設定したか</li>
+        <li>監視キーワードに自社ブランドの表記ゆれ（略称・誤字・カタカナ・ひらがな）を含めたか</li>
+        <li>ネガティブ検知時の対応フロー（担当者・返答方針・承認プロセス）を事前にチームで決めたか</li>
+        <li>感情分析の精度をテストデータで確認し、誤検知の傾向を把握したか（皮肉・冗談の誤分類など）</li>
+        <li>Slackのアラートが正しいチャンネルに届くかテスト送信で確認したか</li>
+        <li>X APIの月次ツイート取得上限（無料プランで15万件）を把握し、過剰リクエストにならないよう設定したか</li>
+        <li>閾値（何件でアラートを発動するか）を実際の投稿量に合わせて調整したか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>X API v2は無料プランでは月15万ツイートの取得制限がある。有料プランへの移行が必要な場合がある。</li>
+        <li>感情分析の精度は100%ではない。皮肉・冗談・引用ツイートは誤分類されやすい。誤検知を減らすため閾値は実際の投稿量を見て調整する。</li>
+        <li>炎上と判断した場合の対応フロー（担当者・返答方針・承認プロセス）を事前に決めておく。システムはあくまで検知まで。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-ads-automation.html">Google/Meta広告 入札・除外KW自動化</a>
+        <span>★★★ 炎上時に広告を素早く停止する</span>
+      </div>
+      <div class="related-card">
+        <a href="06-ga4-report.html">GA4×BigQuery 週次・月次レポート</a>
+        <span>★★★ SNS流入とCV数の相関を確認</span>
+      </div>
+      <div class="related-card">
+        <a href="../05-support/01-email-reply.html">メール返信 自動生成</a>
+        <span>★ 炎上時のお問い合わせ対応を効率化</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer>中級編 設定ガイド — マーケティング・広告</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

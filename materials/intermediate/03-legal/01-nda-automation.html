@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>NDAドラフト→リスク評価→フォルダ格納自動化 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.warn { background: #fef3c7; border: 1px solid #fcd34d; border-radius: 8px; padding: 14px 18px; margin: 10px 0; font-size: 14px; color: #92400e; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 法務</div>
+  <h1>NDAをSlackにアップロードするだけでリスク評価・フォルダ格納・ファイルリネームまで自動化</h1>
+  <div class="meta">
+    <span class="badge lv3">★★★ 設定半日〜</span>
+    <span class="time-b">NDA処理を全自動化</span>
+    <span class="tool-b">Slack MCP</span>
+    <span class="tool-b">Google Drive</span>
+    <span class="tool-b">Claude Code</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      #法務チャンネルにNDAのPDFをアップロードするだけで、AIがテキストを抽出・リスク評価・問題条項の指摘を行い、結果をSlackに返信。同時にGoogle DriveへのNDA分類・フォルダ格納・ファイルリネームまで自動処理する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ NDAをSlackにアップロードすると以下のようなリスク評価レポートが自動返信される</p>
+    <div class="output-example">
+      <div class="output-header">Slack Bot の自動返信（NDAリスク評価レポート）</div>
+      <div class="output-body">
+        <pre>【NDAリスク評価レポート】
+ファイル：20260515_株式会社サンプル_NDA.pdf
+処理日時：2026-05-15 10:23
+
+━━━━━━━━━━━━━━━━━━━━━━━
+総合リスクレベル：🟡 中（要確認2件）
+━━━━━━━━━━━━━━━━━━━━━━━
+
+【評価項目】
+
+1. 秘密情報の定義　→ リスク：低
+   「口頭・書面を問わず開示された全情報」と広めだが、
+   「秘密である旨を明示した情報」に限定する除外規定あり。
+   問題なし。
+
+2. 秘密保持期間　→ リスク：中 ⚠️
+   契約終了後2年。自社標準（3年）を下回っている。
+   修正案：「契約終了後3年間」への変更を相手方に打診推奨。
+
+3. 損害賠償の上限設定　→ リスク：高 🔴
+   損害賠償上限の記載なし。無制限の賠償リスクあり。
+   修正案：「本契約に基づく損害賠償額は、過去12か月の
+   取引総額を上限とする」等の条項追加を強く推奨。
+
+4. 目的外使用の制限　→ リスク：低
+   「本取引の検討目的のみに使用」と明確に限定。
+   問題なし。
+
+5. 管轄裁判所・準拠法　→ リスク：中 ⚠️
+   管轄：大阪地方裁判所（相手方所在地）。
+   自社が東京の場合、費用・負担が生じる可能性。
+   修正案：「東京地方裁判所を第一審の専属的合意管轄」
+   への変更を相手方に確認推奨。
+
+6. 残存条項　→ リスク：低
+   契約終了後も秘密保持義務が存続する旨の記載あり。
+   問題なし。
+
+━━━━━━━━━━━━━━━━━━━━━━━
+格納先：Google Drive / NDA管理 / 2026年 / 検討中
+担当者：このレポートを確認し、法務担当者に転送してください。
+━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ このレポートはAIによる一次スクリーニングです。
+　最終判断は必ず法務担当者・顧問弁護士が行ってください。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意</h2>
+    <div class="warn">
+      AIによる法務文書の分析は参考情報です。最終的な法的判断は必ず弁護士・法務担当者が行ってください。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div>
+      <span class="tool-chip">Slack Bot（files:read、chat:write スコープ）</span>
+      <span class="tool-chip">Google Drive API（サービスアカウント）</span>
+      <span class="tool-chip">Python（PyPDF2、anthropic、slack-bolt）</span>
+      <span class="tool-chip">Claude Code</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>Slack Botを作成してイベント購読を設定</strong>
+          <p>api.slack.com → Event Subscriptions → <code>message.files</code> イベントを購読。<code>#法務</code>チャンネルのファイルアップロードを検知する。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>PDFテキスト抽出 + リスク評価スクリプトを生成</strong>
+          <div class="prompt">
+            <div class="prompt-label">Claude Codeへのプロンプト</div>
+            <pre>NDA自動処理システムを作成してください。
+
+処理フロー：
+1. SlackからPDFファイルを受け取る（slack-boltを使用）
+2. PyPDF2でテキストを抽出
+3. Claudeでリスク評価を実施
+   - 秘密保持期間（短すぎないか）
+   - 損害賠償の上限設定の有無
+   - 管轄裁判所（相手方有利でないか）
+   - 目的外使用の制限
+   - 残存条項（契約終了後の義務）
+4. リスクレベル（高/中/低）と具体的な問題点をSlackに返信
+5. Google DriveのNDA管理フォルダに保存
+   ファイル名：YYYYMMDD_相手方企業名_NDA.pdf</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>リスク評価プロンプトを定義する</strong>
+          <div class="code"><span class="c"># nda_review_prompt.txt</span>
+以下のNDA文書を法務的観点から審査してください。
+
+評価項目：
+1. 秘密情報の定義（広すぎないか・曖昧でないか）
+2. 秘密保持期間（契約終了後何年か）
+3. 損害賠償条項（上限額の設定・懲罰的賠償の有無）
+4. 目的の限定（明確に記載されているか）
+5. 管轄・準拠法（相手方有利でないか）
+6. 残存条項
+
+各項目をリスクレベル（高/中/低）で評価し、
+問題がある場合は具体的な条項番号と修正提案を記載してください。</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>スクリプトをサーバーにデプロイして常駐化</strong>
+          <p>VPSまたはCloud Run等にデプロイして24時間稼働させる。Slackへのアップロードを待ち受ける。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('receive',this)">NDA受領時</button>
+      <button class="stab" onclick="showScenario('draft',this)">NDAドラフト依頼時</button>
+      <button class="stab" onclick="showScenario('revise',this)">修正依頼時</button>
+    </div>
+
+    <div id="scenario-receive" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">NDA受領時 — 相手方から受け取ったNDAのリスク評価</div>
+        <pre>以下のNDA文書（相手方ドラフト）を審査してください。
+
+【評価観点】
+- 自社に不利な条項がないか
+- 秘密保持期間は自社標準（3年）以上か
+- 損害賠償上限の記載があるか
+- 管轄裁判所は自社所在地または東京か
+- 目的外使用の制限が明確か
+
+【NDA本文】
+（ここにテキスト抽出したNDA内容をペースト）
+
+各項目をリスクレベル（高/中/低）で評価し、
+修正交渉すべき条項と具体的な修正案を提示してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-draft" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">NDAドラフト依頼時 — 自社から提示するNDAを作成</div>
+        <pre>新規取引先向けのNDAドラフトを作成してください。
+
+【取引概要】
+相手方：〇〇株式会社
+取引内容：システム開発の打ち合わせ・仕様検討
+開示方向：相互開示（双方向）
+想定期間：6か月
+
+【自社の標準条件】
+- 秘密保持期間：契約終了後3年
+- 損害賠償上限：過去12か月の取引総額
+- 管轄：東京地方裁判所
+- 準拠法：日本法
+
+以上を踏まえ、自社に有利で、かつ相手方も受け入れやすい
+バランスの取れたNDAドラフトを作成してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-revise" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">修正依頼時 — 相手方から修正案が来た場合の差異確認</div>
+        <pre>自社ドラフトに対して相手方から修正案が届きました。
+変更箇所とリスクを確認してください。
+
+【自社ドラフト（主要条項）】
+第〇条（秘密保持期間）：契約終了後3年
+第〇条（損害賠償）：過去12か月の取引総額を上限
+第〇条（管轄）：東京地方裁判所
+
+【相手方修正案】
+（ここに相手方の修正テキストをペースト）
+
+確認事項：
+1. 変更された条項の一覧
+2. 各変更のリスク評価（高/中/低）
+3. 受け入れ可能か・再交渉が必要かの判断
+4. 代替案の提示（再交渉が必要な場合）</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>AIのリスク評価結果を法務担当者・顧問弁護士が確認したか</li>
+        <li>リスク「高」と判定された条項の対応方針を決定したか</li>
+        <li>相手方との管轄・準拠法の合意が取れているか（国内法か）</li>
+        <li>損害賠償上限が記載されており、自社に過剰な責任が生じないか</li>
+        <li>秘密情報の定義に口頭開示が含まれる場合、確認の手順を定めているか</li>
+        <li>NDAに個人情報の取り扱いに関する記載が必要かを確認したか</li>
+        <li>Google Driveへの格納先フォルダが正しいか（「締結済」と「検討中」を区別）</li>
+        <li>ファイル名（YYYYMMDD_企業名_NDA.pdf）が正しく付与されているか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>NDA文書には機密情報が含まれる。使用するClaude APIがデータ学習に使われない設定（API経由の利用）であることを確認する。</li>
+        <li>スキャンPDFはOCR処理が必要。pytesseractを追加するか、Adobe PDF APIを使うとテキスト精度が上がる。</li>
+        <li>AIの評価結果はあくまで一次スクリーニング。リスク「高」判定のNDAは必ず法務担当者・顧問弁護士が確認する運用フローを設定すること。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-contract-review.html">法務プレイブック参照 条項差異・リスク判定</a>
+        <span>★★★★ より高度なRAGシステムを構築する</span>
+      </div>
+      <div class="related-card">
+        <a href="03-renewal-alert.html">契約更新期限・自動更新条項 横断管理＋アラート</a>
+        <span>★★ 締結後の契約期限を一元管理する</span>
+      </div>
+      <div class="related-card">
+        <a href="../02-sales/01-proposal-draft.html">提案書・見積書の自動ドラフト</a>
+        <span>★ 営業書類の自動化にも応用できる</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer>中級編 設定ガイド — 法務</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

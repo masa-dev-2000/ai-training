@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>「議事録まとめて」スラッシュコマンド化・1発実行 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv2 { background: #fef9c3; color: #854d0e; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 総務・人事</div>
+  <h1>「議事録まとめて」スラッシュコマンド化・1発実行</h1>
+  <div class="meta">
+    <span class="badge lv2">★★ 設定1〜2時間</span>
+    <span class="time-b">テキストを貼って1コマンド</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">Skills</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      会議中にとったメモ・チャットログ・文字起こしテキストをClaude Codeに貼り付けて <code>/minutes</code> と入力するだけで、決定事項・アクションアイテム・次回会議日程が整理された議事録を1発で生成するスキルコマンドを設定する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ /minutes コマンドへの入力と出力の例</p>
+    <div class="output-example">
+      <div class="output-header">入力（会議メモを貼り付け）</div>
+      <div class="output-body">
+        <pre>/minutes
+
+参加：田中、山田、佐藤
+・新機能リリースは来月15日に決定
+・テスト担当は山田さん、来週金曜までに完了
+・競合調査を佐藤さんが2週間以内に実施
+・次回MTGは来週水曜10時〜</pre>
+      </div>
+    </div>
+    <div class="output-example">
+      <div class="output-header">出力（生成された議事録）</div>
+      <div class="output-body">
+        <pre># 開発チーム会議
+日時：2026年5月15日
+参加者：田中、山田、佐藤
+
+## 議題
+1. 新機能リリース日程の確認
+2. テスト・競合調査の担当割り
+
+## 決定事項
+- 新機能のリリース日を来月15日（2026年6月15日）に確定
+
+## アクションアイテム
+| 担当者 | タスク | 期限 |
+|--------|--------|------|
+| 山田さん | 新機能のテスト完了 | 来週金曜（5/22） |
+| 佐藤さん | 競合調査の実施 | 2週間以内（5/29） |
+
+## 次回会議
+来週水曜 10:00〜（場所・URLは引き続き同様）
+
+## 備考・懸案事項
+（なし）
+
+---
+Notionにも保存しますか？ [はい / いいえ]</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>議事録テンプレートを決める</strong>
+          <p>チーム・会議種別によってテンプレートを用意する。「週次MTG」「プロジェクト会議」「1on1」等で別テンプレートを作ると用途に合った議事録が生成される。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>スキルファイルを作成する</strong>
+          <div class="code"><span class="c"># .claude/skills/minutes.md</span>
+---
+name: minutes
+description: 会議メモから議事録を生成する
+---
+
+以下の手順で議事録を生成してください：
+
+1. ユーザーから会議の内容（メモ・チャット・文字起こし）を受け取る
+2. 以下のフォーマットで議事録をMarkdownで出力する：
+
+---
+# 会議名（メモから推定）
+日時：〇〇年〇月〇日
+参加者：〇〇（メモから抽出）
+
+## 議題
+1. （一覧）
+
+## 決定事項
+- 〇〇を△△に変更することになった
+- □□プロジェクトは来月末を目標に進める
+
+## アクションアイテム
+| 担当者 | タスク | 期限 |
+|--------|--------|------|
+| 〇〇さん | △△の調査 | 〇月〇日 |
+
+## 次回会議
+日時・場所（言及があれば）
+
+## 備考・懸案事項
+---
+
+3. 生成後「Notionにも保存しますか？」と確認する</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>実行してみる</strong>
+          <div class="prompt">
+            <div class="prompt-label">使い方</div>
+            <pre>/minutes
+
+（以下に会議メモをペースト）
+参加：田中、山田、佐藤
+・新機能リリースは来月15日に決定
+・テスト担当は山田さん、来週金曜までに完了
+・競合調査を佐藤さんが2週間以内に実施
+・次回MTGは来週水曜10時〜</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>Notion連携を追加する（任意）</strong>
+          <p>Notion MCPをClaude Codeに追加すると、議事録生成後に「Notionに保存しますか？」の確認を経てNotionデータベースに自動保存できる。</p>
+          <div class="code"><span class="c"># .claude/settings.jsonにNotion MCPを追加</span>
+{
+  "mcpServers": {
+    "notion": {
+      "command": "npx",
+      "args": ["-y", "@modelcontextprotocol/server-notion"],
+      "env": { "NOTION_API_KEY": "secret_xxx" }
+    }
+  }
+}</div>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('standard',this)">標準議事録</button>
+      <button class="stab" onclick="showScenario('action',this)">アクションアイテム重視</button>
+      <button class="stab" onclick="showScenario('decision',this)">決定事項のみ抽出</button>
+    </div>
+    <div id="scenario-standard" class="scenario-content active">
+      <div class="output-example">
+        <div class="output-header">標準議事録 — スキルファイル設定例</div>
+        <div class="output-body">
+          <pre># .claude/skills/minutes.md（標準版）
+---
+name: minutes
+description: 会議メモから標準フォーマットの議事録を生成
+---
+
+以下のフォーマットで議事録を生成してください：
+
+# 会議名（推定）
+日時：〇〇年〇月〇日
+参加者：（抽出）
+
+## 議題 / ## 決定事項 / ## アクションアイテム（表）
+## 次回会議 / ## 備考・懸案事項
+
+生成後「Notionに保存しますか？」と確認する</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-action" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">アクションアイテム重視 — スキルファイル設定例</div>
+        <div class="output-body">
+          <pre># .claude/skills/minutes-action.md（アクション重視版）
+---
+name: minutes-action
+description: 会議メモからアクションアイテムを優先的に抽出
+---
+
+以下の点を最優先で抽出してください：
+
+1. アクションアイテム（担当者・タスク・期限・優先度）
+2. 決定事項（1行1件）
+3. 懸案事項（未決定・要フォローアップ）
+
+フォーマット：
+## ⚡ アクションアイテム（優先度順）
+| 優先度 | 担当者 | タスク | 期限 |
+最後にSlackの @担当者 へのリマインダー文章を自動生成する</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-decision" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">決定事項のみ抽出 — スキルファイル設定例</div>
+        <div class="output-body">
+          <pre># .claude/skills/minutes-decision.md（決定事項抽出版）
+---
+name: minutes-decision
+description: 会議メモから決定事項のみをコンパクトに抽出
+---
+
+会議の決定事項のみを抽出して、以下のフォーマットで出力してください：
+
+## ✅ 決定事項（YYYY/MM/DD 会議）
+1. （決定内容）— 決定者：〇〇
+2. （決定内容）— 決定者：〇〇
+...
+
+決定事項が見つからない場合は「本会議では新たな決定事項はありませんでした」と記載する
+出力はコピーして即メール・Slackに貼れる形式にすること</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>アクションアイテムの担当者名・期限がメモに明記されているか（推測の場合は要確認）</li>
+        <li>決定事項の言い回しが原文のニュアンスを正確に反映しているか</li>
+        <li>参加者リストに抜けがないか（文字起こしから推定している場合は特に要確認）</li>
+        <li>個人名を含むメモをClaude.aiに貼る場合、プロジェクト設定でデータ保持をオフにしているか</li>
+        <li>Notion保存後、ページのアクセス権限が適切に設定されているか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>アクションアイテムの担当者名と期限は、メモに明記されていない場合AIが推測することがある。送信前に必ず確認する。</li>
+        <li>会議参加者の個人名が含まれる場合、Claudeのプロジェクト設定でデータ保持をオフにして使う。</li>
+        <li>決定事項の言い回しはAIが整形するため、原文のニュアンスが変わることがある。重要な決定は原文と照合する。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-zoom-minutes.html">Zoom録画→構造化議事録→Slack/Notion自動投稿</a>
+        <span>★★★ 録音から全自動で議事録を生成</span>
+      </div>
+      <div class="related-card">
+        <a href="05-faq-update.html">社内FAQ・ナレッジベースの自動更新</a>
+        <span>★★★ 繰り返し質問をFAQ化する</span>
+      </div>
+      <div class="related-card">
+        <a href="../05-support/01-email-reply.html">問い合わせメール→トーン別返信案自動生成</a>
+        <span>★ 今日から — 会議後のメール連絡も効率化</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer>中級編 設定ガイド — 総務・人事</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

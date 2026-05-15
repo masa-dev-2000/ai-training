@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>中級編 自動化設定ガイド 一覧</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #f8fafc; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; }
+a:hover { text-decoration: underline; }
+
+/* ── ヘッダー ── */
+.page-header { background: linear-gradient(135deg, #0f172a 0%, #1e3a5f 100%); color: #fff; padding: 40px 32px 32px; }
+.page-header h1 { font-size: 26px; font-weight: 700; margin-bottom: 6px; letter-spacing: -0.3px; }
+.page-header p { color: #94a3b8; font-size: 14px; margin-bottom: 20px; }
+.stats-row { display: flex; gap: 24px; flex-wrap: wrap; }
+.stat { display: flex; flex-direction: column; align-items: flex-start; }
+.stat strong { font-size: 28px; font-weight: 700; color: #60a5fa; line-height: 1; }
+.stat span { font-size: 12px; color: #94a3b8; margin-top: 2px; }
+
+/* ── 凡例 ── */
+.legend { display: flex; flex-wrap: wrap; gap: 10px 20px; padding: 12px 32px; background: #1e293b; }
+.legend-item { display: flex; align-items: center; gap: 6px; font-size: 12px; color: #cbd5e1; }
+.badge { display: inline-flex; align-items: center; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 700; white-space: nowrap; }
+.lv1 { background: #dcfce7; color: #166534; }
+.lv2 { background: #fef9c3; color: #854d0e; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.lv4 { background: #f3e8ff; color: #6b21a8; }
+
+/* ── フィルターバー ── */
+.filter-bar { position: sticky; top: 0; z-index: 100; background: #fff; border-bottom: 1px solid #e2e8f0; padding: 10px 32px; display: flex; gap: 12px; align-items: center; flex-wrap: wrap; box-shadow: 0 1px 4px rgba(0,0,0,0.06); }
+.search-wrap { position: relative; flex: 1; min-width: 200px; max-width: 320px; }
+.search-wrap input { width: 100%; padding: 7px 12px 7px 34px; border: 1px solid #e2e8f0; border-radius: 8px; font-size: 13px; color: #0f172a; outline: none; background: #f8fafc; }
+.search-wrap input:focus { border-color: #3b82f6; background: #fff; }
+.search-wrap svg { position: absolute; left: 10px; top: 50%; transform: translateY(-50%); color: #94a3b8; }
+.filter-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+.tab { padding: 5px 14px; border: 1px solid #e2e8f0; border-radius: 20px; font-size: 12px; font-weight: 600; background: #fff; cursor: pointer; color: #64748b; transition: all 0.15s; }
+.tab:hover { background: #f1f5f9; }
+.tab.active { background: #0f172a; color: #fff; border-color: #0f172a; }
+.tab[data-filter="lv1"].active { background: #166534; border-color: #166534; }
+.tab[data-filter="lv2"].active { background: #854d0e; border-color: #854d0e; }
+.tab[data-filter="lv3"].active { background: #991b1b; border-color: #991b1b; }
+.tab[data-filter="lv4"].active { background: #6b21a8; border-color: #6b21a8; }
+#resultCount { font-size: 12px; color: #94a3b8; margin-left: auto; white-space: nowrap; }
+
+/* ── コンテンツエリア ── */
+.content { max-width: 960px; margin: 0 auto; padding: 28px 32px; }
+.category-section { margin-bottom: 40px; }
+.category-header { display: flex; align-items: center; gap: 10px; margin-bottom: 16px; }
+.category-title { font-size: 16px; font-weight: 700; color: #0f172a; }
+.category-icon { font-size: 20px; }
+.category-count { font-size: 12px; color: #94a3b8; background: #f1f5f9; padding: 2px 8px; border-radius: 10px; }
+.method-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(290px, 1fr)); gap: 12px; }
+.method-card { border: 1px solid #e2e8f0; border-radius: 10px; padding: 16px; background: #fff; transition: box-shadow 0.15s, transform 0.1s; display: flex; flex-direction: column; gap: 8px; }
+.method-card:hover { box-shadow: 0 4px 12px rgba(0,0,0,0.1); transform: translateY(-1px); }
+.card-title a { color: #0f172a; font-weight: 600; font-size: 14px; line-height: 1.4; display: block; }
+.card-title a:hover { color: #2563eb; text-decoration: none; }
+.card-desc { font-size: 12px; color: #64748b; line-height: 1.5; }
+.card-meta { display: flex; gap: 5px; flex-wrap: wrap; align-items: center; margin-top: auto; padding-top: 4px; border-top: 1px solid #f1f5f9; }
+.time-chip { background: #e0f2fe; color: #075985; font-size: 11px; padding: 2px 8px; border-radius: 10px; font-weight: 600; }
+.tool-chip { background: #f1f5f9; color: #475569; font-size: 11px; padding: 2px 8px; border-radius: 10px; border: 1px solid #e2e8f0; }
+.card-hidden { display: none !important; }
+.category-hidden { display: none !important; }
+
+/* ── 空状態 ── */
+.empty-state { text-align: center; padding: 60px 32px; color: #94a3b8; display: none; }
+.empty-state svg { margin-bottom: 12px; opacity: 0.4; }
+.empty-state p { font-size: 14px; }
+
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #e2e8f0; margin-top: 20px; }
+</style>
+</head>
+<body>
+
+<div class="page-header">
+  <h1>中級編 自動化設定ガイド</h1>
+  <p>Claude Code × AI で実現する業務自動化 — 設定手順・コード・プロンプト付き</p>
+  <div class="stats-row">
+    <div class="stat"><strong>41</strong><span>手法</span></div>
+    <div class="stat"><strong>9</strong><span>カテゴリ</span></div>
+    <div class="stat"><strong>4</strong><span>難易度レベル</span></div>
+  </div>
+</div>
+
+<div class="legend">
+  <span class="legend-item"><span class="badge lv1">★ 今日から</span>Claude.ai だけで即実践</span>
+  <span class="legend-item"><span class="badge lv2">★★ 1〜2時間</span>MCP・APIキー設定あり</span>
+  <span class="legend-item"><span class="badge lv3">★★★ 半日〜</span>n8n・Playwright等の構築</span>
+  <span class="legend-item"><span class="badge lv4">★★★★ エンジニア向け</span>VPS・SDK・高度な統合</span>
+</div>
+
+<div class="filter-bar" id="filterBar">
+  <div class="search-wrap">
+    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <input type="search" id="searchInput" placeholder="手法・ツールを検索…" autocomplete="off">
+  </div>
+  <div class="filter-tabs">
+    <button class="tab active" data-filter="all">すべて</button>
+    <button class="tab" data-filter="lv1">★ 今日から</button>
+    <button class="tab" data-filter="lv2">★★ 1〜2時間</button>
+    <button class="tab" data-filter="lv3">★★★ 半日〜</button>
+    <button class="tab" data-filter="lv4">★★★★ 上級</button>
+  </div>
+  <span id="resultCount">41件</span>
+</div>
+
+<div class="content">
+
+  <!-- ── 1. マーケティング・広告 ── -->
+  <div class="category-section" data-category="marketing">
+    <div class="category-header">
+      <span class="category-icon">📣</span>
+      <span class="category-title">マーケティング・広告</span>
+      <span class="category-count">7手法</span>
+    </div>
+    <div class="method-grid">
+      <div class="method-card" data-level="lv2" data-keywords="広告 google meta csv 監査 チェック claude code">
+        <div class="card-title"><a href="01-marketing/01-ad-audit.html">広告監査190項目チェック</a></div>
+        <div class="card-desc">Google/Meta広告のパフォーマンスCSVを取得し、190項目のチェックリストをAIが自動評価。週次レポートをcronで自動送信。</div>
+        <div class="card-meta"><span class="badge lv2">★★</span><span class="time-chip">4〜8時間 → 5分</span><span class="tool-chip">Claude Code</span><span class="tool-chip">Python</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="google meta 広告 入札 除外 キーワード クリエイティブ mcp api">
+        <div class="card-title"><a href="01-marketing/02-ads-automation.html">Google/Meta広告 入札・除外KW・クリエイティブ自動化</a></div>
+        <div class="card-desc">MCP経由で広告APIを呼び出し、入札調整・除外キーワード追加・パフォーマンス低下クリエイティブの停止を自動化。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">MCP</span><span class="tool-chip">Ads API</span></div>
+      </div>
+      <div class="method-card" data-level="lv1" data-keywords="sns x twitter linkedin instagram 投稿 一括 claude.ai">
+        <div class="card-title"><a href="01-marketing/03-sns-batch.html">SNS投稿文9本一括生成（X/LinkedIn/Instagram）</a></div>
+        <div class="card-desc">1つのネタからX・LinkedIn・Instagramの文字数・トーンに合わせた投稿文を1発で9本生成。コピペだけで完了。</div>
+        <div class="card-meta"><span class="badge lv1">★</span><span class="time-chip">今日から</span><span class="tool-chip">Claude.ai</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="seo 競合 hタグ 記事 構成 beautifulsoup スクレイピング">
+        <div class="card-title"><a href="01-marketing/04-seo-competitor.html">SEO競合調査 Hタグ抽出→記事構成案自動生成</a></div>
+        <div class="card-desc">競合サイトのHタグ・見出し構造を自動取得し、上位表示を狙える記事構成案をAIが生成する。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">Claude Code</span><span class="tool-chip">Python</span></div>
+      </div>
+      <div class="method-card" data-level="lv2" data-keywords="youtube 動画 ブログ sns サムネ 一括 文字起こし">
+        <div class="card-title"><a href="01-marketing/05-youtube-to-content.html">YouTube動画→ブログ+SNS+サムネ一括生成</a></div>
+        <div class="card-desc">YouTube動画の文字起こしを自動取得し、ブログ記事・3本のSNS投稿・サムネイルアイデアを一括生成。</div>
+        <div class="card-meta"><span class="badge lv2">★★</span><span class="time-chip">設定1〜2時間</span><span class="tool-chip">YouTube API</span><span class="tool-chip">Claude Code</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="ga4 bigquery レポート 週次 月次 定期 slack">
+        <div class="card-title"><a href="01-marketing/06-ga4-report.html">GA4×BigQuery 週次・月次広告レポート自動生成</a></div>
+        <div class="card-desc">BigQueryでGA4データを集計し、AIコメント付きの週次・月次レポートを自動生成してSlackへ投稿。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">3〜5時間 → 7分</span><span class="tool-chip">BigQuery</span><span class="tool-chip">Slack</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="sns ブランド 評判 監視 slack 緊急 通知 twitter x">
+        <div class="card-title"><a href="01-marketing/07-brand-monitoring.html">SNSブランド評判監視→Slack緊急通知</a></div>
+        <div class="card-desc">X(Twitter)でブランド名を定期監視し、ネガティブ投稿をAIが検知したらSlackに即時アラートを送信。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">Slack MCP</span><span class="tool-chip">tweepy</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 2. 営業 ── -->
+  <div class="category-section" data-category="sales">
+    <div class="category-header">
+      <span class="category-icon">💼</span>
+      <span class="category-title">営業</span>
+      <span class="category-count">5手法</span>
+    </div>
+    <div class="method-grid">
+      <div class="method-card" data-level="lv2" data-keywords="提案書 顧客 ドラフト 自動 skill claude code">
+        <div class="card-title"><a href="02-sales/01-proposal-draft.html">顧客情報→提案書ドラフト自動生成</a></div>
+        <div class="card-desc">会社情報と過去の商談メモを渡すだけで、顧客の課題に合わせた提案書のドラフトをスキルコマンドで生成。</div>
+        <div class="card-meta"><span class="badge lv2">★★</span><span class="time-chip">設定1〜2時間</span><span class="tool-chip">Claude Code</span><span class="tool-chip">Skills</span></div>
+      </div>
+      <div class="method-card" data-level="lv2" data-keywords="見積書 pdf 消費税 源泉 スキル コマンド skill">
+        <div class="card-title"><a href="02-sales/02-quote-pdf.html">「見積書作って」でPDF見積書を出力</a></div>
+        <div class="card-desc">/quote スキルに品目・金額を入力するだけで、源泉・消費税を自動計算してPDF見積書を生成・保存。</div>
+        <div class="card-meta"><span class="badge lv2">★★</span><span class="time-chip">設定1〜2時間</span><span class="tool-chip">Skills</span><span class="tool-chip">WeasyPrint</span></div>
+      </div>
+      <div class="method-card" data-level="lv2" data-keywords="slack 営業 チャンネル 要約 週次 mcp">
+        <div class="card-title"><a href="02-sales/03-slack-summary.html">先週のsalesチャンネル議論を自動要約</a></div>
+        <div class="card-desc">Slack MCP経由でsalesチャンネルを自動取得し、商談状況・課題・次のアクションをまとめて毎週月曜送信。</div>
+        <div class="card-meta"><span class="badge lv2">★★</span><span class="time-chip">設定1〜2時間</span><span class="tool-chip">Slack MCP</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="crm hubspot 商談 メモ 自動 入力 次 アクション">
+        <div class="card-title"><a href="02-sales/04-crm-auto-input.html">商談メモ→CRM自動入力＋次アクション提案</a></div>
+        <div class="card-desc">商談メモをHubSpot CRMに自動入力し、過去の商談履歴をもとに次のアクションを提案する。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">HubSpot API</span><span class="tool-chip">Skills</span></div>
+      </div>
+      <div class="method-card" data-level="lv2" data-keywords="競合 調査 レポート 比較 機能 価格 差別化">
+        <div class="card-title"><a href="02-sales/05-competitor-report.html">競合調査レポートを30分で自動生成</a></div>
+        <div class="card-desc">競合他社の公開情報をもとに、機能比較・価格・差別化ポイントを整理した調査レポートを自動生成。</div>
+        <div class="card-meta"><span class="badge lv2">★★</span><span class="time-chip">設定1〜2時間</span><span class="tool-chip">Claude Code</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 3. 法務 ── -->
+  <div class="category-section" data-category="legal">
+    <div class="category-header">
+      <span class="category-icon">📋</span>
+      <span class="category-title">法務</span>
+      <span class="category-count">3手法</span>
+    </div>
+    <div class="method-grid">
+      <div class="method-card" data-level="lv3" data-keywords="nda 秘密保持 リスク 評価 slack pdf 格納">
+        <div class="card-title"><a href="03-legal/01-nda-automation.html">NDAドラフト→リスク評価→フォルダ格納自動化</a></div>
+        <div class="card-desc">SlackにNDAのPDFを投稿するだけで、5つのリスク観点を自動評価し所定フォルダに格納。Slack Botで完結。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">Slack Bot</span><span class="tool-chip">PyPDF2</span></div>
+      </div>
+      <div class="method-card" data-level="lv4" data-keywords="法務 プレイブック 契約 条項 リスク ベクトル db rag">
+        <div class="card-title"><a href="03-legal/02-contract-review.html">法務プレイブック参照 条項差異・リスク瞬時判定</a></div>
+        <div class="card-desc">社内法務プレイブックをベクトルDBに格納し、送られてきた契約書の各条項と自動比較してリスクを判定。</div>
+        <div class="card-meta"><span class="badge lv4">★★★★</span><span class="time-chip">エンジニア向け</span><span class="tool-chip">ベクトルDB</span><span class="tool-chip">RAG</span></div>
+      </div>
+      <div class="method-card" data-level="lv2" data-keywords="契約 更新 期限 アラート メール google スプレッドシート">
+        <div class="card-title"><a href="03-legal/03-renewal-alert.html">契約更新期限・自動更新条項 横断管理＋アラート</a></div>
+        <div class="card-desc">全契約の更新期限をスプレッドシートで一元管理し、期限60日前からメールアラートを毎朝自動送信。</div>
+        <div class="card-meta"><span class="badge lv2">★★</span><span class="time-chip">設定1〜2時間</span><span class="tool-chip">Google Sheets</span><span class="tool-chip">Python</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 4. 経理・バックオフィス ── -->
+  <div class="category-section" data-category="accounting">
+    <div class="category-header">
+      <span class="category-icon">🧾</span>
+      <span class="category-title">経理・バックオフィス</span>
+      <span class="category-count">6手法</span>
+    </div>
+    <div class="method-grid">
+      <div class="method-card" data-level="lv1" data-keywords="請求書 源泉 消費税 インボイス 下書き claude.ai">
+        <div class="card-title"><a href="04-accounting/01-invoice-draft.html">「請求書を出して」で源泉・消費税自動判定し下書き生成</a></div>
+        <div class="card-desc">取引先名と金額を伝えるだけで源泉徴収額・消費税を自動計算し、インボイス対応の請求書下書きを生成。</div>
+        <div class="card-meta"><span class="badge lv1">★</span><span class="time-chip">今日から</span><span class="tool-chip">Claude.ai</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="freee api 仕訳 異常 検出 レポート 経理">
+        <div class="card-title"><a href="04-accounting/02-journal-anomaly.html">freee API連携 仕訳異常値検出・レポート出力</a></div>
+        <div class="card-desc">freee APIで仕訳データを取得し、統計的な異常値・勘定科目の逸脱をAIが検出してレポートを生成。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">freee API</span><span class="tool-chip">pandas</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="月次 決算 前払 減価償却 社保 チェック 漏れ">
+        <div class="card-title"><a href="04-accounting/03-monthly-close.html">月次決算チェック 前払費用・減価償却・社保漏れ自動指摘</a></div>
+        <div class="card-desc">前払費用・減価償却・社会保険の計上漏れを自動チェックし、担当者へアラートと修正提案を送信。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">会計API</span><span class="tool-chip">Claude Code</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="発注書 請求書 照合 差異 ocr pdf 品目 数量">
+        <div class="card-title"><a href="04-accounting/04-po-invoice-match.html">発注書 vs 請求書 品目・数量・税額の差異自動検出</a></div>
+        <div class="card-desc">PDFの発注書と請求書をOCRで読み込み、品目・数量・金額の3方向照合を行い差異を自動検出。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">pdfplumber</span><span class="tool-chip">Claude Code</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="請求書 確認 gmail drive 効率化 承認">
+        <div class="card-title"><a href="04-accounting/05-invoice-review.html">請求書確認作業の大幅効率化（4.5時間→35分）</a></div>
+        <div class="card-desc">GmailとGoogle Driveを連携し、受領した請求書を自動仕分け・内容確認・承認フローで処理。87%の時間削減を実現。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">87%削減</span><span class="tool-chip">Gmail</span><span class="tool-chip">Google Drive</span></div>
+      </div>
+      <div class="method-card" data-level="lv2" data-keywords="インボイス 適格 番号 国税庁 api 検証 一括">
+        <div class="card-title"><a href="04-accounting/06-invoice-number-verify.html">適格請求書番号を国税庁APIで一括検証</a></div>
+        <div class="card-desc">取引先一覧の登録番号を国税庁公表システムAPIで一括検証し、未登録・無効な番号を自動検出してレポート出力。</div>
+        <div class="card-meta"><span class="badge lv2">★★</span><span class="time-chip">設定1〜2時間</span><span class="tool-chip">国税庁API</span><span class="tool-chip">Python</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 5. カスタマーサポート ── -->
+  <div class="category-section" data-category="support">
+    <div class="category-header">
+      <span class="category-icon">📬</span>
+      <span class="category-title">カスタマーサポート</span>
+      <span class="category-count">3手法</span>
+    </div>
+    <div class="method-grid">
+      <div class="method-card" data-level="lv1" data-keywords="メール 返信 トーン 丁寧 問い合わせ claude.ai">
+        <div class="card-title"><a href="05-support/01-email-reply.html">問い合わせメール→トーン別返信案3種を自動生成</a></div>
+        <div class="card-desc">受信したお問い合わせメールを貼り付けるだけで丁寧・標準・簡潔の3種類の返信案を即座に生成。</div>
+        <div class="card-meta"><span class="badge lv1">★</span><span class="time-chip">15分 → 3分</span><span class="tool-chip">Claude.ai</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="slack ボット faq 自動返信 エスカレーション bot">
+        <div class="card-title"><a href="05-support/02-slack-bot.html">Slack自動返信ボット FAQ一次対応→エスカレーション</a></div>
+        <div class="card-desc">SlackのFAQを参照して自動返信し、AIで解決できない場合は担当者チャンネルにエスカレーションを自動実行。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">Slack Bolt</span><span class="tool-chip">Claude API</span></div>
+      </div>
+      <div class="method-card" data-level="lv4" data-keywords="line パーソナライズ メッセージ 自動 送信 mcp 顧客">
+        <div class="card-title"><a href="05-support/03-line-personalized.html">LINE MCPでパーソナライズメッセージ自動送信</a></div>
+        <div class="card-desc">顧客データと購買履歴をもとに個人に最適化したLINEメッセージを生成し、最適なタイミングで自動送信。</div>
+        <div class="card-meta"><span class="badge lv4">★★★★</span><span class="time-chip">エンジニア向け</span><span class="tool-chip">LINE MCP</span><span class="tool-chip">Claude API</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 6. 総務・人事 ── -->
+  <div class="category-section" data-category="hr">
+    <div class="category-header">
+      <span class="category-icon">🏢</span>
+      <span class="category-title">総務・人事</span>
+      <span class="category-count">5手法</span>
+    </div>
+    <div class="method-grid">
+      <div class="method-card" data-level="lv4" data-keywords="面接 ai 採点 質問 採用 評価 フォーム">
+        <div class="card-title"><a href="06-hr/01-ai-interviewer.html">AI面接官 リアルタイム質問・回答収集・採点</a></div>
+        <div class="card-desc">評価基準を設定したAI面接フォームで候補者に質問し、回答を自動採点して候補者比較レポートを生成。</div>
+        <div class="card-meta"><span class="badge lv4">★★★★</span><span class="time-chip">エンジニア向け</span><span class="tool-chip">Claude Code</span><span class="tool-chip">Flask</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="zoom 録画 議事録 文字起こし slack notion webhook">
+        <div class="card-title"><a href="06-hr/02-zoom-minutes.html">Zoom録画→構造化議事録→Slack/Notion自動投稿</a></div>
+        <div class="card-desc">Zoom録画完了のWebhookをトリガーに、AssemblyAIで文字起こし→Claudeが構造化議事録を生成してNotionに自動投稿。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">Zoom API</span><span class="tool-chip">AssemblyAI</span></div>
+      </div>
+      <div class="method-card" data-level="lv2" data-keywords="議事録 スラッシュ コマンド skill notion mcp">
+        <div class="card-title"><a href="06-hr/03-minutes-command.html">「議事録まとめて」スラッシュコマンド化・1発実行</a></div>
+        <div class="card-desc">/minutes コマンドにテキストを渡すだけで、決定事項・アクション・担当者・期限を整理した議事録を生成してNotionに保存。</div>
+        <div class="card-meta"><span class="badge lv2">★★</span><span class="time-chip">設定1〜2時間</span><span class="tool-chip">Skills</span><span class="tool-chip">Notion MCP</span></div>
+      </div>
+      <div class="method-card" data-level="lv4" data-keywords="マニュアル 操作 録画 ナレーション whisper ffmpeg">
+        <div class="card-title"><a href="06-hr/04-manual-generation.html">操作録画＋ナレーション→Markdownマニュアル自動生成</a></div>
+        <div class="card-desc">画面録画とナレーションをFFmpeg+Whisperで処理し、スクリーンショット付きの手順書を自動生成。</div>
+        <div class="card-meta"><span class="badge lv4">★★★★</span><span class="time-chip">エンジニア向け</span><span class="tool-chip">Whisper</span><span class="tool-chip">FFmpeg</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="faq ナレッジ 更新 自動 notion 問い合わせ 閾値">
+        <div class="card-title"><a href="06-hr/05-faq-update.html">社内FAQ・ナレッジベースの自動更新</a></div>
+        <div class="card-desc">問い合わせ履歴を分析し、3回以上出現した新しいFAQを候補として抽出。承認フローを経てNotionを自動更新。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">Claude Code</span><span class="tool-chip">Notion MCP</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 7. 開発・エンジニアリング ── -->
+  <div class="category-section" data-category="engineering">
+    <div class="category-header">
+      <span class="category-icon">🛠</span>
+      <span class="category-title">開発・エンジニアリング</span>
+      <span class="category-count">5手法</span>
+    </div>
+    <div class="method-grid">
+      <div class="method-card" data-level="lv3" data-keywords="pr レビュー jira confluence github mcp コード">
+        <div class="card-title"><a href="07-engineering/01-pr-review.html">PRのURL渡すだけでJira/Confluence参照コードレビュー</a></div>
+        <div class="card-desc">PRのURLを渡すだけでJiraの要件とConfluenceの設計書を参照した、コンテキスト豊富なコードレビューを実行。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">週6時間削減</span><span class="tool-chip">GitHub MCP</span><span class="tool-chip">Atlassian</span></div>
+      </div>
+      <div class="method-card" data-level="lv4" data-keywords="github issue claude メンション 実装 pr 自動 actions">
+        <div class="card-title"><a href="07-engineering/02-github-issue-pr.html">GitHub Issueに@claudeメンション→実装→PR自動作成</a></div>
+        <div class="card-desc">IssueにClaudeをメンションするとGitHub Actionsが起動し、実装からPR作成まで全自動で処理する。</div>
+        <div class="card-meta"><span class="badge lv4">★★★★</span><span class="time-chip">エンジニア向け</span><span class="tool-chip">GitHub Actions</span><span class="tool-chip">Claude API</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="n8n ワークフロー json 自然言語 生成 インポート api">
+        <div class="card-title"><a href="07-engineering/03-n8n-workflow.html">n8nワークフローを自然言語→JSON自動生成→即インポート</a></div>
+        <div class="card-desc">「毎朝9時にSlackで天気を送って」と書くだけでn8nワークフローのJSONを生成し、APIで即座にインポート。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">n8n API</span><span class="tool-chip">Claude Code</span></div>
+      </div>
+      <div class="method-card" data-level="lv4" data-keywords="ui レビュー playwright スクショ ux 分析 コマンド">
+        <div class="card-title"><a href="07-engineering/04-ui-review.html">/ui-reviewコマンドでブラウザ遷移→スクショ→AI分析</a></div>
+        <div class="card-desc">URLを渡すとPlaywrightが自動でブラウザを操作し、スクリーンショットをAIが分析してUX改善提案を生成。</div>
+        <div class="card-meta"><span class="badge lv4">★★★★</span><span class="time-chip">35分 → 1発</span><span class="tool-chip">Playwright</span><span class="tool-chip">Claude Vision</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="ドキュメント スクリーンショット 更新 playwright github actions pr">
+        <div class="card-title"><a href="07-engineering/05-doc-screenshot.html">ドキュメントのスクリーンショット更新を全自動化</a></div>
+        <div class="card-desc">UIを変更するとGitHub Actionsが自動でPlaywrightを起動し、ドキュメントのスクリーンショットを更新してPRを作成。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">Playwright</span><span class="tool-chip">GitHub Actions</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 8. コンテンツ制作 ── -->
+  <div class="category-section" data-category="content">
+    <div class="category-header">
+      <span class="category-icon">🎬</span>
+      <span class="category-title">コンテンツ制作</span>
+      <span class="category-count">4手法</span>
+    </div>
+    <div class="method-grid">
+      <div class="method-card" data-level="lv4" data-keywords="remotion 動画 react jsx mp4 プログラマブル">
+        <div class="card-title"><a href="08-content/01-video-generation.html">Remotion×Claude Codeでプロンプト1発・1分で動画生成</a></div>
+        <div class="card-desc">動画の内容をプロンプトで伝えるだけでReactコンポーネントを自動生成し、ロゴアニメ・グラフ動画をMP4出力。</div>
+        <div class="card-meta"><span class="badge lv4">★★★★</span><span class="time-chip">エンジニア向け</span><span class="tool-chip">Remotion</span><span class="tool-chip">React</span></div>
+      </div>
+      <div class="method-card" data-level="lv3" data-keywords="画面録画 字幕 キャプション 矢印 オーバーレイ ffmpeg whisper">
+        <div class="card-title"><a href="08-content/02-screen-caption.html">画面録画→キャプション・矢印オーバーレイ動画自動生成</a></div>
+        <div class="card-desc">画面録画にWhisperで字幕を生成し、FFmpegで矢印・ハイライトを重ねた解説動画を自動作成。</div>
+        <div class="card-meta"><span class="badge lv3">★★★</span><span class="time-chip">設定半日〜</span><span class="tool-chip">FFmpeg</span><span class="tool-chip">Whisper</span></div>
+      </div>
+      <div class="method-card" data-level="lv4" data-keywords="記事 一貫性 矛盾 ベクトル db rag langchain chroma ブログ">
+        <div class="card-title"><a href="08-content/03-article-consistency.html">過去記事DBを参照し矛盾チェック→新記事執筆自動化</a></div>
+        <div class="card-desc">過去記事をベクトルDBに格納し、新記事作成時に矛盾・重複・古い情報を自動検出して整合性のとれた記事を生成。</div>
+        <div class="card-meta"><span class="badge lv4">★★★★</span><span class="time-chip">エンジニア向け</span><span class="tool-chip">ChromaDB</span><span class="tool-chip">LangChain</span></div>
+      </div>
+      <div class="method-card" data-level="lv2" data-keywords="事業計画書 提案資料 マニュアル ドラフト skill コマンド">
+        <div class="card-title"><a href="08-content/04-document-draft.html">事業計画書・提案資料・マニュアルの自動ドラフト</a></div>
+        <div class="card-desc">5種類のビジネス文書テンプレートをスキルとして登録し、最低限の情報を渡すだけで構成・本文のドラフトを自動生成。</div>
+        <div class="card-meta"><span class="badge lv2">★★</span><span class="time-chip">設定1〜2時間</span><span class="tool-chip">Skills</span><span class="tool-chip">Claude Code</span></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── 9. 経営・全社横断 ── -->
+  <div class="category-section" data-category="management">
+    <div class="category-header">
+      <span class="category-icon">⚙️</span>
+      <span class="category-title">経営・全社横断</span>
+      <span class="category-count">3手法</span>
+    </div>
+    <div class="method-grid">
+      <div class="method-card" data-level="lv4" data-keywords="スキル 57 ceo cfo cmo 部門 1人 skill command">
+        <div class="card-title"><a href="09-management/01-57-skills.html">57個のカスタムスキルで6部門業務を1人でカバー</a></div>
+        <div class="card-desc">CEO・CFO・CMO等6役割のスキルをClaude Codeに登録し、コマンド1発で各部門の定型業務を処理。1日実働60分化の事例あり。</div>
+        <div class="card-meta"><span class="badge lv4">★★★★</span><span class="time-chip">1日60分化</span><span class="tool-chip">Skills</span><span class="tool-chip">MCP</span></div>
+      </div>
+      <div class="method-card" data-level="lv4" data-keywords="モノレポ git リポジトリ 経費 稼働 ブログ 提案 ナレッジ">
+        <div class="card-title"><a href="09-management/02-business-monorepo.html">業務モノレポ：6業務を1リポジトリで管理</a></div>
+        <div class="card-desc">経費精算・稼働報告・ブログ・提案書をGitリポジトリで一元管理。Claudeが過去の成果物を参照しながら業務を処理。</div>
+        <div class="card-meta"><span class="badge lv4">★★★★</span><span class="time-chip">エンジニア向け</span><span class="tool-chip">Git</span><span class="tool-chip">GitHub Actions</span></div>
+      </div>
+      <div class="method-card" data-level="lv4" data-keywords="vps エージェント line works gmail calendar drive notion 常駐">
+        <div class="card-title"><a href="09-management/03-vps-agent.html">VPS常駐エージェント LINE WORKS→各サービス横断操作</a></div>
+        <div class="card-desc">VPSにClaudeエージェントを常駐させ、LINE WORKSからの自然言語指示でGmail・Calendar・Drive・Notionを横断操作。</div>
+        <div class="card-meta"><span class="badge lv4">★★★★</span><span class="time-chip">エンジニア向け</span><span class="tool-chip">VPS</span><span class="tool-chip">LINE WORKS</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="empty-state" id="emptyState">
+    <svg width="48" height="48" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+    <p>該当する手法が見つかりませんでした。<br>別のキーワードまたはフィルターをお試しください。</p>
+  </div>
+
+</div>
+
+<footer>AI研修 中級編 設定ガイド集 — 全41手法 / 9カテゴリ</footer>
+
+<script>
+(function() {
+  const searchInput = document.getElementById('searchInput');
+  const tabs = document.querySelectorAll('.tab');
+  const cards = document.querySelectorAll('.method-card');
+  const categories = document.querySelectorAll('.category-section');
+  const resultCount = document.getElementById('resultCount');
+  const emptyState = document.getElementById('emptyState');
+
+  let activeFilter = 'all';
+  let searchTerm = '';
+
+  function normalize(s) {
+    return s.toLowerCase().replace(/\s+/g, ' ');
+  }
+
+  function update() {
+    let visible = 0;
+
+    categories.forEach(cat => {
+      let catVisible = 0;
+      cat.querySelectorAll('.method-card').forEach(card => {
+        const level = card.dataset.level;
+        const keywords = normalize(card.dataset.keywords || '');
+        const title = normalize(card.querySelector('.card-title').textContent);
+        const desc = normalize(card.querySelector('.card-desc').textContent);
+        const searchIn = title + ' ' + desc + ' ' + keywords;
+
+        const levelOk = activeFilter === 'all' || level === activeFilter;
+        const searchOk = searchTerm === '' || searchIn.includes(searchTerm);
+
+        if (levelOk && searchOk) {
+          card.classList.remove('card-hidden');
+          catVisible++;
+          visible++;
+        } else {
+          card.classList.add('card-hidden');
+        }
+      });
+
+      if (catVisible === 0) {
+        cat.classList.add('category-hidden');
+      } else {
+        cat.classList.remove('category-hidden');
+        // カウントを更新
+        const countEl = cat.querySelector('.category-count');
+        if (countEl) {
+          const total = cat.querySelectorAll('.method-card').length;
+          countEl.textContent = catVisible === total ? `${total}手法` : `${catVisible}/${total}手法`;
+        }
+      }
+    });
+
+    resultCount.textContent = `${visible}件`;
+    emptyState.style.display = visible === 0 ? 'block' : 'none';
+  }
+
+  tabs.forEach(tab => {
+    tab.addEventListener('click', () => {
+      tabs.forEach(t => t.classList.remove('active'));
+      tab.classList.add('active');
+      activeFilter = tab.dataset.filter;
+      update();
+    });
+  });
+
+  searchInput.addEventListener('input', () => {
+    searchTerm = normalize(searchInput.value.trim());
+    update();
+  });
+
+  // キーボードショートカット: / でサーチにフォーカス
+  document.addEventListener('keydown', e => {
+    if (e.key === '/' && document.activeElement !== searchInput) {
+      e.preventDefault();
+      searchInput.focus();
+    }
+    if (e.key === 'Escape') {
+      searchInput.value = '';
+      searchTerm = '';
+      update();
+      searchInput.blur();
+    }
+  });
+})();
+</script>
+</body>
+</html>

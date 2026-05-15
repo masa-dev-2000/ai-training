@@ -1,0 +1,365 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>YouTube動画→ブログ+SNS+サムネ一括生成 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { display: inline-flex; align-items: center; padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; }
+.lv2 { background: #fef9c3; color: #854d0e; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-list { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 8px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.flow { display: flex; align-items: center; gap: 0; flex-wrap: wrap; margin: 12px 0; }
+.flow-item { background: #f1f5f9; border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px 14px; font-size: 13px; color: #334155; font-weight: 600; }
+.flow-arrow { color: #94a3b8; padding: 0 6px; font-size: 16px; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › マーケティング・広告</div>
+  <h1>YouTube動画URL→ブログ記事+SNS投稿3本+サムネ画像を一括生成</h1>
+  <div class="meta">
+    <span class="badge lv2">★★ 設定1〜2時間</span>
+    <span class="time-b">動画1本から4コンテンツを自動生成</span>
+    <span class="tool-b">YouTube Data API</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">画像生成AI</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      YouTubeのURLを渡すだけで、字幕テキストを取得し、ブログ記事・SNS投稿3本・サムネイル画像のプロンプトを一括生成する。動画制作後のコンテンツ展開作業を大幅に自動化できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 「ChatGPT活用術5選」という動画を処理した場合の出力例（一部抜粋）</p>
+    <div class="output-example">
+      <div class="output-header">Claude Code が生成したコンテンツ（ブログ記事冒頭＋SNS投稿）</div>
+      <div class="output-body">
+        <pre>【ブログ記事冒頭（2500字の一部）】
+---
+タイトル：ChatGPT活用術5選｜業務効率が3倍になった実践テクニック
+
+「ChatGPTを使ってみたいけど、どう活用すればいいかわからない」
+そんな悩みを抱えていませんか？
+
+本記事では、実際に業務で活用して効果があった5つのテクニックを紹介します。
+メール返信の自動化から会議メモの整理まで、明日から使える内容です。
+
+## ChatGPT活用術① メール返信の下書きを瞬時に生成
+（以下続く…）
+---
+
+【X（旧Twitter）投稿①：数字フック型】
+ChatGPTで業務効率が3倍になった5つの方法を公開します。
+
+① メール返信→30秒で下書き完成
+② 会議メモ→要点整理を自動化
+③ データ分析→Excelの代わりに使う
+④ 企画書の壁打ち相手として活用
+⑤ 社内マニュアルの更新作業を時短
+
+詳細はブログ記事で解説中↓
+
+【X（旧Twitter）投稿②：問いかけ型】
+「ChatGPTって使ってみたいけど何から始めればいい？」
+
+一番最初に試すべきは「メール返信の下書き」です。
+
+プロンプト1行入力で、3パターンの返信案が出てきます。
+これだけで1日30分の時短になる人が続出中。
+
+【LinkedIn投稿】
+先日、ChatGPT業務活用の動画をYouTubeで公開しました。
+（本文400字のプロ向けテキスト…）
+
+【サムネイル画像プロンプト】
+16:9比率のYouTubeサムネイル。白背景に大きなアイコン文字で「ChatGPT業務活用5選」。
+右側にPCと矢印で効率化を表現。色：青・白・オレンジ。
+左下に「明日から使える」のポップアップラベル。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>処理フロー</h2>
+    <div class="flow">
+      <span class="flow-item">YouTube URL</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-item">字幕取得</span>
+      <span class="flow-arrow">→</span>
+      <span class="flow-item">ブログ記事</span>
+      <span class="flow-arrow">+</span>
+      <span class="flow-item">SNS投稿×3</span>
+      <span class="flow-arrow">+</span>
+      <span class="flow-item">サムネイル画像</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
+    <div class="tool-list">
+      <span class="tool-chip">YouTube Data API v3（無料枠で十分）</span>
+      <span class="tool-chip">yt-dlp または youtube-transcript-api</span>
+      <span class="tool-chip">Claude Code</span>
+      <span class="tool-chip">画像生成AI（Stable Diffusion / DALL-E等）</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>YouTube字幕取得ツールをインストール</strong>
+          <div class="code">pip install youtube-transcript-api
+<span class="c"># または</span>
+pip install yt-dlp</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>字幕取得スクリプトを作成（Claude Codeで生成）</strong>
+          <div class="prompt">
+            <div class="prompt-label">プロンプト例</div>
+            <pre>YouTube URLを引数にとり、字幕テキストを取得して整形するPythonスクリプトを作成してください。
+・youtube-transcript-apiを使用
+・日本語字幕を優先、なければ英語字幕を取得
+・タイムスタンプを除去してテキストのみを返す
+・出力：transcript.txt</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>コンテンツ一括生成プロンプトを実行</strong>
+          <p>取得した字幕テキストをClaude Codeに渡して4種類のコンテンツを一括生成する。</p>
+          <div class="prompt">
+            <div class="prompt-label">コンテンツ生成プロンプト</div>
+            <pre>添付の字幕テキスト（transcript.txt）をもとに以下の4つを生成してください。
+
+1. ブログ記事（2000〜3000字）
+   ・SEOを意識したH2/H3構成
+   ・導入文・まとめを含む
+   ・読みやすい文体
+
+2. X（旧Twitter）投稿文（140字以内）×3本
+   ・それぞれ異なる切り口・フック
+
+3. LinkedIn投稿文（400〜600字）×1本
+   ・プロフェッショナルなトーン
+   ・動画視聴を促すCTAを含む
+
+4. サムネイル画像生成用プロンプト
+   ・16:9比率
+   ・動画の核心メッセージを表現
+   ・テキストオーバーレイの指示も含む</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>サムネイル画像を生成する</strong>
+          <p>出力されたプロンプトをCanva AI・Stable Diffusion・DALL-Eに貼り付けてサムネイル画像を生成する。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('blog', this)">ブログ記事のみ</button>
+      <button class="stab" onclick="showScenario('sns', this)">SNS3本のみ</button>
+      <button class="stab" onclick="showScenario('full', this)">フル一括生成</button>
+    </div>
+
+    <div id="scenario-blog" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">ブログ記事のみ — 詳細プロンプト</div>
+        <pre>以下の字幕テキストからSEOに強いブログ記事を作成してください。
+
+【字幕テキスト】
+（transcript.txtの内容を貼り付け）
+
+【記事の条件】
+・文字数：2500〜3500字
+・ターゲットキーワード：「〇〇」
+・想定読者：〇〇（初心者 / ビジネスパーソン等）
+・H2見出し：4〜6個
+・各H2のあとにH3を1〜3個追加
+・リード文（200字）・まとめ（300字）を必ず含める
+・箇条書きや図解の説明を活用して読みやすくする
+・動画本編の視聴を促すCTAを本文中に1箇所挿入</pre>
+      </div>
+    </div>
+
+    <div id="scenario-sns" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">SNS3本のみ — プラットフォーム別プロンプト</div>
+        <pre>以下の字幕テキストから、各SNSに最適化した投稿文を作成してください。
+
+【字幕テキスト】
+（transcript.txtの内容を貼り付け）
+
+【出力する投稿文】
+
+① X（旧Twitter）投稿×3本（各140字以内）
+   - 1本目：数字や実績を使ったフック型
+   - 2本目：問いかけ・共感型
+   - 3本目：「知らないと損」「意外な事実」型
+
+② Instagram キャプション（300字以内）
+   ・ハッシュタグ10個を末尾に追加
+   ・改行を多めに使い読みやすく
+
+③ LinkedIn 投稿（500字）
+   ・プロフェッショナルなトーン
+   ・動画視聴のリンクを誘導する一文を含む</pre>
+      </div>
+    </div>
+
+    <div id="scenario-full" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">フル一括生成 — 4コンテンツ同時プロンプト</div>
+        <pre>以下の字幕テキストからコンテンツを4種類一括生成してください。
+
+【字幕テキスト】
+（transcript.txtの内容を貼り付け）
+
+【生成物①】ブログ記事（2000〜3000字）
+・SEO対策済みのH2/H3構成
+・リード文・まとめ含む
+
+【生成物②】X（旧Twitter）投稿（140字以内×3本）
+・切り口をそれぞれ変えること
+
+【生成物③】LinkedIn投稿（400〜600字）
+・プロフェッショナルなトーン
+
+【生成物④】サムネイル画像プロンプト
+・16:9比率
+・タイトル文字・ビジュアル要素を具体的に指定
+・使用する色・フォントスタイルも記述
+
+各生成物は「---」で区切って出力してください。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>字幕テキストを目視確認し、明らかな誤字・文脈の切れ目がないか確認したか</li>
+        <li>自動生成された字幕（CC）の場合、固有名詞・専門用語が正しく取得されているか確認したか</li>
+        <li>ブログ記事に動画の文脈が正しく反映されているか（視聴後に確認することを推奨）</li>
+        <li>SNS投稿の文字数が各プラットフォームの制限内に収まっているか確認したか</li>
+        <li>サムネイル画像プロンプトで生成した画像にテキストの誤字がないか確認したか</li>
+        <li>対象が自社コンテンツ（または許可を得たコンテンツ）であることを確認したか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>自動生成された字幕（CC）は精度が低いことがある。手動字幕が設定されたチャンネルで使うと精度が上がる。</li>
+        <li>生成されたブログ記事は必ず加筆修正する。動画の文脈が失われることがあるため、視聴後に編集するのが理想。</li>
+        <li>他者のYouTube動画を対象にする場合は著作権に注意。自社コンテンツまたは許可を得たコンテンツのみに使用する。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="04-seo-competitor.html">SEO競合調査 Hタグ抽出→記事構成案</a>
+        <span>★★★ ブログ記事の品質をさらに高める</span>
+      </div>
+      <div class="related-card">
+        <a href="../08-content/03-article-consistency.html">記事一貫性チェック</a>
+        <span>★★★★ 生成記事の品質を自動チェック</span>
+      </div>
+      <div class="related-card">
+        <a href="03-sns-batch.html">SNS投稿9本一括生成</a>
+        <span>★ SNSだけをまとめて量産する</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer>中級編 設定ガイド — マーケティング・広告</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

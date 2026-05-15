@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>競合調査レポートを30分で自動生成 — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv2 { background: #fef9c3; color: #854d0e; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.prompt { background: #f0fdf4; border: 1px solid #86efac; border-radius: 8px; padding: 16px 20px; margin: 10px 0; }
+.prompt-label { font-size: 11px; font-weight: 700; color: #15803d; text-transform: uppercase; letter-spacing: 0.5px; margin-bottom: 8px; }
+.prompt pre { font-size: 14px; color: #14532d; white-space: pre-wrap; font-family: inherit; line-height: 1.6; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+.comp-table { width: 100%; border-collapse: collapse; font-size: 12px; }
+.comp-table th { background: #1e293b; color: #e2e8f0; font-weight: 700; padding: 8px 10px; border: 1px solid #334155; text-align: left; }
+.comp-table td { padding: 7px 10px; border: 1px solid #e2e8f0; color: #334155; vertical-align: top; }
+.comp-table tr:nth-child(even) td { background: #f8fafc; }
+.comp-table .our { background: #eff6ff !important; font-weight: 600; }
+.comp-table .win { color: #166534; }
+.comp-table .lose { color: #991b1b; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 営業</div>
+  <h1>競合調査レポートを30分で自動生成</h1>
+  <div class="meta">
+    <span class="badge lv2">★★ 設定1〜2時間</span>
+    <span class="time-b">競合調査を大幅効率化</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">Web検索</span>
+    <span class="tool-b">Google Sheets</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      競合企業のリストを渡すだけで、各社の製品・料金・強み・弱み・最新ニュースをWeb上から自動収集し、比較表と分析コメント付きのレポートをGoogle Sheetsに出力する。従来30時間かかる作業を30分に短縮。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 自動生成される競合比較表の例（SaaS型業務管理ツール市場の場合）</p>
+    <div class="output-example">
+      <div class="output-header">競合比較表（生成されるレポートの中心部分）</div>
+      <div class="output-body">
+        <table class="comp-table">
+          <thead>
+            <tr>
+              <th>調査項目</th>
+              <th class="our">自社（〇〇ツール）</th>
+              <th>A社（〇〇クラウド）</th>
+              <th>B社（〇〇マネージャー）</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>主要機能</td>
+              <td class="our">受注管理・在庫・レポート自動化</td>
+              <td>受注管理・請求書連携</td>
+              <td>在庫・発注・分析ダッシュボード</td>
+            </tr>
+            <tr>
+              <td>料金プラン</td>
+              <td class="our">月額3万〜（ユーザー数無制限）</td>
+              <td>月額5万〜（5ユーザーまで）</td>
+              <td>月額2万〜（機能制限あり）</td>
+            </tr>
+            <tr>
+              <td>対象規模</td>
+              <td class="our">中小〜中堅（50〜500名）</td>
+              <td>中堅〜大企業（200名〜）</td>
+              <td>小規模（〜50名）</td>
+            </tr>
+            <tr>
+              <td>強み</td>
+              <td class="our win">ユーザー数無制限・AI自動化・日本語サポート</td>
+              <td>既存ERPとの連携が豊富</td>
+              <td>価格が安く導入が簡単</td>
+            </tr>
+            <tr>
+              <td>弱み</td>
+              <td class="our lose">大規模案件の実績が少ない</td>
+              <td>高価格・導入に時間がかかる</td>
+              <td>機能が限定的・スケールしにくい</td>
+            </tr>
+            <tr>
+              <td>G2評価</td>
+              <td class="our">4.6 / 5（レビュー数少）</td>
+              <td>4.4 / 5（レビュー多）</td>
+              <td>4.2 / 5（中程度）</td>
+            </tr>
+            <tr>
+              <td>営業トーク案</td>
+              <td class="our win">「ユーザー追加費用ゼロで、AIレポートが自動生成されます」</td>
+              <td>—</td>
+              <td>—</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>競合リストと調査項目を定義する</strong>
+          <div class="prompt">
+            <div class="prompt-label">competitors.md（テンプレート）</div>
+            <pre>## 競合リスト
+1. 〇〇株式会社（https://example1.com）
+2. 〇〇サービス（https://example2.com）
+3. 〇〇ツール（https://example3.com）
+
+## 調査項目
+- 主要製品・サービスの概要
+- 料金プラン（無料/有料、価格帯）
+- 対象顧客（業種・規模）
+- 機能上の強み・弱み
+- 最新のプレスリリース・ニュース
+- G2/Capterra等のレビュー評価</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>Claude Codeで自動調査を実行</strong>
+          <div class="prompt">
+            <div class="prompt-label">プロンプト例</div>
+            <pre>competitors.mdに記載の競合各社について、Web検索を使って調査項目をすべて調べてください。
+
+調査後、以下の形式でレポートをまとめてください：
+
+1. 競合比較表（Markdown表形式）
+   - 各社を列、調査項目を行で整理
+
+2. 各社の詳細分析（各500字程度）
+   - 強み・弱み・差別化ポイント
+
+3. 自社との比較で活用できる営業トーク
+   - 競合を名指しせず自社優位性を説明できる表現
+
+4. 注目すべき最新動向・脅威
+（自社への影響と対応策も一緒に）</pre>
+          </div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>Google Sheetsへの自動書き込みを追加（任意）</strong>
+          <p>「Googleスプレッドシートに書き込むコードも追加して」と指示すると、gspreadを使った書き込みスクリプトも生成される。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>月次更新を自動化</strong>
+          <p>cronで毎月1日に実行。Slackに「競合レポートを更新しました」と通知するよう設定する。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('direct',this)">直接競合2社比較</button>
+      <button class="stab" onclick="showScenario('market',this)">市場全体俯瞰</button>
+      <button class="stab" onclick="showScenario('price',this)">価格比較特化</button>
+    </div>
+
+    <div id="scenario-direct" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">直接競合2社比較 — 商談で比較検討されている競合に特化</div>
+        <pre>以下の2社について、商談で「どちらを選ぶか」という観点から
+徹底的に比較調査してレポートを作成してください。
+
+比較対象：
+- A社（https://example-a.com）
+- B社（https://example-b.com）
+
+自社の強み（参考情報）：
+- ユーザー数無制限の料金体系
+- 日本語サポート（営業時間内電話対応）
+- AI自動レポート生成機能
+
+調査・出力してほしい内容：
+1. 機能比較表（全項目を行・各社を列）
+2. 料金比較（初期費用・月額・オプション）
+3. 自社が勝てるポイント（証拠付き）
+4. 自社が負けているポイント（正直に）
+5. 商談で使える切り返しトーク（相手の懸念別）
+
+※公開情報のみを使用すること</pre>
+      </div>
+    </div>
+
+    <div id="scenario-market" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">市場全体俯瞰 — 業界マップを把握するための広域調査</div>
+        <pre>「業務管理SaaS」市場における主要プレイヤーを
+Web検索で調査し、市場全体の俯瞰レポートを作成してください。
+
+調査範囲：国内外の主要5〜8社
+
+レポートの構成：
+1. 市場マップ（価格帯×ターゲット規模のポジショニング図をテキストで）
+2. 各社の簡易プロフィール（1社200字程度）
+3. 市場トレンドと注目の動向
+   - AI・自動化への対応状況
+   - 新規参入・資金調達ニュース
+4. 自社のポジショニングの現状と改善余地
+5. 今後12ヶ月で警戒すべき脅威（上位3つ）
+
+出力形式：Markdownレポート（Google Sheetsにも貼り付けやすい構成で）</pre>
+      </div>
+    </div>
+
+    <div id="scenario-price" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">価格比較特化 — 見積もり交渉で使える価格情報を収集</div>
+        <pre>以下の競合各社の料金プランを徹底的に調査してください。
+
+対象：competitors.mdに記載の競合3社
+
+調査項目（価格に絞って詳細に）：
+1. 公式サイトに掲載されている料金プラン
+2. 無料プランの有無・制限内容
+3. ユーザー数・データ容量による課金の仕組み
+4. 年間払いと月払いの差額
+5. オプション機能の追加料金
+6. 初期費用・導入支援費用の目安
+7. 大手割引・教育機関割引等の特別料金
+
+出力形式：
+- 料金比較表（見積もりの場で即座に参照できるもの）
+- 「価格で負けた場合」の切り返しトーク例
+
+※公開情報のみ。非公開の料金を推測・生成しないこと</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>調査後チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>料金情報は競合の公式サイトで最新版を目視確認したか（AIの知識は古い場合がある）</li>
+        <li>競合他社への言及が事実に基づいており、誇張・憶測が含まれていないか</li>
+        <li>自社の強み・弱みの評価が主観的になっていないか（ユーザーレビュー等で裏付けがあるか）</li>
+        <li>レポートを社外（顧客・パートナー）に共有する場合、競合他社の表現が適切か</li>
+        <li>最新ニュースの日付が半年以内のものか（古いプレスリリースに基づいていないか）</li>
+        <li>競合の非公開情報（未発表機能・未公開料金）が誤って含まれていないか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>Web検索で取得した情報は最新でない場合がある。特に料金情報は公式サイトで必ず確認する。</li>
+        <li>競合他社の内部情報（非公開の料金・戦略等）をAIに生成させてはいけない。あくまで公開情報のみを収集する。</li>
+        <li>レポートを社外に共有する場合は、競合他社への言及の表現に注意する。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-proposal-draft.html">提案書ドラフト自動生成</a>
+        <span>★★ 競合情報を提案書に反映</span>
+      </div>
+      <div class="related-card">
+        <a href="../01-marketing/03-market-research.html">市場調査レポートの自動生成</a>
+        <span>★★ より広い市場分析に</span>
+      </div>
+      <div class="related-card">
+        <a href="03-slack-summary.html">Slackチャンネルの自動要約</a>
+        <span>★★ 競合情報を社内で共有</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer>中級編 設定ガイド — 営業</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>

@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>請求書確認作業の大幅効率化（4.5時間→35分） — 設定ガイド</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Hiragino Sans', 'Yu Gothic UI', sans-serif; background: #fff; color: #1a1a1a; line-height: 1.7; font-size: 15px; }
+a { color: #2563eb; text-decoration: none; } a:hover { text-decoration: underline; }
+.page-header { background: #f8fafc; border-bottom: 1px solid #e2e8f0; padding: 22px 32px; }
+.breadcrumb { font-size: 12px; color: #64748b; margin-bottom: 8px; }
+h1 { font-size: 22px; font-weight: 700; color: #0f172a; margin-bottom: 10px; }
+.meta { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+.badge { padding: 3px 10px; border-radius: 20px; font-size: 12px; font-weight: 700; display: inline-flex; }
+.lv3 { background: #fee2e2; color: #991b1b; }
+.time-b { background: #e0f2fe; color: #075985; font-size: 12px; padding: 3px 10px; border-radius: 20px; font-weight: 600; }
+.tool-b { background: #f1f5f9; color: #475569; font-size: 12px; padding: 3px 10px; border-radius: 20px; border: 1px solid #e2e8f0; font-weight: 500; }
+.content { max-width: 760px; margin: 0 auto; padding: 32px; }
+.section { margin-bottom: 32px; }
+h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; border-left: 3px solid #3b82f6; margin-bottom: 14px; }
+.overview { background: #f0f9ff; border: 1px solid #bae6fd; border-radius: 8px; padding: 16px 20px; color: #0c4a6e; font-size: 14px; }
+.tool-chip { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 6px; padding: 4px 12px; font-size: 13px; color: #334155; font-weight: 500; display: inline-block; margin: 3px; }
+.steps { list-style: none; padding: 0; }
+.step { display: flex; gap: 16px; margin-bottom: 20px; }
+.step-num { flex-shrink: 0; width: 30px; height: 30px; background: #3b82f6; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 13px; font-weight: 700; margin-top: 2px; }
+.step-body strong { display: block; font-size: 15px; color: #0f172a; margin-bottom: 4px; }
+.step-body p { font-size: 14px; color: #475569; margin-bottom: 6px; }
+.code { background: #1e293b; color: #e2e8f0; border-radius: 8px; padding: 16px 20px; font-family: 'SF Mono', 'Consolas', monospace; font-size: 13px; line-height: 1.8; overflow-x: auto; white-space: pre; margin: 10px 0; }
+.code .c { color: #94a3b8; }
+.notes { background: #fffbeb; border-left: 4px solid #f59e0b; padding: 14px 18px; border-radius: 0 8px 8px 0; }
+.notes ul { padding-left: 18px; font-size: 14px; color: #78350f; }
+.notes ul li { margin-bottom: 5px; }
+.back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
+.back:hover { background: #f8fafc; text-decoration: none; }
+footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+/* テーブル */
+.table-wrap { overflow-x: auto; margin: 8px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #f1f5f9; color: #334155; font-weight: 700; padding: 8px 12px; text-align: left; border: 1px solid #e2e8f0; }
+td { padding: 8px 12px; border: 1px solid #e2e8f0; color: #475569; }
+td.st-ok { background: #dcfce7; color: #166534; font-weight: 700; }
+td.st-warn { background: #fef9c3; color: #854d0e; font-weight: 600; }
+td.st-ng { background: #fee2e2; color: #991b1b; font-weight: 700; }
+td.amount { text-align: right; font-variant-numeric: tabular-nums; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+</style>
+</head>
+<body>
+<div class="page-header">
+  <div class="breadcrumb"><a href="../index.html">中級編 一覧</a> › 経理・バックオフィス</div>
+  <h1>請求書確認作業の大幅効率化（4.5時間 → 35分、87%削減）</h1>
+  <div class="meta">
+    <span class="badge lv3">★★★ 設定半日〜</span>
+    <span class="time-b">87%の時間削減</span>
+    <span class="tool-b">Claude Code</span>
+    <span class="tool-b">PDFパーサー</span>
+    <span class="tool-b">承認フロー</span>
+  </div>
+</div>
+<div class="content">
+  <a href="../index.html" class="back">← 一覧に戻る</a>
+
+  <div class="section">
+    <h2>概要</h2>
+    <div class="overview">
+      月間100〜200枚の請求書確認作業を自動化するパイプラインを構築する。受信したPDFから必要情報を抽出・検証し、問題のないものは自動承認キューへ、疑問点があるものだけを担当者に振り分けることで87%の時間削減を実現する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 月末バッチ処理後の処理済み請求書一覧（承認キューUIの画面例）</p>
+    <div class="output-example">
+      <div class="output-header">処理済み請求書一覧 — 2026年5月分（全14件処理済み）</div>
+      <div class="output-body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>ファイル名</th><th>取引先</th><th>金額（税込）</th><th>支払期日</th><th>ステータス</th><th>承認者</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>INV-0501-A社.pdf</td>
+                <td>株式会社A商事</td>
+                <td class="amount">¥330,000</td>
+                <td>2026-06-30</td>
+                <td class="st-ok">自動承認済み</td>
+                <td>システム</td>
+              </tr>
+              <tr>
+                <td>INV-0503-B社.pdf</td>
+                <td>合同会社Bサービス</td>
+                <td class="amount">¥88,000</td>
+                <td>2026-06-15</td>
+                <td class="st-warn">要確認</td>
+                <td>山田（確認中）</td>
+              </tr>
+              <tr>
+                <td>INV-0508-C社.pdf</td>
+                <td>C技術株式会社</td>
+                <td class="amount">¥1,650,000</td>
+                <td>2026-06-30</td>
+                <td class="st-ok">自動承認済み</td>
+                <td>システム</td>
+              </tr>
+              <tr>
+                <td>INV-0510-D社.pdf</td>
+                <td>D印刷株式会社</td>
+                <td class="amount">¥44,000</td>
+                <td>2026-06-20</td>
+                <td class="st-ng">インボイス番号無効</td>
+                <td>要対応</td>
+              </tr>
+              <tr>
+                <td>INV-0515-E社.pdf</td>
+                <td>E物流合同会社</td>
+                <td class="amount">¥275,000</td>
+                <td>2026-06-30</td>
+                <td class="st-ok">承認済み</td>
+                <td>鈴木</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px;color:#64748b;margin-top:10px;">自動承認済み：11件 ／ 要確認：2件 ／ インボイスエラー：1件 ／ 合計金額：¥3,842,000</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>自動化の対象業務</h2>
+    <div class="code"><span class="c"># 従来の手作業ステップ（1枚あたり約2〜3分）</span>
+1. メール受信 → 添付PDFを開く
+2. 発行者名・金額・支払期日を確認
+3. 過去の取引データと照合
+4. 消費税の計算が正しいか確認
+5. インボイス登録番号の確認
+6. 支払条件（〇日払い）の確認
+7. 会計ソフトへの入力
+8. 承認者へ回覧
+
+<span class="c"># 自動化後のステップ（担当者は3.と7.のみ）</span>
+1〜6: AI自動チェック
+7: 問題なし → 自動承認キュー / 問題あり → 担当者に通知
+8: 担当者確認後、会計ソフトに一括インポート</div>
+  </div>
+
+  <div class="section">
+    <h2>設定手順</h2>
+    <ul class="steps">
+      <li class="step">
+        <div class="step-num">1</div>
+        <div class="step-body">
+          <strong>請求書受信フォルダを設定</strong>
+          <p>専用メールアドレス（例：invoice@company.com）を作成し、受信した添付PDFを自動で処理フォルダに保存するフィルタを設定する（Gmailフィルタ → Google Drive保存）。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">2</div>
+        <div class="step-body">
+          <strong>バッチ処理スクリプトを作成（Claude Codeで生成）</strong>
+          <div class="code"><span class="c"># invoice_processor.py（抜粋）</span>
+import pdfplumber, anthropic
+from pathlib import Path
+
+def process_invoices(folder: str):
+    results = []
+    for pdf_file in Path(folder).glob("*.pdf"):
+        text = extract_text(pdf_file)
+        data = structure_invoice(text)  <span class="c"># Claudeで構造化</span>
+        checks = run_checks(data)       <span class="c"># 7項目チェック</span>
+        results.append({
+            "file": pdf_file.name,
+            "data": data,
+            "status": "OK" if all(checks.values()) else "要確認",
+            "issues": [k for k, v in checks.items() if not v]
+        })
+    return results</div>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">3</div>
+        <div class="step-body">
+          <strong>承認キューUIを用意（任意）</strong>
+          <p>問題なしの請求書一覧を表示するシンプルなHTMLページを作成し、担当者が一括確認・承認できるUIを提供する。</p>
+        </div>
+      </li>
+      <li class="step">
+        <div class="step-num">4</div>
+        <div class="step-body">
+          <strong>会計ソフトへの一括インポートを設定</strong>
+          <p>承認済みデータをCSVに変換し、会計ソフトのインポート機能で一括登録する。freeeはCSVインポート対応。</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('gmail',this)">Gmail自動フィルタ設定</button>
+      <button class="stab" onclick="showScenario('drive',this)">Driveフォルダ整理</button>
+      <button class="stab" onclick="showScenario('approval',this)">承認フロー設定</button>
+    </div>
+
+    <div id="scenario-gmail" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">Gmail自動フィルタ設定 — 受信した請求書PDFを自動振り分け</div>
+        <pre>Gmailで受信した請求書メールを自動でフィルタリングし、
+添付PDFをGoogle Driveの処理フォルダに保存するGASを作成してください。
+
+// Google Apps Script（GAS）の設定例
+function processInvoiceEmails() {
+  const threads = GmailApp.search(
+    'subject:(請求書 OR invoice) has:attachment filename:pdf'
+  );
+  threads.forEach(thread => {
+    thread.getMessages().forEach(msg => {
+      msg.getAttachments().forEach(att => {
+        if (att.getContentType() === 'application/pdf') {
+          DriveApp.getFolderById(FOLDER_ID).createFile(att);
+          msg.markRead();
+          msg.moveToTrash(); // 処理済みをアーカイブ
+        }
+      });
+    });
+  });
+}
+
+// トリガー：毎朝8:00に自動実行</pre>
+      </div>
+    </div>
+
+    <div id="scenario-drive" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">Driveフォルダ整理 — 処理状態別に自動仕分け</div>
+        <pre>Google Driveの請求書フォルダを処理状態別に自動整理するGASを作成してください。
+
+# フォルダ構成（自動作成）
+請求書/
+  2026-05/
+    00_未処理/    ← メール受信後に保存
+    01_処理中/    ← AIチェック実行中
+    02_自動承認済み/ ← 差異なし
+    03_要確認/    ← 担当者確認待ち
+    04_承認済み/  ← 支払処理完了
+    05_エラー/    ← インボイス番号無効等
+
+# 自動移動ロジック
+- AIチェック完了 → ステータスに応じてフォルダ移動
+- 承認操作後 → 04_承認済みに移動 + 移動日をファイル名に追記</pre>
+      </div>
+    </div>
+
+    <div id="scenario-approval" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">承認フロー設定 — 金額別に承認ルートを自動分岐</div>
+        <pre>請求書の金額によって承認ルートを変えるフロー設定を実装してください。
+
+# 承認ルール（config.yaml）
+approval_rules:
+  - max_amount: 100000      # 10万円以下
+    approvers: ["経理担当"]
+    auto_approve: true      # 差異なしなら自動承認
+
+  - max_amount: 1000000     # 100万円以下
+    approvers: ["経理担当", "部門長"]
+    auto_approve: false     # 必ず人間が承認
+
+  - max_amount: null        # 100万円超
+    approvers: ["経理担当", "部門長", "役員"]
+    auto_approve: false
+
+# Slack通知（承認依頼）
+@部門長 以下の請求書の承認をお願いします。
+取引先：株式会社C技術
+金額：¥1,650,000
+リンク：https://drive.google.com/...</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>自動承認された請求書を定期的にサンプル抽出（月10%程度）して目視確認しているか</li>
+        <li>「要確認」になった請求書の対応が支払期日前に完了しているか</li>
+        <li>インボイス番号エラーが出た取引先に連絡し、番号の再確認または修正請求書を依頼したか</li>
+        <li>AIの自動抽出で金額・支払期日が正しく読み取れているか（新規取引先の初回は必ず確認）</li>
+        <li>承認済みのCSVを会計ソフトにインポートした後、合計金額が一致しているか確認したか</li>
+        <li>承認フローの設定（金額閾値・承認者）が変更になった場合、config.yamlを更新したか</li>
+        <li>月次の処理件数・エラー率をモニタリングしてAIの精度低下を早期に検知しているか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>注意点</h2>
+    <div class="notes">
+      <ul>
+        <li>初期精度は70〜80%程度。誤検出のパターンを学習して改善していく運用が必要。</li>
+        <li>請求書のフォーマットは取引先によって異なる。フォーマットが特殊な取引先は個別対応ルールを追加する。</li>
+        <li>完全自動承認は避ける。必ず人間がサンプルチェックを行い、自動化の精度を定期的に確認する。</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="04-po-invoice-match.html">発注書 vs 請求書 差異自動検出</a>
+        <span>★★★ 照合作業の自動化</span>
+      </div>
+      <div class="related-card">
+        <a href="06-invoice-number-verify.html">適格請求書番号を国税庁APIで一括検証</a>
+        <span>★★ インボイス番号チェックの詳細</span>
+      </div>
+      <div class="related-card">
+        <a href="01-invoice-draft.html">請求書の自動下書き生成</a>
+        <span>★ 送付側の自動化</span>
+      </div>
+    </div>
+  </div>
+
+</div>
+<footer>中級編 設定ガイド — 経理・バックオフィス</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
+</body>
+</html>
