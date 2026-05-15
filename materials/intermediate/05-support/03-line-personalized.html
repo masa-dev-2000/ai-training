@@ -34,6 +34,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -55,6 +73,49 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       LINE Messaging APIをMCP経由でClaude Codeから操作できるようにし、ユーザーデータベース（購買履歴・属性・行動ログ）に基づいてパーソナライズされたメッセージを自動生成・送信するシステムを構築する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ ユーザーデータに基づいてClaudeが生成したLINEメッセージの例</p>
+    <div class="output-example">
+      <div class="output-header">生成されたLINEメッセージ（3名分）</div>
+      <div class="output-body">
+        <pre><strong>【田中 美咲 さん向け — 購入後フォロー】</strong>
+田中さん、こんにちは！
+先日はオーガニックスキンケアセットをご購入いただきありがとうございました。
+使い心地はいかがでしょうか？
+
+乾燥が気になる季節にぴったりの保湿クリームが今週20%OFFです。
+セットでお使いいただくと効果がさらに高まりますよ 😊
+
+▶ 詳細はこちら → https://example.com/cream
+
+---
+
+<strong>【山本 健太 さん向け — 休眠顧客への再接触（最終購入から127日）】</strong>
+山本さん、ご無沙汰しております。
+以前ご購入いただいたプロテインシリーズ、いかがでしたか？
+
+長らくお会いできていなかったので、特別クーポンをお届けします。
+次回ご購入時に使える <strong>15%OFFクーポン</strong> です（有効期限：7日間）。
+
+クーポンコード：YAMAMOTO15
+▶ ショップはこちら → https://example.com/shop
+
+---
+
+<strong>【佐藤 令奈 さん向け — 誕生日メッセージ（5月20日が誕生日）】</strong>
+佐藤さん、お誕生日おめでとうございます🎂
+いつもご愛顧いただきありがとうございます。
+
+特別に <strong>誕生日限定20%OFFクーポン</strong> をプレゼントします！
+お好きな商品にご利用ください（今月末まで有効）。
+
+クーポンコード：BIRTHDAY_SATO
+▶ ショップはこちら → https://example.com/birthday</pre>
+      </div>
     </div>
   </div>
 
@@ -132,6 +193,93 @@ for user in users:
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('birthday',this)">誕生日メッセージ</button>
+      <button class="stab" onclick="showScenario('post-purchase',this)">購入後フォロー</button>
+      <button class="stab" onclick="showScenario('reactivate',this)">休眠顧客への再接触</button>
+    </div>
+    <div id="scenario-birthday" class="scenario-content active">
+      <div class="output-example">
+        <div class="output-header">誕生日メッセージ — プロンプト設定例</div>
+        <div class="output-body">
+          <pre>以下のユーザー情報をもとに誕生日メッセージを作成してください。
+
+【ユーザー情報】
+名前：{name}
+誕生日：{birthday}
+過去の購入カテゴリ：{categories}
+会員ランク：{rank}
+
+【メッセージの条件】
+- 150文字以内で温かみのある文体
+- 購入カテゴリに関連した商品ヒントを1つ含める
+- 誕生日限定クーポンコード（{coupon_code}）を記載
+- 絵文字は1〜2個まで
+- ショップURLを末尾に記載する</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-post-purchase" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">購入後フォロー — プロンプト設定例（購入3日後）</div>
+        <div class="output-body">
+          <pre>以下のユーザー情報をもとに購入後フォローメッセージを作成してください。
+
+【ユーザー情報】
+名前：{name}
+購入商品：{last_product}
+購入日：{purchase_date}（{days_since}日前）
+関連おすすめ商品：{recommended_product}
+
+【メッセージの条件】
+- 購入へのお礼から始める
+- 使い心地を気にかける一言を入れる
+- 関連商品を自然な流れで案内する（強引な売り込みはNG）
+- 200文字以内
+- 問い合わせ先を末尾に記載する</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-reactivate" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">休眠顧客への再接触 — プロンプト設定例（90日以上未購入）</div>
+        <div class="output-body">
+          <pre>以下のユーザー情報をもとに再接触メッセージを作成してください。
+
+【ユーザー情報】
+名前：{name}
+最終購入：{last_purchase_product}（{days_since}日前）
+購入カテゴリ：{categories}
+特別クーポン：{coupon_code}（割引率：{discount}%）
+
+【メッセージの条件】
+- ご無沙汰していることを自然に伝える（責める表現はNG）
+- 最後の購入を覚えているか軽く触れる
+- 特別クーポンを「限定感」を持たせて案内する
+- 有効期限（7日間）を明記する
+- 200文字以内・絵文字は控えめに</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>送信対象ユーザーのLINE友だち登録状況・ブロック状態を事前に確認しているか</li>
+        <li>メッセージ送信数がLINE公式アカウントの月次プラン上限内に収まっているか</li>
+        <li>個人情報（名前・購入履歴）の利用についてプライバシーポリシーに明記し、ユーザーの同意を得ているか</li>
+        <li>配信前にテスト送信（自分のLINEアカウントへ）を行い、文字化けや変数未置換がないか確認しているか</li>
+        <li>同一ユーザーへの送信頻度が週1〜2回を超えていないか</li>
+        <li>クーポンコードの有効期限・使用条件が正確に反映されているか</li>
+        <li>送信ログをDBに記録し、配信停止要求に即対応できる体制があるか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -142,7 +290,34 @@ for user in users:
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-email-reply.html">問い合わせメール→トーン別返信案自動生成</a>
+        <span>★ 今日から — メール対応を効率化</span>
+      </div>
+      <div class="related-card">
+        <a href="02-slack-bot.html">Slack自動返信ボット FAQ一次対応</a>
+        <span>★★★ Slackでも自動返信する場合</span>
+      </div>
+      <div class="related-card">
+        <a href="../06-hr/05-faq-update.html">社内FAQ・ナレッジベースの自動更新</a>
+        <span>★★★ よくある問い合わせをFAQ化する</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — カスタマーサポート</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

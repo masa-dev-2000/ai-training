@@ -38,6 +38,28 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -59,6 +81,47 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       ターゲットキーワードで検索上位10サイトのH1〜H3タグを自動抽出し、Claude CodeでAI分析。共通トピック・競合が網羅していない空白領域を特定して記事構成案をスプレッドシートに保存する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ キーワード「副業 確定申告」で競合5社を調査した場合の構成案出力例</p>
+    <div class="output-example">
+      <div class="output-header">Claude Code が生成した記事構成案</div>
+      <div class="output-body">
+        <pre>■ 競合カバレッジ分析（上位5サイト横断）
+
+【全サイト共通トピック（空白なし）】
+・確定申告が必要な所得金額の基準（5/5サイト）
+・青色申告 vs 白色申告の違い（5/5サイト）
+・必要書類の一覧（4/5サイト）
+
+【差別化チャンス（2サイト以下しか触れていない空白領域）】
+・副業ごとの経費の扱い方（ライター・ハンドメイド・プログラミング別）
+・ふるさと納税との組み合わせ節税術
+・会社員がバレずに副業収入を申告するポイント
+
+■ 提案記事構成案
+H1: 副業の確定申告を完全解説｜いくらから？必要書類・書き方まで
+
+H2: 副業で確定申告が必要になるのはいくらから？
+  H3: 給与所得以外の所得が20万円を超えたら申告義務
+  H3: 住民税は金額に関わらず申告が必要な場合も
+
+H2: 副業の種類別・経費の計上ルール（差別化ポイント）
+  H3: ライター・ブロガーの場合
+  H3: ハンドメイド販売・せどりの場合
+  H3: プログラミング・エンジニア副業の場合
+
+H2: 青色申告と白色申告どちらを選ぶべきか
+  H3: 青色申告のメリット（65万円控除）
+  H3: 初心者におすすめなのはどちら？
+
+H2: 副業が会社にバレないための住民税の手続き（差別化ポイント）
+H2: 確定申告の手順と必要書類チェックリスト
+H2: まとめ：副業収入は正しく申告して節税しよう</pre>
+      </div>
     </div>
   </div>
 
@@ -136,6 +199,86 @@ python scrape_headings.py</div>
   </div>
 
   <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('single', this)">競合1社調査</button>
+      <button class="stab" onclick="showScenario('multi', this)">上位5社一括比較</button>
+      <button class="stab" onclick="showScenario('structure', this)">記事構成案のみ</button>
+    </div>
+
+    <div id="scenario-single" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">競合1社調査 — 詳細分析プロンプト</div>
+        <pre>以下のURLのページを詳しく分析してください。
+
+対象URL：https://example.com/article/xxx
+
+分析項目：
+1. H1〜H3の見出し構成（階層ごとに表示）
+2. 各セクションのおおよその文字数
+3. 内部リンク・外部リンクの傾向
+4. 想定される検索意図と記事の狙い
+5. 私たちが参考にすべき点・差別化できる点
+
+対象キーワード：「〇〇」
+自社の強み・差別化したい点：〇〇</pre>
+      </div>
+    </div>
+
+    <div id="scenario-multi" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">上位5社一括比較 — 横断分析プロンプト</div>
+        <pre>competitor_headings.csvに記録された上位5サイトのHタグを横断分析してください。
+
+分析内容：
+1. カバレッジ表（H2レベルのトピック × 各サイト）
+   ・○：詳しく扱っている
+   ・△：軽く触れている
+   ・×：扱っていない
+2. 全サイト共通の必須トピック（読者が期待する内容）
+3. 差別化余地のある空白トピック（上位3つ）
+4. 見出しのパターン・傾向（数字入り・問いかけ型・ハウツー型など）
+5. 推奨記事構成案（H1〜H3まで完全版）
+
+対象キーワード：「〇〇」
+目標文字数：〇〇字</pre>
+      </div>
+    </div>
+
+    <div id="scenario-structure" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">記事構成案のみ — 直接生成プロンプト</div>
+        <pre>以下の条件で記事の構成案をH1〜H3まで提案してください。
+
+対象キーワード：「〇〇」
+検索意図：〇〇（情報収集 / 比較検討 / 購入 / 操作方法など）
+想定読者：〇〇（初心者 / 中級者 / 専門家など）
+目標文字数：〇〇字
+記事の目的：〇〇（CVR向上 / 検索流入 / ブランディング）
+
+参考：以下の競合サイトが共通して扱っているトピック
+（competitor_headings.csvの分析結果を貼り付け）
+
+競合が触れていない切り口を盛り込み、独自性を出してください。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>対象サイトのrobots.txtを確認し、スクレイピングが禁止されていないか確認したか</li>
+        <li>アクセス間隔を1〜2秒空ける設定をスクリプトに入れたか</li>
+        <li>JavaScriptで動的に描画されるサイトが含まれていないか確認したか（含む場合はPlaywright使用を検討）</li>
+        <li>取得したCSVのデータを目視確認し、Hタグが正しく取得されているか確認したか</li>
+        <li>構成案の「空白トピック」が本当に読者のニーズに合致するか検証したか</li>
+        <li>Google Sheets APIのサービスアカウントにスプレッドシートの編集権限を付与したか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -146,7 +289,34 @@ python scrape_headings.py</div>
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="05-youtube-to-content.html">YouTube動画→コンテンツ一括生成</a>
+        <span>★★ 構成案をもとに動画からも展開</span>
+      </div>
+      <div class="related-card">
+        <a href="../08-content/03-article-consistency.html">記事一貫性チェック</a>
+        <span>★★★★ 構成案から記事品質を担保する</span>
+      </div>
+      <div class="related-card">
+        <a href="../02-sales/05-competitor-report.html">競合調査レポート</a>
+        <span>★★ SEO以外の競合調査手法</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — マーケティング・広告</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

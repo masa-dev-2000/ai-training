@@ -38,6 +38,28 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -59,6 +81,40 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       Google Ads API と Meta Marketing API をMCPサーバー経由でClaude Codeから操作できるようにする。入札額の自動調整・除外キーワードの追加・パフォーマンスの低いクリエイティブの入れ替えを自然言語の指示で実行できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 自然言語で広告操作を指示した際のClaude Codeの応答例</p>
+    <div class="output-example">
+      <div class="output-header">Claude Code の実行ログ（入札調整 + 除外KW追加）</div>
+      <div class="output-body">
+        <pre>【指示】先週のGoogle Adsキャンペーンを確認して、CPAが目標の150%を超えているキャンペーンの入札額を20%下げてください。また、CTRが0.5%未満のキーワードを除外KWに追加してください。
+
+【Claude Codeの実行結果】
+get_campaigns ツールを実行中...
+
+■ キャンペーン一覧（先週実績）
+┌────────────────┬────────┬────────┬────────────┐
+│ キャンペーン名  │ CPA    │ 目標CPA │ 判定       │
+├────────────────┼────────┼────────┼────────────┤
+│ 春季セール_検索 │ 3,240円│ 2,000円 │ 要調整（162%）│
+│ ブランド_検索   │ 890円  │ 1,500円 │ 良好       │
+│ 競合_検索       │ 4,100円│ 2,500円 │ 要調整（164%）│
+└────────────────┴────────┴────────┴────────────┘
+
+update_bid ツールを実行中...
+  → 「春季セール_検索」の入札額を20%引き下げ完了（¥280 → ¥224）
+  → 「競合_検索」の入札額を20%引き下げ完了（¥350 → ¥280）
+
+■ 除外KW追加対象（CTR 0.5%未満）
+・「格安 スマホ」CTR: 0.31% → 除外KWに追加完了
+・「中古 iPhone」CTR: 0.22% → 除外KWに追加完了
+・「スマホ 修理」CTR: 0.18% → 除外KWに追加完了
+
+完了。変更内容をSlackに通知しますか？</pre>
+      </div>
     </div>
   </div>
 
@@ -151,6 +207,75 @@ async def add_negative_keyword(campaign_id: str, keyword: str):
   </div>
 
   <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('bid', this)">入札調整のみ</button>
+      <button class="stab" onclick="showScenario('neg-kw', this)">除外KW追加</button>
+      <button class="stab" onclick="showScenario('creative', this)">クリエイティブ停止</button>
+    </div>
+
+    <div id="scenario-bid" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">入札調整のみ — 指示例</div>
+        <pre>今週のキャンペーン実績を確認して、以下の条件で入札額を調整してください。
+
+調整ルール：
+・目標CPA比 150%超 → 入札額を15%引き下げ
+・目標CPA比 80%未満（目標より安い）→ 入札額を10%引き上げ
+・目標CPA比 80〜150% → 変更なし
+
+変更前に変更予定リストを提示して、私が「OK」と返したら実行してください。
+変更件数の上限は1回の操作で5キャンペーンまで。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-neg-kw" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">除外KW追加 — 指示例</div>
+        <pre>過去30日間の検索クエリレポートを分析して、除外キーワードの候補を提案してください。
+
+除外KW候補の条件：
+・クリック数が3回以上でコンバージョンが0件
+・CTRが0.3%未満
+・明らかに関係ないワード（競合名・無関係な業種など）
+
+提案リストを確認後、承認したものだけ除外KWとして追加してください。
+追加前に「〇〇件の除外KWを追加します。よろしいですか？」と確認を求めてください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-creative" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">クリエイティブ停止 — 指示例</div>
+        <pre>Meta Adsの広告クリエイティブを分析して、パフォーマンスが低いものを停止してください。
+
+停止条件（以下をすべて満たすもの）：
+・掲載期間が14日以上
+・フリークエンシー（平均表示回数）が5回以上
+・CTRが広告グループ平均の50%未満
+
+停止前に停止対象リスト（クリエイティブ名・掲載期間・指標）を提示し、
+私が確認してから実行してください。停止した広告はアーカイブに移動してください。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>APIの認証情報（トークン・シークレット）を .env ファイルに保存し、Gitに含まれないよう .gitignore に追加したか</li>
+        <li>初回実行はテストアカウントまたは少数のキャンペーンに限定して動作確認したか</li>
+        <li>入札額変更・クリエイティブ停止など取り消せない操作の前に確認ステップを設けたか</li>
+        <li>Google Ads APIの開発者トークンの審査状況を確認し、本番アクセスが承認されているか</li>
+        <li>Meta Ads APIのレート制限（1時間あたりのAPIコール数）を把握しているか</li>
+        <li>変更ログを記録するしくみ（ファイルまたはスプレッドシートへの書き込み）を設けたか</li>
+        <li>自動変更の上限幅（例: 1回で±30%以上変えない）を設定しているか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -161,7 +286,34 @@ async def add_negative_keyword(campaign_id: str, keyword: str):
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-ad-audit.html">広告監査190項目チェック</a>
+        <span>★★ 自動化の前に現状を把握する</span>
+      </div>
+      <div class="related-card">
+        <a href="06-ga4-report.html">GA4×BigQuery 週次・月次レポート</a>
+        <span>★★★ 広告効果をGA4で確認する</span>
+      </div>
+      <div class="related-card">
+        <a href="07-brand-monitoring.html">ブランド監視Slack通知</a>
+        <span>★★★ 広告反応をSNSで追う</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — マーケティング・広告</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

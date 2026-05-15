@@ -35,6 +35,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -56,6 +74,50 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       オンライン面接（Zoom/Google Meet等）でAIが面接官として質問を行い、応募者の回答をリアルタイムでテキスト化・採点・記録するシステム。一次面接のスクリーニングを自動化し、採用担当者の工数を削減する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 面接終了後に採用担当者へ送信される評価レポートの例</p>
+    <div class="output-example">
+      <div class="output-header">AI面接 評価レポート（候補者ごと）</div>
+      <div class="output-body">
+        <pre>========================================
+【面接評価レポート】
+面接日時：2026-05-15 14:00〜14:30
+応募職種：ソフトウェアエンジニア（中途）
+候補者ID：CAND-2026-0123
+========================================
+
+■ スコアサマリー
+┌────────────────────────┬──────┬─────────────────────────────────┐
+│ 評価軸                 │ 点数 │ 根拠                            │
+├────────────────────────┼──────┼─────────────────────────────────┤
+│ 論理的思考力           │  4/5 │ 複雑な設計問題を順序立てて説明  │
+│ 問題解決力             │  5/5 │ 過去の障害対応を具体的に語った  │
+│ コミュニケーション力   │  3/5 │ 専門用語が多く非技術者への配慮不足│
+│ カルチャーフィット     │  4/5 │ 自律性・チームワーク重視と合致  │
+└────────────────────────┴──────┴─────────────────────────────────┘
+合計：16/20点
+
+■ 総合評価：次の選考ステップに進めることを推奨
+（※ 最終判断は採用担当者が行ってください）
+
+■ 注目回答
+Q：これまでで最も困難だったエンジニアリング上の課題は？
+A要約：本番環境での深夜データベース障害を単独で対応。
+　　　ログ分析→原因特定→ロールバック→再発防止まで5時間で完結。
+AI評価：問題解決の手順・結果・学びまで明確。実践力の高さが伺える。
+
+■ 懸念点
+- コミュニケーションの平易化トレーニングが有効かもしれない
+- チームマネジメント経験はゼロ（リーダー職には追加確認が必要）
+
+■ 推奨質問（次の面接担当者向け）
+1. 非技術者のステークホルダーと連携した経験について
+2. リモートチームでの協働経験について</pre>
+      </div>
     </div>
   </div>
 
@@ -133,16 +195,122 @@ def score_response(question: str, answer: str, criteria: str) -> dict:
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('tech',this)">技術職採用</button>
+      <button class="stab" onclick="showScenario('sales',this)">営業職採用</button>
+      <button class="stab" onclick="showScenario('manager',this)">管理職採用</button>
+    </div>
+    <div id="scenario-tech" class="scenario-content active">
+      <div class="output-example">
+        <div class="output-header">技術職採用 — 評価軸・質問バンク設定例</div>
+        <div class="output-body">
+          <pre>【評価軸（5点満点）】
+1. 技術的専門性：該当技術スタックへの習熟度
+2. 問題解決力：デバッグ・設計判断のプロセス
+3. コード品質への意識：テスト・レビュー・ドキュメント
+4. チームワーク：コードレビュー・ペアプロ経験
+
+【質問バンク（抜粋）】
+- 得意な技術スタックとその選定理由を教えてください
+- 本番障害の対応経験と、その時の判断プロセスを教えてください
+- コードレビューで気をつけていることは何ですか？
+- 技術的な負債に直面したとき、どのようにアプローチしますか？</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-sales" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">営業職採用 — 評価軸・質問バンク設定例</div>
+        <div class="output-body">
+          <pre>【評価軸（5点満点）】
+1. 傾聴力：顧客ニーズの引き出し方
+2. 提案力：課題解決型の提案ができるか
+3. 粘り強さ：断られた経験と乗り越え方
+4. 数字への意識：目標・実績の把握と管理
+
+【質問バンク（抜粋）】
+- これまでの営業成績で最も誇れる実績を教えてください
+- 断られた案件を覆した経験はありますか？
+- 顧客のニーズを引き出すために意識していることは？
+- ノルマ未達成だったとき、どのように対処しましたか？</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-manager" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">管理職採用 — 評価軸・質問バンク設定例</div>
+        <div class="output-body">
+          <pre>【評価軸（5点満点）】
+1. リーダーシップ：チームを動機づける方法
+2. 意思決定力：不確実な状況での判断
+3. 人材育成：メンバーの成長へのアプローチ
+4. 戦略的思考：中長期の視点を持った計画立案
+
+【質問バンク（抜粋）】
+- チームが機能不全に陥ったとき、どのように立て直しましたか？
+- メンバーのパフォーマンスが低下したとき、どう対処しますか？
+- 自部門の中長期目標をどのように設定・管理しますか？
+- 経営層と現場の板挟みになった経験はありますか？</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>応募者にAI面接であることを事前に告知・同意を取得しているか</li>
+        <li>評価軸が応募職種に直接関係する能力のみに絞られているか（性別・年齢・出身地等は含まれていないか）</li>
+        <li>AIの採点結果はあくまで参考情報として扱い、採用可否の最終決定を人間が行う運用になっているか</li>
+        <li>AIの採点に性別・年齢・出身等のバイアスが生じていないか定期的に監査しているか</li>
+        <li>応募者の回答データがHTTPS・DB暗号化・アクセス制限で適切に保護されているか</li>
+        <li>外部AIサービスへのデータ送信について個人情報取り扱い規約を確認しているか</li>
+        <li>採点レポートにアクセスできる社内担当者を最小限に絞っているか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
         <li>応募者の回答テキストは個人情報。適切なセキュリティ措置（HTTPS・DB暗号化・アクセス制限）を施す。</li>
         <li>AIの採点結果に偏り（性別・年齢・出身等に関する偏見）が生じていないか定期的に監査する。</li>
+        <li>AIはバイアスがかかる可能性があり、採用可否の最終決定は必ず人間が行う。AI評価はあくまで一次スクリーニングの参考情報として扱うこと。</li>
         <li>外部サービス（OpenAI等）にデータを送る場合は個人情報の取り扱い規約を確認し、応募者の同意を得ること。</li>
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-zoom-minutes.html">Zoom録画→構造化議事録→Slack/Notion自動投稿</a>
+        <span>★★★ 面接議事録を自動化する場合</span>
+      </div>
+      <div class="related-card">
+        <a href="05-faq-update.html">社内FAQ・ナレッジベースの自動更新</a>
+        <span>★★★ よくある質問をFAQ化する</span>
+      </div>
+      <div class="related-card">
+        <a href="../05-support/01-email-reply.html">問い合わせメール→トーン別返信案自動生成</a>
+        <span>★ 今日から — 応募者連絡を効率化</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 総務・人事</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

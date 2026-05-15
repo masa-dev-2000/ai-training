@@ -41,6 +41,28 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -62,6 +84,57 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       YouTubeのURLを渡すだけで、字幕テキストを取得し、ブログ記事・SNS投稿3本・サムネイル画像のプロンプトを一括生成する。動画制作後のコンテンツ展開作業を大幅に自動化できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 「ChatGPT活用術5選」という動画を処理した場合の出力例（一部抜粋）</p>
+    <div class="output-example">
+      <div class="output-header">Claude Code が生成したコンテンツ（ブログ記事冒頭＋SNS投稿）</div>
+      <div class="output-body">
+        <pre>【ブログ記事冒頭（2500字の一部）】
+---
+タイトル：ChatGPT活用術5選｜業務効率が3倍になった実践テクニック
+
+「ChatGPTを使ってみたいけど、どう活用すればいいかわからない」
+そんな悩みを抱えていませんか？
+
+本記事では、実際に業務で活用して効果があった5つのテクニックを紹介します。
+メール返信の自動化から会議メモの整理まで、明日から使える内容です。
+
+## ChatGPT活用術① メール返信の下書きを瞬時に生成
+（以下続く…）
+---
+
+【X（旧Twitter）投稿①：数字フック型】
+ChatGPTで業務効率が3倍になった5つの方法を公開します。
+
+① メール返信→30秒で下書き完成
+② 会議メモ→要点整理を自動化
+③ データ分析→Excelの代わりに使う
+④ 企画書の壁打ち相手として活用
+⑤ 社内マニュアルの更新作業を時短
+
+詳細はブログ記事で解説中↓
+
+【X（旧Twitter）投稿②：問いかけ型】
+「ChatGPTって使ってみたいけど何から始めればいい？」
+
+一番最初に試すべきは「メール返信の下書き」です。
+
+プロンプト1行入力で、3パターンの返信案が出てきます。
+これだけで1日30分の時短になる人が続出中。
+
+【LinkedIn投稿】
+先日、ChatGPT業務活用の動画をYouTubeで公開しました。
+（本文400字のプロ向けテキスト…）
+
+【サムネイル画像プロンプト】
+16:9比率のYouTubeサムネイル。白背景に大きなアイコン文字で「ChatGPT業務活用5選」。
+右側にPCと矢印で効率化を表現。色：青・白・オレンジ。
+左下に「明日から使える」のポップアップラベル。</pre>
+      </div>
     </div>
   </div>
 
@@ -155,6 +228,101 @@ pip install yt-dlp</div>
   </div>
 
   <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('blog', this)">ブログ記事のみ</button>
+      <button class="stab" onclick="showScenario('sns', this)">SNS3本のみ</button>
+      <button class="stab" onclick="showScenario('full', this)">フル一括生成</button>
+    </div>
+
+    <div id="scenario-blog" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">ブログ記事のみ — 詳細プロンプト</div>
+        <pre>以下の字幕テキストからSEOに強いブログ記事を作成してください。
+
+【字幕テキスト】
+（transcript.txtの内容を貼り付け）
+
+【記事の条件】
+・文字数：2500〜3500字
+・ターゲットキーワード：「〇〇」
+・想定読者：〇〇（初心者 / ビジネスパーソン等）
+・H2見出し：4〜6個
+・各H2のあとにH3を1〜3個追加
+・リード文（200字）・まとめ（300字）を必ず含める
+・箇条書きや図解の説明を活用して読みやすくする
+・動画本編の視聴を促すCTAを本文中に1箇所挿入</pre>
+      </div>
+    </div>
+
+    <div id="scenario-sns" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">SNS3本のみ — プラットフォーム別プロンプト</div>
+        <pre>以下の字幕テキストから、各SNSに最適化した投稿文を作成してください。
+
+【字幕テキスト】
+（transcript.txtの内容を貼り付け）
+
+【出力する投稿文】
+
+① X（旧Twitter）投稿×3本（各140字以内）
+   - 1本目：数字や実績を使ったフック型
+   - 2本目：問いかけ・共感型
+   - 3本目：「知らないと損」「意外な事実」型
+
+② Instagram キャプション（300字以内）
+   ・ハッシュタグ10個を末尾に追加
+   ・改行を多めに使い読みやすく
+
+③ LinkedIn 投稿（500字）
+   ・プロフェッショナルなトーン
+   ・動画視聴のリンクを誘導する一文を含む</pre>
+      </div>
+    </div>
+
+    <div id="scenario-full" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">フル一括生成 — 4コンテンツ同時プロンプト</div>
+        <pre>以下の字幕テキストからコンテンツを4種類一括生成してください。
+
+【字幕テキスト】
+（transcript.txtの内容を貼り付け）
+
+【生成物①】ブログ記事（2000〜3000字）
+・SEO対策済みのH2/H3構成
+・リード文・まとめ含む
+
+【生成物②】X（旧Twitter）投稿（140字以内×3本）
+・切り口をそれぞれ変えること
+
+【生成物③】LinkedIn投稿（400〜600字）
+・プロフェッショナルなトーン
+
+【生成物④】サムネイル画像プロンプト
+・16:9比率
+・タイトル文字・ビジュアル要素を具体的に指定
+・使用する色・フォントスタイルも記述
+
+各生成物は「---」で区切って出力してください。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>字幕テキストを目視確認し、明らかな誤字・文脈の切れ目がないか確認したか</li>
+        <li>自動生成された字幕（CC）の場合、固有名詞・専門用語が正しく取得されているか確認したか</li>
+        <li>ブログ記事に動画の文脈が正しく反映されているか（視聴後に確認することを推奨）</li>
+        <li>SNS投稿の文字数が各プラットフォームの制限内に収まっているか確認したか</li>
+        <li>サムネイル画像プロンプトで生成した画像にテキストの誤字がないか確認したか</li>
+        <li>対象が自社コンテンツ（または許可を得たコンテンツ）であることを確認したか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -164,7 +332,34 @@ pip install yt-dlp</div>
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="04-seo-competitor.html">SEO競合調査 Hタグ抽出→記事構成案</a>
+        <span>★★★ ブログ記事の品質をさらに高める</span>
+      </div>
+      <div class="related-card">
+        <a href="../08-content/03-article-consistency.html">記事一貫性チェック</a>
+        <span>★★★★ 生成記事の品質を自動チェック</span>
+      </div>
+      <div class="related-card">
+        <a href="03-sns-batch.html">SNS投稿9本一括生成</a>
+        <span>★ SNSだけをまとめて量産する</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — マーケティング・広告</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

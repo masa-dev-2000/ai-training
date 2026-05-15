@@ -37,6 +37,36 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+/* テーブル */
+.table-wrap { overflow-x: auto; margin: 8px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #f1f5f9; color: #334155; font-weight: 700; padding: 8px 12px; text-align: left; border: 1px solid #e2e8f0; }
+td { padding: 8px 12px; border: 1px solid #e2e8f0; color: #475569; }
+td.diff-ok { color: #166534; font-weight: 600; }
+td.diff-ng { background: #fee2e2; color: #991b1b; font-weight: 700; }
+td.diff-amount { text-align: right; font-variant-numeric: tabular-nums; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -58,6 +88,59 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       発注書・納品書・請求書の3つの書類をPDFで渡すと、品目名・数量・単価・税額を自動で突合し、差異がある箇所をハイライトしたレポートを出力する。手作業での照合ミスをゼロにする。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 発注書・納品書・請求書の3書類を照合した場合の差異検出結果例</p>
+    <div class="output-example">
+      <div class="output-header">差異検出レポート — PO-2026-0423 vs INV-2026-0501（株式会社〇〇商事）</div>
+      <div class="output-body">
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>品目名</th><th>発注数量</th><th>納品数量</th><th>請求数量</th><th>単価</th><th>差額</th><th>判定</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>サーバー用SSDドライブ 2TB</td>
+                <td>10個</td>
+                <td>10個</td>
+                <td>10個</td>
+                <td>¥28,000</td>
+                <td class="diff-amount">—</td>
+                <td class="diff-ok">一致</td>
+              </tr>
+              <tr>
+                <td>LANケーブル Cat6A 10m</td>
+                <td>50本</td>
+                <td>50本</td>
+                <td class="diff-ng">55本</td>
+                <td>¥1,200</td>
+                <td class="diff-amount diff-ng">+¥6,000</td>
+                <td class="diff-ng">差異あり</td>
+              </tr>
+              <tr>
+                <td>設置作業費（8時間）</td>
+                <td>1式</td>
+                <td>1式</td>
+                <td>1式</td>
+                <td>¥85,000</td>
+                <td class="diff-amount">—</td>
+                <td class="diff-ok">一致</td>
+              </tr>
+              <tr>
+                <td>消費税（10%）</td>
+                <td colspan="4">発注書計算値：¥39,600 ／ 請求書記載：¥40,200</td>
+                <td class="diff-amount diff-ng">+¥600</td>
+                <td class="diff-ng">差異あり</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px;color:#64748b;margin-top:10px;">検出された差異：2件（LANケーブル数量過請求・消費税計算誤り）。取引先に確認の上、修正請求書を依頼してください。</p>
+      </div>
     </div>
   </div>
 
@@ -145,6 +228,91 @@ def match_documents(po: dict, receipt: dict, invoice: dict) -> list:
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('pdf',this)">PDF照合</button>
+      <button class="stab" onclick="showScenario('csv',this)">CSV照合</button>
+      <button class="stab" onclick="showScenario('batch',this)">バッチ処理（複数件）</button>
+    </div>
+
+    <div id="scenario-pdf" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">PDF照合 — pdfplumberでテキスト抽出・突合</div>
+        <pre>発注書・納品書・請求書のPDFを渡すと自動で3書類を突合し、
+差異をHTMLレポートとして出力するスクリプトを作成してください。
+
+# 実行方法
+python match_pdf.py \
+  --po   PO-2026-0423.pdf \
+  --receipt NS-2026-0428.pdf \
+  --invoice INV-2026-0501.pdf \
+  --output report_0501.html
+
+# 出力：差異箇所を赤くハイライトしたHTMLレポート
+# 差異なしの場合：自動承認フォルダに移動</pre>
+      </div>
+    </div>
+
+    <div id="scenario-csv" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">CSV照合 — 発注データをCSVで管理している場合</div>
+        <pre>調達システムからエクスポートした発注CSV と
+取引先から受け取った請求書CSVを照合するスクリプトを作成してください。
+
+# 発注CSV形式
+po_number,item_name,quantity,unit_price,supplier
+PO-0423,SSDドライブ 2TB,10,28000,株式会社〇〇商事
+
+# 請求CSVの読み込みと突合
+python match_csv.py \
+  --po_csv orders_april.csv \
+  --invoice_csv invoices_may.csv
+
+# 品目名の表記揺れ対応（類似度マッチング）
+# 例：「SSDドライブ2TB」と「SSD 2TB」を同一品目として認識</pre>
+      </div>
+    </div>
+
+    <div id="scenario-batch" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">バッチ処理 — 月末に複数請求書を一括処理</div>
+        <pre>月末に受け取った複数の請求書PDFを一括で発注書データと照合し、
+差異レポートをまとめてSlackに投稿するバッチスクリプトを作成してください。
+
+# フォルダ構成
+invoices/
+  2026-05/
+    INV-0501-A社.pdf
+    INV-0503-B社.pdf
+    INV-0508-C社.pdf
+
+# バッチ実行
+python batch_match.py --month 2026-05
+
+# Slack通知（差異ありのみ）
+✗ INV-0503-B社.pdf: 差異2件（数量・消費税）
+✓ INV-0501-A社.pdf: 差異なし → 自動承認キューへ
+✓ INV-0508-C社.pdf: 差異なし → 自動承認キューへ</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>差異が検出された場合、取引先への確認連絡と修正請求書の受け取りが完了しているか</li>
+        <li>数量差異は実際の納品数と発注数のどちらが正しいか、納品担当者に確認したか</li>
+        <li>消費税の計算差異は、税率区分（10%/8%軽減）の誤りがないか確認したか</li>
+        <li>品目名の表記揺れで「一致扱い」になった項目が本当に同一品目か確認したか</li>
+        <li>スキャンPDFの場合、OCR読取ミス（数字の誤認識：1/7、0/8等）がないか目視確認したか</li>
+        <li>差異なしで自動承認した請求書もサンプル抽出（10%程度）で目視確認しているか</li>
+        <li>照合結果のレポートは支払処理の証憑として保管しているか（7年間）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -154,7 +322,34 @@ def match_documents(po: dict, receipt: dict, invoice: dict) -> list:
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="05-invoice-review.html">請求書確認作業の大幅効率化</a>
+        <span>★★★ 照合後の承認フロー自動化</span>
+      </div>
+      <div class="related-card">
+        <a href="06-invoice-number-verify.html">適格請求書番号を国税庁APIで一括検証</a>
+        <span>★★ インボイス番号の確認</span>
+      </div>
+      <div class="related-card">
+        <a href="02-journal-anomaly.html">freee API連携 仕訳異常値検出</a>
+        <span>★★★ 照合後の仕訳確認</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 経理・バックオフィス</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

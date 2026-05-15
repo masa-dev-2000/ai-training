@@ -37,6 +37,30 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
+.quote-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+.quote-table th { background: #f1f5f9; color: #475569; font-weight: 700; padding: 8px 10px; border: 1px solid #e2e8f0; text-align: left; font-size: 12px; }
+.quote-table td { padding: 8px 10px; border: 1px solid #e2e8f0; color: #334155; }
+.quote-table tr:nth-child(even) { background: #f8fafc; }
+.quote-table .total-row { background: #eff6ff; font-weight: 700; }
+.quote-table .grand-total { background: #1e40af; color: #fff; font-weight: 700; }
 </style>
 </head>
 <body>
@@ -58,6 +82,55 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       「A社にコンサル料50万円の見積書を作って」という自然言語の指示だけで、正式な体裁のPDF見積書を自動生成するスキルコマンドを構築する。消費税計算・見積番号の自動採番・会社印影の埋め込みまで自動化できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ /quoteコマンド実行後に生成されるPDF見積書の内容例</p>
+    <div class="output-example">
+      <div class="output-header">生成される PDF 見積書の内容</div>
+      <div class="output-body">
+        <p style="font-size:12px;color:#64748b;margin-bottom:12px;">御見積書　　見積番号：Q20260515-007　　発行日：2026年5月15日　　有効期限：2026年6月14日</p>
+        <p style="font-size:13px;font-weight:700;margin-bottom:8px;">株式会社〇〇 御中</p>
+        <table class="quote-table" style="margin-bottom:12px;">
+          <thead>
+            <tr>
+              <th>品目</th>
+              <th>数量</th>
+              <th>単価</th>
+              <th>金額</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>システム導入コンサルティング</td>
+              <td>1式</td>
+              <td>500,000円</td>
+              <td>500,000円</td>
+            </tr>
+            <tr>
+              <td>月次保守・サポート料</td>
+              <td>3ヶ月</td>
+              <td>50,000円</td>
+              <td>150,000円</td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="3" style="text-align:right;">小計</td>
+              <td>650,000円</td>
+            </tr>
+            <tr class="total-row">
+              <td colspan="3" style="text-align:right;">消費税（10%）</td>
+              <td>65,000円</td>
+            </tr>
+            <tr class="grand-total">
+              <td colspan="3" style="text-align:right;">合計（税込）</td>
+              <td>715,000円</td>
+            </tr>
+          </tbody>
+        </table>
+        <p style="font-size:12px;color:#64748b;">振込先：〇〇銀行 〇〇支店 普通 1234567 〇〇株式会社<br>備考：上記金額は見積書発行から30日以内にご入金ください。</p>
+      </div>
     </div>
   </div>
 
@@ -153,6 +226,86 @@ generate_quote.pyを実行してPDFを生成してください。
   </div>
 
   <div class="section">
+    <h2>プロンプト / 設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('single',this)">単一品目</button>
+      <button class="stab" onclick="showScenario('multi',this)">複数品目＋値引き</button>
+      <button class="stab" onclick="showScenario('saas',this)">月額SaaS型</button>
+    </div>
+
+    <div id="scenario-single" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">単一品目 — シンプルな見積書</div>
+        <pre>/quote
+
+顧客名：株式会社〇〇
+品目：業務改善コンサルティング
+単価：800,000円
+数量：1式
+有効期限：30日
+備考：（特記事項があれば）
+
+消費税10%を自動計算して見積書PDFを生成してください。
+ファイル名：quote_〇〇_20260515.pdf</pre>
+      </div>
+    </div>
+
+    <div id="scenario-multi" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">複数品目＋値引き — 値引き額を明示した見積書</div>
+        <pre>/quote
+
+顧客名：〇〇工業株式会社
+品目一覧：
+  1. システム設計・要件定義　　500,000円 × 1式
+  2. 開発・実装（基本機能）　　1,200,000円 × 1式
+  3. テスト・品質検証　　　　　300,000円 × 1式
+  4. 導入支援・操作研修　　　　150,000円 × 1式
+
+値引き：上記合計から10%割引（長期取引割引）
+有効期限：2026年6月30日
+
+値引き行を小計の前に明示し、
+税抜小計→値引き額→値引き後小計→消費税→税込合計の順で表示してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-saas" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">月額SaaS型 — 初期費用＋月額料金の見積書</div>
+        <pre>/quote
+
+顧客名：〇〇株式会社
+契約形態：月額サブスクリプション（1年契約）
+品目一覧：
+  1. 初期導入費用（設定・データ移行）　200,000円 × 1式
+  2. 月額利用料（プレミアムプラン）　　 50,000円 × 12ヶ月
+
+契約期間：2026年6月1日〜2027年5月31日
+支払い条件：初期費用は契約時一括、月額は毎月月末払い
+
+月額と年間合計を分けて表示し、
+「1年間の総費用：〇〇円（税込）」を備考欄に記載してください。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>送付前チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>顧客名（会社名・御中の表記）に誤りがないか</li>
+        <li>見積番号が連番で管理されており、重複がないか</li>
+        <li>品目名・単価・数量・合計の計算が正しいか（特に消費税率）</li>
+        <li>値引きがある場合、値引き後の金額が正しく反映されているか</li>
+        <li>有効期限が設定されており、過去の日付になっていないか</li>
+        <li>振込先情報（銀行名・支店名・口座番号・名義）に誤りがないか</li>
+        <li>ロゴ・印影が正しく表示されているか（PDF表示で確認）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -162,7 +315,34 @@ generate_quote.pyを実行してPDFを生成してください。
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-proposal-draft.html">提案書ドラフト自動生成</a>
+        <span>★★ 見積書と合わせて提案書も自動化</span>
+      </div>
+      <div class="related-card">
+        <a href="04-crm-auto-input.html">CRM自動入力＋次アクション提案</a>
+        <span>★★★ 商談後の記録も自動化</span>
+      </div>
+      <div class="related-card">
+        <a href="../03-finance/02-invoice-matching.html">請求書・領収書の自動照合</a>
+        <span>★★ 見積→請求のワークフロー連携</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 営業</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

@@ -34,6 +34,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -55,6 +73,113 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       GitHubのIssueコメントで <code>@claude implement this</code> とメンションすると、Claude CodeがIssueの内容を読み取り・コードを実装・テストを書き・PRを自動作成するワークフローを構築する。小規模なバグ修正・機能追加を高速化できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ Issue #42「ログインページのバリデーションエラー表示が不正」に <code>@claude implement this</code> とコメントした場合の自動作成PRの例</p>
+    <div class="output-example">
+      <div class="output-header">Claudeが自動作成したPRの概要</div>
+      <div class="output-body">
+        <pre><strong>PR #44: fix: ログインページのバリデーションエラー表示を修正</strong>
+ブランチ: claude/fix-login-validation-42
+作成者: @claude-bot
+
+---
+
+## 変更内容
+
+Issue #42 の問題を修正しました。メールアドレス形式が不正な場合にエラーメッセージが
+表示されない不具合を解消しています。
+
+## 差分概要
+
+<strong>src/components/LoginForm.tsx</strong> (+18 / -4)
+  - バリデーション処理を useForm フックに移行
+  - エラーメッセージを FormErrorMessage コンポーネントで表示
+  - 空白入力・形式不正・必須未入力の3パターンを個別にハンドリング
+
+<strong>src/components/LoginForm.test.tsx</strong> (+32 / -0)
+  - バリデーションエラー表示の単体テスト3ケースを追加
+  - 正常ログインのスモークテストを追加
+
+## テスト確認
+
+✅ npm test — 全47テストパス
+✅ TypeScript コンパイル — エラーなし
+
+## 注意事項
+
+- エラーメッセージの文言は既存の i18n ファイル（locales/ja.json）を参照しています
+- 既存のスタイルシートを変更していません（FormErrorMessage は既存コンポーネント）</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('bugfix',this)">バグ修正Issue</button>
+      <button class="stab" onclick="showScenario('feature',this)">機能追加Issue</button>
+      <button class="stab" onclick="showScenario('refactor',this)">リファクタリングIssue</button>
+    </div>
+
+    <div id="scenario-bugfix" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">バグ修正Issue — Claudeへの指示テンプレート</div>
+        <pre>以下のバグ修正Issueを実装してPRを作成してください。
+
+Issue内容：$ISSUE_BODY
+
+実装方針：
+- 最小限の変更でバグを修正する（スコープを広げない）
+- 修正した箇所の単体テストを追加する
+- 修正内容をPR本文に「再現手順」「原因」「修正内容」の形式でまとめる
+
+完了後：
+- git add → git commit（"fix: [Issue内容を要約]"）
+- feature/fix-[issue番号] ブランチを作成してPRを作成</pre>
+      </div>
+    </div>
+
+    <div id="scenario-feature" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">機能追加Issue — Claudeへの指示テンプレート</div>
+        <pre>以下の機能追加Issueを実装してPRを作成してください。
+
+Issue内容：$ISSUE_BODY
+
+実装方針：
+- CONTRIBUTING.md のコーディング規約に従う
+- 新機能に対応するユニットテストを追加する（カバレッジ80%以上）
+- 変更が大きい場合は実装前に設計をコメントとして確認を取る
+- APIの変更がある場合はOpenAPI仕様書（docs/api.yaml）も更新する
+
+完了後：
+- git add → git commit（"feat: [機能名]"）
+- feature/[機能名]-[issue番号] ブランチを作成してPRを作成
+- PRのラベルに "enhancement" を付ける</pre>
+      </div>
+    </div>
+
+    <div id="scenario-refactor" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">リファクタリングIssue — Claudeへの指示テンプレート</div>
+        <pre>以下のリファクタリングIssueを実施してPRを作成してください。
+
+Issue内容：$ISSUE_BODY
+
+実装方針：
+- 外部から見える振る舞いを変えない（既存テストがすべてパスすること）
+- リファクタリング前後で動作が同一であることをテストで確認する
+- 変更の意図（なぜ変えるか）をコードコメントまたはPR本文に記載する
+- 1つのPRで変更するファイル数は10ファイル以内に収める
+
+完了後：
+- git add → git commit（"refactor: [変更内容を要約]"）
+- refactor/[内容]-[issue番号] ブランチを作成してPRを作成</pre>
+      </div>
     </div>
   </div>
 
@@ -129,6 +254,21 @@ jobs:
   </div>
 
   <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>自動作成されたPRのコードを人間がレビューしたか（自動マージ設定になっていないか）</li>
+        <li>CIのすべてのテスト・リントチェックがパスしているか</li>
+        <li>Claudeがトリガーできるユーザーをホワイトリストで制限しているか</li>
+        <li>ANTHROPIC_API_KEY が GitHub Secrets に安全に保存されているか</li>
+        <li>本番環境への意図しないデプロイが走らないよう、ブランチ保護ルールを設定しているか</li>
+        <li>月次のAPI利用コストをモニタリングし、上限を設定しているか</li>
+        <li>大きな機能変更の場合、実装前にClaudeが設計確認コメントを投稿する設定になっているか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -139,7 +279,33 @@ jobs:
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-pr-review.html">PRのURL渡すだけでコードレビュー</a>
+        <span>★★★ 自動作成PRのレビューに活用</span>
+      </div>
+      <div class="related-card">
+        <a href="05-doc-screenshot.html">ドキュメントのスクリーンショット全自動更新</a>
+        <span>★★★ PRマージ後のドキュメント更新を自動化</span>
+      </div>
+      <div class="related-card">
+        <a href="../06-hr/04-manual-generation.html">業務マニュアルの自動生成</a>
+        <span>★★★ 実装仕様書・手順書の文書化に</span>
+      </div>
+    </div>
+  </div>
 </div>
 <footer>中級編 設定ガイド — 開発・エンジニアリング</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

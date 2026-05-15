@@ -34,6 +34,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -55,6 +73,52 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       全契約書の更新期限・自動更新条項・解約通知期限をGoogle Sheetsで一元管理し、期限30日前・7日前・当日にSlackとメールで自動アラートを送信する。担当者が変わっても更新見落としが起きない体制を構築できる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 毎朝9時に自動実行され、期限が近い契約の担当者宛に以下のアラートメールが送信される</p>
+    <div class="output-example">
+      <div class="output-header">自動送信アラートメール（本文例）</div>
+      <div class="output-body">
+        <pre>件名：【重要】契約更新アラート — 株式会社サンプル（あと30日）
+
+山田 花子 様
+
+以下の契約の更新期限が30日後に迫っています。
+対応方針を確認の上、必要な手続きを進めてください。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+契約ID：CON-2024-0042
+相手方：株式会社サンプル
+契約種別：業務委託契約
+契約終了日：2026年6月15日（あと30日）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+⚠️【自動更新あり】解約通知期限にご注意ください
+この契約には自動更新条項があります。
+解約通知の期限：2026年5月16日（明日まで）
+
+契約を終了する場合は、今日中に相手方へ書面で
+解約通知を送付する必要があります。
+
+自動更新を希望する場合は、この期限後に
+相手方との条件確認を行ってください。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+【対応が必要なアクション】
+□ 契約継続 or 終了の方針を決定する
+□ 自動更新の場合：条件変更の交渉が必要か確認する
+□ 解約の場合：今日中に解約通知書を送付する
+
+契約管理シート：
+https://docs.google.com/spreadsheets/d/...（シートURL）
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+このメールは契約管理システムから自動送信されています。
+設定変更・配信停止は法務担当（legal@example.co.jp）まで。</pre>
+      </div>
     </div>
   </div>
 
@@ -132,6 +196,99 @@ def check_and_alert():
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('sheets',this)">Googleシート管理</button>
+      <button class="stab" onclick="showScenario('threshold',this)">アラート閾値の変更</button>
+      <button class="stab" onclick="showScenario('filter',this)">特定カテゴリの抽出</button>
+    </div>
+
+    <div id="scenario-sheets" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">Googleシート管理 — 既存Excelからの移行プロンプト</div>
+        <pre>既存のExcel契約管理台帳をGoogle Sheets形式に移行し、
+アラートスクリプトが読み取れる形式に整えてください。
+
+【現在のExcel列構成】
+（ここにExcelのヘッダー行をペースト）
+
+【要件】
+1. 現在の列名を以下のシステム列名にマッピングする
+   契約ID / 相手方企業名 / 契約種別 / 契約開始日 /
+   契約終了日 / 自動更新 / 解約通知期限 / 担当者名 /
+   担当者メール / 備考 / ステータス
+2. 日付は YYYY/MM/DD 形式に統一する
+3. 自動更新列は「あり/なし」の2値に統一する
+4. ステータスは「有効/更新済/終了」に分類する
+
+移行用のPythonスクリプトを生成してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-threshold" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">アラート閾値の変更 — 30日/60日/90日への切り替え</div>
+        <pre>現在のアラートスクリプト（30日前・7日前・当日）を
+以下の設定に変更してください。
+
+【変更後のアラートスケジュール】
+- 90日前：担当者へ事前通知（更新か終了かを決める期限）
+- 60日前：担当者＋上長へ通知（方針決定の催促）
+- 30日前：担当者＋上長＋法務部長へ通知（解約通知の送付期限確認）
+- 7日前：全関係者へ緊急通知（自動更新条項がある場合は特に重要）
+
+【追加要件】
+- 自動更新ありの契約は「解約通知期限」（G列）に基づいて
+  別途アラートを出す
+- 解約通知期限が7日以内に迫った場合は緊急フラグを付ける
+
+contract_alert.py を上記仕様に書き直してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-filter" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">特定カテゴリの抽出 — 契約種別・担当者別のフィルタリング</div>
+        <pre>月次の法務レポート用に、契約管理シートから
+特定条件でデータを抽出するスクリプトを作成してください。
+
+【抽出条件A：今月中に期限が来る契約】
+- ステータス：有効
+- 契約終了日：今月末日まで
+- 出力：企業名・契約種別・終了日・自動更新・担当者
+
+【抽出条件B：自動更新条項あり・解約通知期限が60日以内】
+- ステータス：有効
+- 自動更新：あり
+- 解約通知期限（G列の数値）× 日前が60日以内に相当する契約
+- 出力：企業名・終了日・解約通知送付期限・担当者
+
+【抽出条件C：担当者別の契約件数・期限一覧】
+- 担当者名でグループ化
+- 各担当者の有効契約数・最も近い期限を一覧表示
+
+各抽出結果をSlackの#法務チャンネルに毎月1日に投稿する
+機能も合わせて実装してください。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>自動更新条項のある契約は解約通知期限（G列）が正しく入力されているか</li>
+        <li>アラートメールの送信元アドレスが法務担当者に認識されるアドレスになっているか</li>
+        <li>担当者のメールアドレスが最新の状態に保たれているか（退職・異動に対応）</li>
+        <li>スプレッドシートの編集権限が適切に設定されているか（誰でも削除できない状態）</li>
+        <li>アラートを受け取った担当者が次のアクションを実施したかを追跡できているか</li>
+        <li>解約通知を送付する場合、書面・内容証明の要否を法務担当者に確認したか</li>
+        <li>テスト実行で実際にSlack・メールが正しく届くことを確認したか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -141,7 +298,34 @@ def check_and_alert():
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-nda-automation.html">NDAドラフト→リスク評価→フォルダ格納自動化</a>
+        <span>★★★ 受領したNDAを自動でシートに登録する</span>
+      </div>
+      <div class="related-card">
+        <a href="02-contract-review.html">法務プレイブック参照 条項差異・リスク判定</a>
+        <span>★★★★ 更新時の条件変更をRAGで審査する</span>
+      </div>
+      <div class="related-card">
+        <a href="../05-support/01-email-reply.html">問い合わせメール返信案の自動生成</a>
+        <span>★ 解約通知・更新連絡メールの文面作成に</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 法務</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

@@ -34,6 +34,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -59,12 +77,92 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
   </div>
 
   <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 操作解説の画面録画を入力した場合にClaudeが生成するoverlays.jsonと最終動画の説明</p>
+    <div class="output-example">
+      <div class="output-header">生成された overlays.json の例</div>
+      <div class="output-body">
+        <pre>[
+  {
+    "start": 3.4,
+    "end": 6.2,
+    "type": "arrow",
+    "x": 680,
+    "y": 240,
+    "label": "「設定」ボタンをクリック",
+    "color": "#ef4444"
+  },
+  {
+    "start": 8.0,
+    "end": 11.5,
+    "type": "highlight",
+    "x1": 580,
+    "y1": 300,
+    "x2": 920,
+    "y2": 380,
+    "label": "入力欄に値を入力"
+  },
+  {
+    "start": 14.1,
+    "end": 17.0,
+    "type": "arrow",
+    "x": 760,
+    "y": 480,
+    "label": "「保存」を押して完了",
+    "color": "#22c55e"
+  }
+]</pre>
+      </div>
+    </div>
+    <div class="output-example" style="margin-top:10px;">
+      <div class="output-header">最終動画の内容</div>
+      <div class="output-body">
+        Whisperが生成した日本語字幕が画面下部に表示され、操作箇所に赤い矢印と「ここをクリック」のラベルが自動表示される。重要な入力欄はオレンジの枠線でハイライト。担当者は後処理なしでYouTubeやSlackに共有できる状態の解説動画が完成する。
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>必要な準備</h2>
     <div>
       <span class="tool-chip">FFmpeg（テキスト・矢印描画のためのdrawtext/drawbox）</span>
       <span class="tool-chip">OpenAI Whisper（字幕生成）</span>
       <span class="tool-chip">Python（Pillow・moviepy）</span>
       <span class="tool-chip">Claude Code</span>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('caption-only',this)">字幕のみ</button>
+      <button class="stab" onclick="showScenario('arrow',this)">矢印オーバーレイあり</button>
+      <button class="stab" onclick="showScenario('highlight',this)">ハイライトボックスあり</button>
+    </div>
+    <div id="scenario-caption-only" class="scenario-content active">
+      <div class="code"><span class="c"># 字幕のみ：WhisperでSRT生成→FFmpegで焼き込み（最もシンプル）</span>
+whisper input.mp4 --language ja --output_format srt --output_dir ./
+ffmpeg -i input.mp4 \
+  -vf "subtitles=input.srt:force_style='FontName=Noto Sans JP,FontSize=22,PrimaryColour=&HFFFFFF&,BackColour=&H80000000&,MarginV=30'" \
+  -c:a copy output_captioned.mp4</div>
+    </div>
+    <div id="scenario-arrow" class="scenario-content">
+      <div class="code"><span class="c"># 矢印オーバーレイ：Claude CodeでSRTからoverlays.jsonを生成→Pythonで合成</span>
+<span class="c"># 1. SRT生成（字幕のみの場合と同じ）</span>
+whisper input.mp4 --language ja --output_format srt
+<span class="c"># 2. Claude Codeに字幕テキストを渡してoverlays.jsonを生成させる</span>
+<span class="c"># 3. Pythonスクリプトで矢印クリップを合成</span>
+python3 apply_overlays.py \
+  --input input.mp4 \
+  --overlays overlays.json \
+  --output output_with_arrows.mp4</div>
+    </div>
+    <div id="scenario-highlight" class="scenario-content">
+      <div class="code"><span class="c"># ハイライトボックス：FFmpegのdrawboxフィルターを使う方法</span>
+<span class="c"># overlays.jsonの"type":"highlight"エントリをdrawboxフィルターに変換</span>
+ffmpeg -i output_captioned.mp4 \
+  -vf "drawbox=enable='between(t,8.0,11.5)':x=580:y=300:w=340:h=80:color=orange@0.8:t=4" \
+  -c:a copy output_highlighted.mp4</div>
     </div>
   </div>
 
@@ -116,6 +214,21 @@ from moviepy.video.tools.drawing import color_gradient
   </div>
 
   <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>FFmpegがインストールされているか（`ffmpeg -version` で確認）</li>
+        <li>Whisperで生成したSRTファイルの日本語字幕が正しく認識されているか</li>
+        <li>日本語フォントのパスが絶対パスで指定されているか（drawtextフィルター用）</li>
+        <li>overlays.jsonのタイムスタンプ（start/end）が動画の実際の操作箇所に合っているか</li>
+        <li>矢印・ハイライトの座標（x, y）が画面内に収まっているか（解像度の範囲内か）</li>
+        <li>字幕と矢印が重なって読みにくくなっていないか（プレビューで確認）</li>
+        <li>最終動画をYouTube・Slack等の配布先で実際に再生して確認したか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -125,7 +238,29 @@ from moviepy.video.tools.drawing import color_gradient
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-video-generation.html">Remotion×Claude Codeで動画生成</a>
+        <span>プログラマブル動画を1分で作る</span>
+      </div>
+      <div class="related-card">
+        <a href="../07-engineering/01-pr-review.html">PRレビュー自動化</a>
+        <span>Claude Codeで開発フローを効率化</span>
+      </div>
+    </div>
+  </div>
 </div>
 <footer>中級編 設定ガイド — コンテンツ制作</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

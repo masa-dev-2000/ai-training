@@ -37,6 +37,35 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+/* 出力例 */
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+/* テーブル */
+.table-wrap { overflow-x: auto; margin: 8px 0; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th { background: #f1f5f9; color: #334155; font-weight: 700; padding: 8px 12px; text-align: left; border: 1px solid #e2e8f0; }
+td { padding: 8px 12px; border: 1px solid #e2e8f0; color: #475569; }
+td.flag-ng { background: #fee2e2; color: #991b1b; font-weight: 700; }
+td.flag-warn { background: #fef9c3; color: #854d0e; font-weight: 600; }
+/* シナリオタブ */
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+/* チェックリスト */
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+/* 関連ガイド */
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -58,6 +87,62 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       freee APIから当月の仕訳データを取得し、Claudeが統計的な異常値・計上ミスの疑いがある仕訳を自動検出してレポートを出力する。仕訳件数が増えても処理時間は一定に保たれる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 当月の仕訳データを処理した場合の検出レポート例</p>
+    <div class="output-example">
+      <div class="output-header">異常値検出レポート — 2026年4月分（freee APIより取得）</div>
+      <div class="output-body">
+        <p style="margin-bottom:10px;font-size:12px;color:#64748b;">検出件数：5件 ／ 総仕訳件数：312件 ／ 実行日時：2026-05-05 09:00</p>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr><th>仕訳日</th><th>勘定科目</th><th>金額</th><th>フラグ理由</th><th>判定</th></tr>
+            </thead>
+            <tbody>
+              <tr>
+                <td>2026-04-06</td>
+                <td>広告宣伝費</td>
+                <td>¥2,850,000</td>
+                <td>前月比420%。同一取引先の過去実績は平均¥680,000</td>
+                <td class="flag-ng">要確認</td>
+              </tr>
+              <tr>
+                <td>2026-04-13</td>
+                <td>外注費</td>
+                <td>¥750,000</td>
+                <td>日曜日に計上された仕訳。摘要「テスト入力」</td>
+                <td class="flag-ng">要確認</td>
+              </tr>
+              <tr>
+                <td>2026-04-20</td>
+                <td>旅費交通費</td>
+                <td>¥1,200,000</td>
+                <td>前月に同一取引先・同一金額の計上なし（突発的支払い）</td>
+                <td class="flag-warn">要調査</td>
+              </tr>
+              <tr>
+                <td>2026-04-25</td>
+                <td>消耗品費</td>
+                <td>¥89,000</td>
+                <td>借方貸方の合計が¥100不一致（丸め誤差の可能性）</td>
+                <td class="flag-ng">修正必要</td>
+              </tr>
+              <tr>
+                <td>2026-04-30</td>
+                <td>売掛金</td>
+                <td>¥4,500,000</td>
+                <td>期末に計上。前月末比300%超。売上計上漏れ振替の疑い</td>
+                <td class="flag-warn">要調査</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+        <p style="font-size:12px;color:#64748b;margin-top:10px;">※ 判定「要確認」は速やかに経理担当者が原票と照合すること。修正がある場合はfreee上で訂正仕訳を入力。</p>
+      </div>
     </div>
   </div>
 
@@ -139,6 +224,100 @@ def get_journals(start_date: str, end_date: str) -> pd.DataFrame:
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('monthly',this)">月次定期実行</button>
+      <button class="stab" onclick="showScenario('manual',this)">手動トリガー実行</button>
+      <button class="stab" onclick="showScenario('account',this)">特定勘定科目の監視</button>
+    </div>
+
+    <div id="scenario-monthly" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">月次定期実行 — cron設定例</div>
+        <pre>毎月5日の午前9時に前月分の仕訳データを取得・チェックし、
+結果をPDFレポートとしてメール送信するcron設定を作成してください。
+
+# crontab
+0 9 5 * * /usr/bin/python3 /opt/journal_check/run_monthly.py
+
+# run_monthly.py（Claude Codeで生成）
+import datetime
+
+last_month = datetime.date.today().replace(day=1) - datetime.timedelta(days=1)
+start = last_month.replace(day=1).strftime("%Y-%m-%d")
+end = last_month.strftime("%Y-%m-%d")
+
+journals = get_journals(start, end)
+anomalies = detect_anomalies(journals)
+send_report_email(anomalies, to="keiri@company.co.jp")</pre>
+      </div>
+    </div>
+
+    <div id="scenario-manual" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">手動トリガー実行 — 任意期間を指定して実行</div>
+        <pre>特定の期間を指定してコマンドラインから即座に異常値チェックを実行する。
+
+# コマンド例
+python run_check.py --start 2026-04-01 --end 2026-04-30
+
+# run_check.py（抜粋）
+import argparse
+parser = argparse.ArgumentParser()
+parser.add_argument("--start", required=True)
+parser.add_argument("--end", required=True)
+args = parser.parse_args()
+
+journals = get_journals(args.start, args.end)
+anomalies = detect_anomalies(journals)
+
+# 結果をターミナルに表示 + CSVに保存
+print(f"検出件数: {len(anomalies)}件")
+anomalies.to_csv("anomaly_report.csv", index=False, encoding="utf-8-sig")</pre>
+      </div>
+    </div>
+
+    <div id="scenario-account" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">特定勘定科目の監視 — 重点チェック設定</div>
+        <pre>外注費・広告宣伝費など金額が大きくなりやすい科目に特化した
+厳格な監視ルールを設定する。
+
+# 監視対象科目と閾値設定（config.yaml）
+watch_accounts:
+  - name: 外注費
+    threshold_ratio: 1.5   # 前月比150%超で警告
+    max_single: 3000000    # 1件あたり上限額（300万円）
+  - name: 広告宣伝費
+    threshold_ratio: 2.0
+    max_single: 5000000
+  - name: 接待交際費
+    threshold_ratio: 1.3
+    max_single: 200000
+
+# 閾値超えは即座にSlack通知
+if anomaly["amount"] > config["max_single"]:
+    slack_notify(f"警告: {anomaly['account']} に{anomaly['amount']:,}円の計上")</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>検出された異常仕訳を原票（領収書・請求書）と照合したか</li>
+        <li>土日・祝日計上の仕訳に業務上の合理的な理由があるか確認したか</li>
+        <li>借方貸方の不一致は丸め誤差か入力ミスかを特定したか</li>
+        <li>前月比300%超の計上は経営者・上長への報告が必要か検討したか</li>
+        <li>摘要が空白の仕訳は内容を特定し記載を補完したか</li>
+        <li>修正仕訳が必要な場合、税理士に確認してからfreeeに反映したか</li>
+        <li>APIアクセストークンの有効期限が切れていないか（リフレッシュ設定の確認）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -148,7 +327,34 @@ def get_journals(start_date: str, end_date: str) -> pd.DataFrame:
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="03-monthly-close.html">月次決算チェック（前払費用・減価償却・社保漏れ）</a>
+        <span>★★★ 異常検出の次ステップ</span>
+      </div>
+      <div class="related-card">
+        <a href="06-invoice-number-verify.html">適格請求書番号を国税庁APIで一括検証</a>
+        <span>★★ インボイス制度への対応</span>
+      </div>
+      <div class="related-card">
+        <a href="04-po-invoice-match.html">発注書 vs 請求書 差異自動検出</a>
+        <span>★★★ 計上前の照合自動化</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 経理・バックオフィス</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

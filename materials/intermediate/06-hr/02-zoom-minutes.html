@@ -37,6 +37,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -62,7 +80,49 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
   </div>
 
   <div class="section">
-    <h2>必要な準備</html></h2>
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ Zoom録画から自動生成された議事録がSlackに投稿される例</p>
+    <div class="output-example">
+      <div class="output-header">生成された構造化議事録（Slack投稿文）</div>
+      <div class="output-body">
+        <pre>📋 *【議事録】週次プロジェクト進捗会議*
+日時：2026年5月15日（木）10:00〜10:45
+参加者：田中（進行）、山田、佐藤、鈴木、石井
+
+---
+
+*■ 議題*
+1. 新機能開発の進捗確認
+2. 不具合対応の状況
+3. 来月リリース日程の確認
+
+*■ 決定事項*
+• 新機能のリリース日を5月30日に確定
+• 不具合#142はv1.3.2に含める（山田さん担当）
+• 来週の進捗会議を1時間早め、9:00開始に変更
+
+*■ アクションアイテム*
+| 担当者 | タスク | 期限 |
+|--------|--------|------|
+| 山田さん | 不具合#142の修正・テスト | 5/22（金） |
+| 佐藤さん | リリースノートの初稿作成 | 5/27（火） |
+| 鈴木さん | ステージング環境の確認 | 5/28（水） |
+| 石井さん | 顧客への事前告知メール送信 | 5/29（木） |
+
+*■ 次回会議*
+5月22日（木）9:00〜 / Zoom（同URLを使用）
+
+*■ 補足メモ*
+• 山田さんより：外部ライブラリの更新が必要（互換性確認済）
+• 鈴木さんより：ステージング環境が現在不安定なためバックアップ確保を提案
+
+_Notion議事録DB → https://notion.so/xxx_</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>必要な準備</h2>
     <div>
       <span class="tool-chip">Zoom Pro以上のアカウント（クラウド録画有効）</span>
       <span class="tool-chip">Zoom OAuth App（recordings:read スコープ）</span>

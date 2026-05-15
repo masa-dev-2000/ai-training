@@ -180,6 +180,90 @@ def handle_message(event, say):
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('faq-only',this)">FAQ回答のみ</button>
+      <button class="stab" onclick="showScenario('escalation',this)">エスカレーション付き</button>
+      <button class="stab" onclick="showScenario('after-hours',this)">営業時間外対応</button>
+    </div>
+    <div id="scenario-faq-only" class="scenario-content active">
+      <div class="output-example">
+        <div class="output-header">FAQ回答のみ — システムプロンプト設定例</div>
+        <div class="output-body">
+          <pre>あなたは〇〇株式会社のサポートBotです。
+以下のFAQに基づいてユーザーの質問に回答してください。
+
+FAQに含まれる質問にのみ回答し、不明な場合は「担当者にご確認ください」と案内します。
+エスカレーションは行いません。
+
+【FAQ】
+{faq_content}
+
+【回答ルール】
+- 1〜3文で簡潔に答える
+- FAQのURL参照先があれば末尾に添付する
+- 必ず「このメッセージはAIが自動返信しています」と末尾に記載する</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-escalation" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">エスカレーション付き — 判定ロジック設定例</div>
+        <div class="output-body">
+          <pre>以下のいずれかに該当する場合は needs_escalation: true を返してください：
+
+1. 怒り・不満・脅迫的なトーンが含まれる
+2. 返金・解約・法的手続きの要求
+3. 個人情報（氏名・住所・カード番号等）が含まれる
+4. FAQで解決できない内容かつ不確実性が高い
+5. 「緊急」「至急」「すぐに」等の言葉が含まれる
+
+エスカレーション時は以下を JSON で返すこと：
+{
+  "needs_escalation": true,
+  "summary": "30文字以内の状況要約",
+  "priority": "high | medium | low"
+}</pre>
+        </div>
+      </div>
+    </div>
+    <div id="scenario-after-hours" class="scenario-content">
+      <div class="output-example">
+        <div class="output-header">営業時間外対応 — 設定例</div>
+        <div class="output-body">
+          <pre>営業時間外（平日18時〜翌9時・土日祝）の場合：
+
+1. FAQで解決できる質問 → 通常通り自動回答
+2. FAQで解決できない質問 → 以下のメッセージを返す：
+
+「ご質問ありがとうございます。
+ただいま営業時間外（平日 9:00〜18:00）のため、
+担当者からの返信は翌営業日となります。
+お急ぎの場合は emergency@example.co.jp までご連絡ください。」
+
+3. 緊急案件（システム障害・セキュリティ等）→
+   Slack の #緊急対応 チャンネルに通知を送る</pre>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>FAQの内容が最新の製品仕様・価格・手順に合っているか</li>
+        <li>ボットが自動返信していることをユーザーに明示しているか</li>
+        <li>エスカレーション通知が実際に担当者に届いているか（テスト済みか）</li>
+        <li>ボット自身の投稿をループ検知で無視できているか</li>
+        <li>サーバーが24時間稼働しており、障害時の再起動設定があるか</li>
+        <li>個人情報を含む質問がAIに渡る前にフィルタリングされているか</li>
+        <li>エスカレーション多発カテゴリを月次でFAQに反映する運用があるか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -190,7 +274,34 @@ def handle_message(event, say):
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-email-reply.html">問い合わせメール→トーン別返信案自動生成</a>
+        <span>★ 今日から — メール対応を効率化</span>
+      </div>
+      <div class="related-card">
+        <a href="../06-hr/05-faq-update.html">社内FAQ・ナレッジベースの自動更新</a>
+        <span>★★★ FAQを常に最新に保つ</span>
+      </div>
+      <div class="related-card">
+        <a href="03-line-personalized.html">LINEパーソナライズメッセージ自動送信</a>
+        <span>★★★★ LINE対応も自動化する場合</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — カスタマーサポート</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

@@ -35,6 +35,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -56,6 +74,84 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       自社の法務プレイブック（許容条件の基準書）と過去の締結済み契約書をベクトルデータベースに格納し、新規契約書の各条項を照合。プレイブックとの差異・損害賠償上限なし・管轄問題等のリスクをリアルタイムで判定するRAGシステムを構築する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 新規契約書をシステムに投入すると以下のような差異検出レポートが生成される</p>
+    <div class="output-example">
+      <div class="output-header">契約書審査レポート（プレイブック照合結果）</div>
+      <div class="output-body">
+        <pre>【契約書審査レポート】
+対象ファイル：業務委託契約書_株式会社サンプル_v2.pdf
+審査日時：2026-05-15 14:05
+プレイブック参照件数：12件　過去類似契約参照件数：8件
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+総合判定：要修正（高リスク1件・中リスク2件）
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+■ 第8条（損害賠償）　リスク：高 🔴
+【契約書の記載】
+「受託者は、本業務の履行に関して委託者に生じた一切の損害を
+ 賠償する責任を負うものとする。」
+
+【プレイブック基準】
+損害賠償は「故意または重過失の場合に限り」「本契約に基づく
+報酬総額を上限として」補償する旨を定めること。
+
+【差異】
+・免責条件（故意/重過失限定）の記載なし
+・上限額の規定なし → 無制限の賠償リスク
+
+【修正案】
+「受託者が本業務の履行に関して故意または重過失により委託者に
+ 損害を与えた場合、その賠償額は本契約における報酬総額を上限
+ とする。間接損害・逸失利益は除く。」
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+■ 第12条（知的財産権の帰属）　リスク：中 🟡
+【契約書の記載】
+「本業務の成果物に関する著作権は、受託者に帰属する。」
+
+【プレイブック基準】
+委託業務の成果物の著作権は委託者に帰属、または
+著作権譲渡を明記することを原則とする。
+
+【差異】
+成果物の著作権が受託者（外部）に残る設計になっている。
+
+【修正案】
+「本業務の成果物に関する著作権（著作権法第27条・28条の権利
+ を含む）は、委託者に帰属するものとする。」または
+「受託者は委託者に対し著作権を譲渡する」旨を追記。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+
+■ 第15条（競業避止）　リスク：中 🟡
+【契約書の記載】
+「受託者は、契約終了後2年間、競合他社への役務提供を行わない。」
+
+【プレイブック基準】
+競業避止は「合理的な範囲（期間・地域・業務内容を限定）」に
+とどめること。過度な制限は無効となる可能性がある。
+
+【差異】
+「競合他社」の定義が不明確。地域的限定もなし。
+有効性に疑義あり、かつ受託者にとっても過剰負担の可能性。
+
+【修正案】
+「競合他社」の具体的定義を列挙、または「〇〇分野において
+ 直接競合する」等の限定を設ける。
+
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+問題なし：第1〜7条、第9〜11条、第13〜14条、第16〜20条
+━━━━━━━━━━━━━━━━━━━━━━━━━━━
+⚠️ このレポートはAIによる一次スクリーニングです。
+　最終的な法的判断は必ず弁護士が行ってください。</pre>
+      </div>
     </div>
   </div>
 
@@ -138,6 +234,105 @@ def review_clause(clause_text: str) -> dict:
   </div>
 
   <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('new',this)">新規取引先の契約</button>
+      <button class="stab" onclick="showScenario('renew',this)">既存契約の更新</button>
+      <button class="stab" onclick="showScenario('overseas',this)">海外企業との契約</button>
+    </div>
+
+    <div id="scenario-new" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">新規取引先の契約 — 基本の審査プロセス</div>
+        <pre>新規取引先から受領した契約書を審査してください。
+
+【契約の概要】
+取引先：〇〇株式会社（国内）
+契約種別：業務委託契約
+取引内容：Webシステム開発の委託
+
+【審査方針】
+1. 自社法務プレイブックとの差異を全条項で確認する
+2. 過去の類似契約（同業種・同規模）と比較する
+3. リスクの高い順に優先して修正交渉する
+4. 取引関係の維持を考慮し、最低限の修正点に絞る
+
+【重点確認事項】
+- 損害賠償の上限と免責条件
+- 知的財産権の帰属（成果物・既存ノウハウ）
+- 機密保持の範囲と期間
+- 解除条件と違約金
+
+各条項のリスク評価と優先度（交渉必須/推奨/許容）を
+表形式で出力してください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-renew" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">既存契約の更新 — 変更箇所の差異確認に特化</div>
+        <pre>既存契約の更新版（相手方ドラフト）を審査してください。
+
+【前回契約（締結済み）の主要条件】
+- 損害賠償上限：報酬総額（〇〇円）
+- 秘密保持期間：契約終了後2年
+- 管轄：東京地方裁判所
+- 知的財産：成果物は委託者帰属
+
+【今回の更新版で変更されている可能性がある箇所】
+（ここに更新版の全文または差分をペースト）
+
+確認してほしいこと：
+1. 前回から変更された条項の特定
+2. 変更により自社に不利になった点の指摘
+3. 変更を受け入れてよいか・再交渉すべきかの判断
+4. 更新に際して法令改正等による修正が必要な点</pre>
+      </div>
+    </div>
+
+    <div id="scenario-overseas" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">海外企業との契約 — 国際契約特有のリスクに注目</div>
+        <pre>海外企業との契約書を審査してください。
+
+【契約の概要】
+相手方：〇〇 Inc.（米国・デラウェア州法人）
+契約種別：ソフトウェアライセンス契約（英文契約）
+準拠法：米国カリフォルニア州法（相手方案）
+
+【審査で特に確認してほしい点】
+1. 準拠法・管轄（日本法・日本の裁判所への変更交渉余地）
+2. 限定保証・免責事項（AS-ISが多い）の範囲
+3. 間接損害・逸失利益の免責条項の有無
+4. GDPR・個人情報保護法（日本）双方への対応状況
+5. 仲裁条項（国際仲裁機関の指定は妥当か）
+6. クラスアクション放棄条項など日本法上問題になる条項
+
+【契約書本文】
+（ここに英文または日本語訳をペースト）
+
+日本企業として受け入れ可能な条件か、
+修正交渉すべき点を具体的に指摘してください。</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>法務プレイブックが最新の社内方針・法令に合わせて更新されているか</li>
+        <li>ベクトルDBに格納した過去契約書の個人情報が匿名化されているか</li>
+        <li>審査対象の契約書をAPIに送信することが社内のデータ取り扱い規定上問題ないか</li>
+        <li>AIが「問題なし」と判定した条項についても弁護士が目視確認したか</li>
+        <li>リスク「高」の条項について、交渉しない場合のリスクを経営層に共有したか</li>
+        <li>外国法が準拠法の場合、現地の専門弁護士に確認を取ったか</li>
+        <li>審査レポートの保存先と保管期間が定められているか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -147,7 +342,34 @@ def review_clause(clause_text: str) -> dict:
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="01-nda-automation.html">NDAドラフト→リスク評価→フォルダ格納自動化</a>
+        <span>★★★ まずNDA審査から自動化したい場合</span>
+      </div>
+      <div class="related-card">
+        <a href="03-renewal-alert.html">契約更新期限・自動更新条項 横断管理＋アラート</a>
+        <span>★★ 審査後の契約期限管理に</span>
+      </div>
+      <div class="related-card">
+        <a href="../02-sales/01-proposal-draft.html">提案書・見積書の自動ドラフト</a>
+        <span>★ 契約前の営業フェーズも自動化する</span>
+      </div>
+    </div>
+  </div>
+
 </div>
 <footer>中級編 設定ガイド — 法務</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

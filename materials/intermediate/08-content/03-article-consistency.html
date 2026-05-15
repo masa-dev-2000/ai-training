@@ -37,6 +37,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -58,6 +76,98 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       過去の記事（数百〜数千件）をベクトルDBに格納し、新記事を書く際に関連する過去記事を参照。内容の矛盾・重複・古い情報を検出した上で、既存コンテンツと整合性のとれた新記事を自動生成する。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 新記事「Claude 3.7の使い方」を執筆する際に生成される矛盾検出レポートの例</p>
+    <div class="output-example">
+      <div class="output-header">矛盾検出レポート（Claude の出力）</div>
+      <div class="output-body">
+        <pre>【新記事の主張】
+「Claude 3.7 は拡張思考モードを使うことで推論精度が向上する。無料プランでも利用可能。」
+
+【過去記事との比較】
+▼ 記事ID: 20241205-claude-plans（2024/12公開）
+  内容：「Claude の拡張思考（Extended Thinking）は Proプラン以上の機能」
+  → ★ 矛盾あり：新記事の「無料プランでも利用可能」は過去記事と相反する。
+    最新の公式ドキュメントを確認し、どちらが正しいか編集者が判断すること。
+
+▼ 記事ID: 20250315-claude-comparison（2025/03公開）
+  内容：「Claude 3.5 Sonnet のトークン上限は 200K」
+  → 参考情報：新記事にモデル比較を含める場合は内部リンク推奨。
+
+【重複している内容】
+- 記事ID: 20250601-how-to-claude（2025/06公開）に「Claude の基本的な使い方」が詳述されている。
+  新記事では重複を避け、上記記事への内部リンクを設置することを推奨。
+
+【更新が必要な古い記事】
+- 記事ID: 20231010-ai-tools（2023/10公開）：「拡張思考は実験的機能」と記載。現在は正式リリース済みのため更新が必要。
+
+【参照・引用すべき過去記事】
+- /how-to-claude（Claude基本操作）
+- /claude-plans（料金・プラン比較）</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('check-only',this)">矛盾チェックのみ</button>
+      <button class="stab" onclick="showScenario('write',this)">新記事生成まで</button>
+      <button class="stab" onclick="showScenario('outdated',this)">更新が必要な古い記事の検出</button>
+    </div>
+    <div id="scenario-check-only" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">矛盾チェックのみ — プロンプト例</div>
+        <pre>新記事のトピック：「〇〇の使い方」
+新記事の主張：（下書きまたは主要な主張を貼り付け）
+
+過去記事（ベクトル検索で上位5件を取得）：
+（retrieved_docs を貼り付け）
+
+確認してください：
+1. 過去記事との内容の矛盾・不整合（あれば記事IDと矛盾箇所を明示）
+2. 重複している内容（内部リンクで誘導すべきか）
+3. 参照・引用すべき過去記事のURL
+矛盾がなければ「問題なし」と出力してください。</pre>
+      </div>
+    </div>
+    <div id="scenario-write" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">新記事生成まで — プロンプト例</div>
+        <pre">新記事を執筆してください。矛盾チェックを行ってから生成すること。
+
+トピック：「〇〇の使い方（2026年最新版）」
+対象読者：初心者〜中級者
+文字数：2,000〜2,500字
+構成：導入→手順→応用→まとめ
+
+過去記事（取得済み）：
+（retrieved_docs を貼り付け）
+
+出力：
+1. 矛盾チェック結果（矛盾があれば警告を先に表示）
+2. 矛盾がなければ本文ドラフト
+3. 内部リンク候補リスト（過去記事URL）</pre>
+      </div>
+    </div>
+    <div id="scenario-outdated" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">更新が必要な古い記事の検出 — プロンプト例</div>
+        <pre">以下の最新情報をもとに、更新が必要な過去記事を特定してください。
+
+最新情報：「〇〇は2026年4月にAPIが変更され、旧バージョンは2027年1月に廃止される。」
+
+過去記事データベース（全件のタイトル・公開日・要約）：
+（article_metadata_list を貼り付け）
+
+出力：
+1. 更新が必要な記事リスト（記事ID・タイトル・更新が必要な理由）
+2. 優先度（高：即時更新 / 中：次回定期更新時 / 低：必要があれば）</pre>
+      </div>
     </div>
   </div>
 
@@ -127,6 +237,21 @@ def write_article_with_consistency(topic: str, outline: str) -> str:
   </div>
 
   <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>ベクトルDBへの記事インデックスが最新状態になっているか（新記事公開後に更新する運用があるか）</li>
+        <li>ベクトル検索の結果が妥当か（関係のない記事が上位に来ていないか）</li>
+        <li>矛盾検出レポートを編集者が目視確認しているか（AIの誤判定に注意）</li>
+        <li>意図的な方針変更による「矛盾」を誤検出として除外する仕組みがあるか</li>
+        <li>埋め込み（Embedding）の生成コストを把握しているか（大量記事は高額になる場合あり）</li>
+        <li>内部リンク候補が実際に存在する記事URLを指しているか（404リンクになっていないか）</li>
+        <li>更新が必要と判定された古い記事の修正フローが決まっているか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -136,7 +261,29 @@ def write_article_with_consistency(topic: str, outline: str) -> str:
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-screen-caption.html">画面録画→キャプション・矢印オーバーレイ動画自動生成</a>
+        <span>コンテンツ制作の自動化を組み合わせる</span>
+      </div>
+      <div class="related-card">
+        <a href="../07-engineering/01-pr-review.html">PRレビュー自動化</a>
+        <span>Claude Codeで開発フローを効率化</span>
+      </div>
+    </div>
+  </div>
 </div>
 <footer>中級編 設定ガイド — コンテンツ制作</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

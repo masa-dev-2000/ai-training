@@ -37,6 +37,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -58,6 +76,137 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
     <h2>概要</h2>
     <div class="overview">
       「Gmailで受信したPDFをGoogle Driveに保存してSlackに通知する」のような自然言語でワークフローを記述するだけで、n8nのワークフローJSONをClaude Codeが自動生成し、n8n APIを通じて即インポートできる。
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓「GmailでPDFを受信したらSlackに通知する」という自然言語指示から生成されたn8n JSONの例（抜粋）</p>
+    <div class="output-example">
+      <div class="output-header">Claude が生成した n8n ワークフロー JSON（抜粋）</div>
+      <div class="output-body">
+        <pre>{
+  "name": "Gmail PDF → Slack通知",
+  "nodes": [
+    {
+      "id": "1",
+      "name": "Gmailトリガー",
+      "type": "n8n-nodes-base.gmailTrigger",
+      "parameters": {
+        "pollTimes": { "item": [{ "mode": "everyMinute" }] },
+        "filters": { "subject": "請求書" },
+        "format": "resolved"
+      },
+      "position": [240, 300]
+    },
+    {
+      "id": "2",
+      "name": "添付ファイル確認",
+      "type": "n8n-nodes-base.if",
+      "parameters": {
+        "conditions": {
+          "string": [{
+            "value1": "={{ $json.attachments.length }}",
+            "operation": "isNotEmpty"
+          }]
+        }
+      },
+      "position": [460, 300]
+    },
+    {
+      "id": "3",
+      "name": "Slack通知",
+      "type": "n8n-nodes-base.slack",
+      "parameters": {
+        "channel": "#経理チャンネル",
+        "text": "新着請求書: {{ $('Gmailトリガー').item.json.subject }}\n送信者: {{ $('Gmailトリガー').item.json.from }}",
+        "authentication": "oAuth2"
+      },
+      "position": [680, 260]
+    }
+  ],
+  "connections": {
+    "Gmailトリガー": { "main": [[{ "node": "添付ファイル確認", "type": "main", "index": 0 }]] },
+    "添付ファイル確認": { "main": [[{ "node": "Slack通知", "type": "main", "index": 0 }], []] }
+  }
+}
+
+--- インポート結果 ---
+✅ ワークフロー作成完了: ID=wf_a3b7c2d1
+⚠️ Gmail・Slack の認証情報は n8n UI で手動設定が必要です</pre>
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('slack',this)">Slack通知ワークフロー</button>
+      <button class="stab" onclick="showScenario('sync',this)">データ同期ワークフロー</button>
+      <button class="stab" onclick="showScenario('schedule',this)">定期実行ワークフロー</button>
+    </div>
+
+    <div id="scenario-slack" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">Slack通知ワークフロー — プロンプト例</div>
+        <pre>以下のワークフローをn8nのJSON形式で生成してください。
+
+ワークフロー名：「フォーム送信 → Slack通知」
+
+処理内容：
+1. Webhookノード（POST /webhook/contact）でフォーム送信を受け取る
+2. 受信データのバリデーション（name・email・message が空でないか確認）
+3. Slack #問い合わせチャンネルに以下の形式で通知：
+   「新着問い合わせ
+   名前：{{name}}
+   メール：{{email}}
+   内容：{{message}}」
+4. Webhookに 200 OK レスポンスを返す
+
+n8n v1.x 系の仕様に準拠したJSON（nodes配列・connections・settings）を出力してください。
+既存ワークフローがある場合は添付するのでそれに準拠させてください。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-sync" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">データ同期ワークフロー — プロンプト例</div>
+        <pre>以下のワークフローをn8nのJSON形式で生成してください。
+
+ワークフロー名：「顧客データ Salesforce → Notion 同期」
+
+処理内容：
+1. Salesforce のトリガー（新規リードが登録されたとき）
+2. Salesforce MCPで新規リードの詳細情報を取得
+3. Notion データベース「顧客リスト」に以下のプロパティでページを作成：
+   - 名前（タイトル）
+   - 会社名（テキスト）
+   - メール（メール）
+   - 登録日（日付）
+   - ステータス（セレクト）：「未対応」で固定
+4. Slack #営業チャンネルに「新規リード追加: {{リード名}}」と通知
+
+重複チェック：メールアドレスで既存ページを検索し、存在する場合はスキップする。</pre>
+      </div>
+    </div>
+
+    <div id="scenario-schedule" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">定期実行ワークフロー — プロンプト例</div>
+        <pre>以下のワークフローをn8nのJSON形式で生成してください。
+
+ワークフロー名：「週次レポート自動送信」
+
+処理内容：
+1. スケジュールトリガー（毎週月曜 9:00）
+2. Google Sheets「売上データ」シートから過去7日分のデータを取得
+3. データを集計（合計・平均・前週比）
+4. Claudeノード（または HTTPリクエスト）を使ってサマリー文章を生成
+5. 指定のメールアドレス宛にHTMLメールで送信（件名：「週次売上レポート YYYY/MM/DD」）
+6. 送信ログを Google Sheets「送信履歴」シートに追記
+
+エラーが発生した場合は Slack #エラー通知チャンネルにアラートを送る。</pre>
+      </div>
     </div>
   </div>
 
@@ -137,6 +286,21 @@ def import_workflow(workflow_json: dict) -> str:
   </div>
 
   <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>生成されたJSONをn8n UIにインポートし、ノードのエラー（赤いマーク）がないか確認したか</li>
+        <li>Gmail・Slack・Notion等の認証情報（Credentials）をn8n UI上で設定したか</li>
+        <li>ワークフローをテスト実行し、意図した動作になることを確認したか</li>
+        <li>本番データ・本番サービスに影響するワークフローはテスト環境で動作確認してからアクティブ化したか</li>
+        <li>APIキー・OAuthトークン等の機密情報がJSONに直接含まれていないか</li>
+        <li>エラーハンドリングノード（エラー時のSlack通知等）を設定したか</li>
+        <li>n8nのバージョンを指定してJSONを生成したか（バージョン不一致は動作不良の原因になる）</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -146,7 +310,33 @@ def import_workflow(workflow_json: dict) -> str:
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-github-issue-pr.html">GitHub Issue → 実装 → PR自動作成</a>
+        <span>★★★★ n8nワークフロー自体を自動実装</span>
+      </div>
+      <div class="related-card">
+        <a href="../05-support/02-slack-bot.html">Slack自動返信ボット</a>
+        <span>★★★ n8nとSlackを組み合わせた応用例</span>
+      </div>
+      <div class="related-card">
+        <a href="../06-hr/04-manual-generation.html">業務マニュアルの自動生成</a>
+        <span>★★★ ワークフロー仕様書の文書化に</span>
+      </div>
+    </div>
+  </div>
 </div>
 <footer>中級編 設定ガイド — 開発・エンジニアリング</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>

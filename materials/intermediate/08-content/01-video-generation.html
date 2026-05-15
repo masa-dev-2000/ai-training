@@ -37,6 +37,24 @@ h2 { font-size: 15px; font-weight: 700; color: #0f172a; padding-left: 12px; bord
 .back { display: inline-flex; align-items: center; gap: 6px; color: #64748b; font-size: 13px; padding: 5px 10px; border: 1px solid #e2e8f0; border-radius: 6px; margin-bottom: 20px; }
 .back:hover { background: #f8fafc; text-decoration: none; }
 footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; border-top: 1px solid #f1f5f9; margin-top: 40px; }
+.scenario-tabs { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 12px; }
+.stab { padding: 5px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 12px; font-weight: 600; background: #f8fafc; cursor: pointer; color: #475569; transition: all 0.15s; }
+.stab.active, .stab:hover { background: #0f172a; color: #fff; border-color: #0f172a; }
+.scenario-content { display: none; }
+.scenario-content.active { display: block; }
+.output-example { border: 1px solid #e2e8f0; border-radius: 8px; overflow: hidden; margin: 10px 0; }
+.output-header { background: #f1f5f9; padding: 8px 16px; font-size: 11px; font-weight: 700; color: #64748b; text-transform: uppercase; letter-spacing: 0.5px; border-bottom: 1px solid #e2e8f0; }
+.output-body { padding: 16px; font-size: 13px; color: #334155; line-height: 1.7; }
+.output-body pre { font-size: 12px; white-space: pre-wrap; font-family: inherit; }
+.checklist { background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 16px 20px; }
+.checklist ul { list-style: none; padding: 0; }
+.checklist li { display: flex; align-items: flex-start; gap: 8px; font-size: 14px; color: #334155; margin-bottom: 8px; }
+.checklist li::before { content: "☐"; flex-shrink: 0; font-size: 16px; color: #94a3b8; margin-top: -1px; }
+.related { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 10px; margin: 10px 0; }
+.related-card { border: 1px solid #e2e8f0; border-radius: 8px; padding: 12px 14px; background: #fafafa; }
+.related-card a { font-size: 13px; font-weight: 600; color: #0f172a; display: block; margin-bottom: 4px; }
+.related-card a:hover { color: #2563eb; text-decoration: none; }
+.related-card span { font-size: 11px; color: #94a3b8; }
 </style>
 </head>
 <body>
@@ -62,6 +80,51 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
   </div>
 
   <div class="section">
+    <h2>完成イメージ（出力例）</h2>
+    <p style="font-size:13px;color:#64748b;margin-bottom:10px;">↓ 「売上棒グラフアニメーション動画を作って」と指示した場合の生成コードと動画の説明</p>
+    <div class="output-example">
+      <div class="output-header">Claude Code が生成した src/MyVideo.jsx（抜粋）</div>
+      <div class="output-body">
+        <pre>import { AbsoluteFill, interpolate, useCurrentFrame, useVideoConfig } from 'remotion';
+
+const data = [100, 150, 120, 200, 180, 250]; // 万円
+const labels = ['1月', '2月', '3月', '4月', '5月', '6月'];
+
+export const SalesChart = () => {
+  const frame = useCurrentFrame();
+  const { durationInFrames } = useVideoConfig();
+
+  return (
+    &lt;AbsoluteFill style={{ background: '#fff', padding: 60 }}&gt;
+      &lt;h1 style={{ fontFamily: 'Noto Sans JP', fontSize: 32, color: '#0f172a' }}&gt;
+        2026年上半期 売上推移
+      &lt;/h1&gt;
+      &lt;div style={{ display: 'flex', alignItems: 'flex-end', gap: 20, marginTop: 40, height: 300 }}&gt;
+        {data.map((val, i) =&gt; {
+          const delay = i * 8;
+          const height = interpolate(frame, [delay, delay + 20], [0, val], { extrapolateRight: 'clamp' });
+          return (
+            &lt;div key={i} style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 8 }}&gt;
+              &lt;div style={{ background: 'linear-gradient(180deg,#3b82f6,#1d4ed8)', width: 60, height: height * 1.1, borderRadius: 4 }} /&gt;
+              &lt;span style={{ fontSize: 14, color: '#64748b' }}&gt;{labels[i]}&lt;/span&gt;
+            &lt;/div&gt;
+          );
+        })}
+      &lt;/div&gt;
+    &lt;/AbsoluteFill&gt;
+  );
+};</pre>
+      </div>
+    </div>
+    <div class="output-example" style="margin-top:10px;">
+      <div class="output-header">生成される動画の内容</div>
+      <div class="output-body">
+        白背景に「2026年上半期 売上推移」のタイトルが表示され、6本の棒グラフが左から順番に下から上へアニメーションで伸びる。各棒の色はブルー系グラデーション。5秒（150フレーム）でMP4 1280×720に書き出し完了。
+      </div>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>Remotionの特長</h2>
     <div class="code"><span class="c"># Remotionでできること</span>
 ・ロゴアニメーション（フェードイン・モーション）
@@ -74,6 +137,58 @@ footer { text-align: center; padding: 24px; color: #94a3b8; font-size: 12px; bor
 ・コード（JSX）なのでバージョン管理できる
 ・データをJSONで渡せるため、データが変わっても自動更新
 ・フレームごとに精密な制御が可能</div>
+  </div>
+
+  <div class="section">
+    <h2>設定例（ケース別）</h2>
+    <div class="scenario-tabs">
+      <button class="stab active" onclick="showScenario('bar',this)">棒グラフアニメーション</button>
+      <button class="stab" onclick="showScenario('logo',this)">ロゴアニメーション</button>
+      <button class="stab" onclick="showScenario('telop',this)">テロップ動画</button>
+    </div>
+    <div id="scenario-bar" class="scenario-content active">
+      <div class="prompt">
+        <div class="prompt-label">棒グラフアニメーション — Claude Codeへの指示例</div>
+        <pre>Remotionで売上棒グラフアニメーション動画を作成してください。
+
+データ：月別売上 [100, 150, 120, 200, 180, 250]（万円）、1〜6月
+サイズ：1280×720、5秒（150フレーム、30fps）
+アニメーション：棒グラフが左から順に下から上へ伸びる（各棒に0.3秒の遅延）
+デザイン：白背景、棒はブルー系グラデーション、タイトル「2026年上半期 売上推移」（Noto Sans JP）
+値ラベル：各棒の上に金額を表示</pre>
+      </div>
+    </div>
+    <div id="scenario-logo" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">ロゴアニメーション — Claude Codeへの指示例</div>
+        <pre>Remotionでロゴアニメーション動画を作成してください。
+
+素材：public/logo.svg（会社ロゴ）
+サイズ：1920×1080、3秒（90フレーム）
+アニメーション：
+  0〜30f：ロゴが中央からフェードイン＋スケール 0.8→1.0
+  30〜60f：静止（ロゴ表示）
+  60〜90f：フェードアウト
+背景：ダークネイビー（#0f172a）
+キャッチコピー：ロゴ下に「AI で、仕事を変える。」をフェードインで表示</pre>
+      </div>
+    </div>
+    <div id="scenario-telop" class="scenario-content">
+      <div class="prompt">
+        <div class="prompt-label">テロップ動画 — Claude Codeへの指示例</div>
+        <pre>Remotionでテロップ動画を作成してください。
+
+テロップ内容（配列で渡す）：
+[
+  { text: "AIを使えば、作業時間が10分の1に。", start: 0, end: 90 },
+  { text: "プロンプト1行で、報告書が完成する。", start: 90, end: 180 },
+  { text: "今日から始めるAI活用術", start: 180, end: 270 }
+]
+サイズ：1080×1920（縦型・リール用）
+デザイン：黒背景、白テキスト（Noto Sans JP Bold）、フォントサイズ56px
+アニメーション：各テロップが下からスライドインして表示</pre>
+      </div>
+    </div>
   </div>
 
   <div class="section">
@@ -133,6 +248,21 @@ npx remotion lambda render</div>
   </div>
 
   <div class="section">
+    <h2>確認チェックリスト</h2>
+    <div class="checklist">
+      <ul>
+        <li>Node.js 18以上がインストールされているか（`node -v` で確認）</li>
+        <li>Remotionプロジェクトが正常に作成できたか（`npm run dev` でブラウザが開くか）</li>
+        <li>日本語フォント（Noto Sans JP等）がGoogle Fontsから正しく読み込まれているか</li>
+        <li>データをハードコードではなくJSONやpropsで渡す設計になっているか</li>
+        <li>フレームレート・解像度・尺がYouTube・SNS等の用途に合っているか</li>
+        <li>MP4レンダリングが正常に完了したか（出力ファイルを再生して確認）</li>
+        <li>商用利用の場合はRemotionのライセンス条件を確認したか</li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="section">
     <h2>注意点</h2>
     <div class="notes">
       <ul>
@@ -143,7 +273,29 @@ npx remotion lambda render</div>
       </ul>
     </div>
   </div>
+
+  <div class="section">
+    <h2>関連ガイド</h2>
+    <div class="related">
+      <div class="related-card">
+        <a href="02-screen-caption.html">画面録画→キャプション・矢印オーバーレイ動画自動生成</a>
+        <span>解説動画の後処理を自動化</span>
+      </div>
+      <div class="related-card">
+        <a href="../07-engineering/01-pr-review.html">PRレビュー自動化</a>
+        <span>Claude Codeで開発フローを効率化</span>
+      </div>
+    </div>
+  </div>
 </div>
 <footer>中級編 設定ガイド — コンテンツ制作</footer>
+<script>
+function showScenario(id, btn) {
+  document.querySelectorAll('.scenario-content').forEach(el => el.classList.remove('active'));
+  document.querySelectorAll('.stab').forEach(el => el.classList.remove('active'));
+  document.getElementById('scenario-' + id).classList.add('active');
+  btn.classList.add('active');
+}
+</script>
 </body>
 </html>
